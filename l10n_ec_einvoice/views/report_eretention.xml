@@ -18,7 +18,7 @@
                         </div>
                         <div class="col-xs-7">
                             <span><strong>RUC </strong></span> <span t-esc="res_company.partner_id.identifier"/><br/>
-                            <span><h4 style="text-align: center;">COMPROBANTE DE RETENCIÖN</h4></span><br/>
+                            <span><h4 style="text-align: center;">COMPROBANTE DE RETENCIÓN</h4></span><br/>
                             <span><strong>NUMERO</strong> </span><span t-esc="o.name"/><br/>
                             <span><strong>NUMERO DE AUTORIZACION</strong></span><br/>
                             <span t-esc="o.clave_acceso"/><br/>
@@ -106,7 +106,7 @@
                                 <span t-esc="line.group_id.name"/>
                             </div>
                             <div class="col-xs-1" style="padding-left: 0px; text-align: center;">
-                                <span t-esc="'%.2f' % (abs(line.tax_id.amount))"/>
+                                <span t-esc="'%.2f' % (abs(line.tax_id.percent_report))"/>
                             </div>
                             <div class="col-xs-1" style="padding-left: 0px; text-align: right;">
                                 <span t-esc="'%.2f' % (abs(line.amount))"/>
