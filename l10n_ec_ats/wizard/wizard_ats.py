@@ -25,7 +25,8 @@ tpIdProv = {
 tpIdCliente = {
     'ruc': '04',
     'cedula': '05',
-    'pasaporte': '06'
+    'pasaporte': '06',
+    'venta_consumidor_final': '07',
     }
 
 
@@ -280,6 +281,17 @@ class WizardAts(models.TransientModel):
                     'reembolsos': self.get_reembolsos(inv)
                 })
                 compras.append(detallecompras)
+
+                formasDePago = []
+                for payment_id in inv.payment_ids:
+                    if payment_id.journal_id.epayment_id.code:
+                        pago = {'formaPago' : payment_id.journal_id.epayment_id.code}
+                        if pago not in formasDePago:
+                            formasDePago.append(pago)
+                    
+                detallecompras.update({'formasDePago':formasDePago})
+                compras.append(detallecompras)
+
         return compras
 
     @api.multi
@@ -289,7 +301,7 @@ class WizardAts(models.TransientModel):
             ('date', '>=', period.date_start),
             ('date', '<=', period.date_stop),
             ('type', '=', 'out_invoice'),
-            ('auth_inv_id.is_electronic', '!=', True)
+           # ('auth_inv_id.is_electronic', '!=', True)
         ]
         ventas = []
         for inv in self.env['account.invoice'].search(dmn):

@@ -39,7 +39,10 @@
           <paisEfecPago>{{ item['pagoExterior']['paisEfecPago']}}</paisEfecPago>
           <aplicConvDobTrib>{{ item['pagoExterior']['aplicConvDobTrib']}}</aplicConvDobTrib>
           <pagExtSujRetNorLeg>{{ item['pagoExterior']['pagoExtSujRetNorLeg']}}</pagExtSujRetNorLeg>
-        </pagoExterior>
+        </pagoExterior> {% if formasDePago %}
+        <formasDePago> {% for f in item['formasDePago'] %}
+            <formaPago>{{ f['formaPago'] }}</formaPago>{% endfor %}
+        </formasDePago> {% endif %}
         <air>
           <detalleAir>
             <codRetAir>{{ item['detalleAir']['codRetAir'] }}</codRetAir>
