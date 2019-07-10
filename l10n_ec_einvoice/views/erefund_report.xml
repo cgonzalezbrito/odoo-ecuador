@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+      <report
+          id="report_erefund"
+          model="account.invoice"
+          string="Nota de Credito"
+          report_type="qweb-pdf"
+          name="l10n_ec_einvoice.account_report_erefund"
+          file="l10n_ec_einvoice.account_report_erefund"
+          menu="False"
+          attachment_use="True"
+          attachment="((object.clave_acceso or '').replace('/','')+'.pdf')"
+      />
+  </data>
+</odoo>

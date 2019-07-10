@@ -93,9 +93,9 @@ class Edocument(models.AbstractModel):
         readonly=True,
     )
     autorizado_sri = fields.Boolean('Autorizado SRI',readonly=True)
-    is_credit = fields.Boolean('Crédito',readonly=True)
-    is_credit_payment = fields.Boolean('Crédito',readonly=True)
-    to_send_einvoice = fields.Boolean('Enviar email',readonly=True)
+    #is_credit = fields.Boolean('Crédito',readonly=True)
+    #is_credit_payment = fields.Boolean('Crédito',readonly=True)
+    to_send_einvoice = fields.Boolean('Enviar email')
     security_code = fields.Char('Código de Seguridad', size=8, readonly=True)
     emission_code = fields.Char('Tipo de Emisión', size=1, readonly=True)
     pos_payment_line_ids = fields.Many2many('account.pos.payment','epayment_id',string='Forma de Pago')
@@ -104,6 +104,7 @@ class Edocument(models.AbstractModel):
     payment_term = fields.Char()
     xml_file = fields.Binary('XML')
     store_fname = fields.Char(string="Factura")
+    sucursal = fields.Char(string="Sucursal")
 
     def get_auth(self, document):
         partner = document.company_id.partner_id

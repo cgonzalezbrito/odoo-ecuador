@@ -70,7 +70,7 @@ class AccountWithdrawing(models.Model):
                 'baseImponible': get_line_base(line),
                 'porcentajeRetener': str(line.tax_id.percent_report),
                 'valorRetenido': '%.2f' % (abs(line.amount)),
-                'codDocSustento': retention.invoice_id.sustento_id.code,
+                'codDocSustento': '01',
                 'numDocSustento': retention.invoice_id.invoice_number,
                 'fechaEmisionDocSustento': time.strftime('%d/%m/%Y', time.strptime(retention.invoice_id.date_invoice, '%Y-%m-%d'))  # noqa
             }

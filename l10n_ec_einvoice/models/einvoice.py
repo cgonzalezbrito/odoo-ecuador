@@ -92,6 +92,7 @@ class AccountInvoice(models.Model):
                 'valorModificacion': self.amount_total
             }
             infoFactura.update(notacredito)
+            
         else:
             formaPago = []
             if self.pos_payment_line_ids:
@@ -227,9 +228,7 @@ class AccountInvoice(models.Model):
             
             aux_acces_key = str(self.clave_acceso)
             emission_code = obj.company_id.emission_code
-            if self.estado_factura == 'process':
-                access_key = self.clave_acceso
-            elif self.clave_acceso:
+            if self.clave_acceso:
                 self.SriServiceObj.set_active_env(self.env.user.company_id.env_service)
                 access_key = self.clave_acceso
             else:
@@ -246,41 +245,41 @@ class AccountInvoice(models.Model):
             password = obj.company_id.password_electronic_signature
             signed_document = xades.sign(einvoice, file_pk12, password)
             self.update_document([access_key, emission_code])
-            if self.estado_factura != 'process':
-                ok, errores = inv_xml.send_receipt(signed_document)
-                if not ok:
-                    self._logger.info(errores)
-                    self.write({'estado_factura': 'send_error'})
-                    if errores == 'ERROR CLAVE ACCESO REGISTRADA ' or errores == 'ERROR ERROR SECUENCIAL REGISTRADO ':
+            #if self.estado_factura != 'process':
+            ok, errores = inv_xml.send_receipt(signed_document)
+            if not ok:
+                self._logger.info(errores)
+                self.write({'estado_factura': 'send_error'})
+                if errores == 'ERROR CLAVE ACCESO REGISTRADA ' or errores == 'ERROR ERROR SECUENCIAL REGISTRADO ':
 
-                        self.write({
-                            'autorizado_sri': True,
-                            'to_send_einvoice': True,
-                            'estado_correo': 'to_send',
-                            'estado_autorizacion': 'Autorizado',
-                            'ambiente': 'PRODUCCION',
-                            #'fecha_autorizacion': fecha,  # noqa
-                            'estado_factura': 'is_auth',
-                        })
-                        
-                        message = """
-                        DOCUMENTO ELECTRONICO GENERADO <br><br>
-                        CLAVE DE ACCESO / NUMERO DE AUTORIZACION: %s <br>
-                        ESTADO: AUTORIZADO <br>
-                        FECHA DE AUTORIZACIÓN:  <br>
-                        AMBIENTE: PRODUCCION <br>
-                        """ % (
-                            aux_acces_key,
-                        )
-                        
-                        self.message_post(body=message)
-                        self.clave_acceso = aux_acces_key
-                        xml_attach = self.add_attachment(einvoice.encode(),aux_acces_key)
-                        self.store_fname = xml_attach[0].datas_fname
-                        self.xml_file = xml_attach[0].datas
-                        
-                    return
-                    #raise UserError(errores)
+                    self.write({
+                        'autorizado_sri': True,
+                        'to_send_einvoice': True,
+                        'estado_correo': 'to_send',
+                        'estado_autorizacion': 'Autorizado',
+                        'ambiente': 'PRODUCCION',
+                        #'fecha_autorizacion': fecha,  # noqa
+                        'estado_factura': 'is_auth',
+                    })
+                    
+                    message = """
+                    DOCUMENTO ELECTRONICO GENERADO <br><br>
+                    CLAVE DE ACCESO / NUMERO DE AUTORIZACION: %s <br>
+                    ESTADO: AUTORIZADO <br>
+                    FECHA DE AUTORIZACIÓN:  <br>
+                    AMBIENTE: PRODUCCION <br>
+                    """ % (
+                        aux_acces_key,
+                    )
+                    
+                    self.message_post(body=message)
+                    self.clave_acceso = aux_acces_key
+                    xml_attach = self.add_attachment(einvoice.encode(),aux_acces_key)
+                    self.store_fname = xml_attach[0].datas_fname
+                    self.xml_file = xml_attach[0].datas
+                    
+                return
+                #raise UserError(errores)
 
             auth, m = inv_xml.request_authorization(access_key)
             if not auth:
@@ -332,7 +331,10 @@ class AccountInvoice(models.Model):
             inv_name = str(self.clave_acceso) + '.xml'
             attach = self.env['ir.attachment'].search([('name','=',inv_name)])
             #attach = attach_ids[0]
-            pdf = self.env.ref('l10n_ec_einvoice.report_einvoice').render_qweb_pdf(self.ids)
+            if obj.type == 'out_refund':
+                self.env.ref('l10n_ec_einvoice.report_erefund').render_qweb_pdf(self.ids)
+            else:    
+                self.env.ref('l10n_ec_einvoice.report_einvoice').render_qweb_pdf(self.ids)
             pdf_name = str(self.clave_acceso) + '.pdf'
             attach_pdf = self.env['ir.attachment'].search([('name','=',pdf_name)])#self.add_attachment_pdf(pdf,self.clave_acceso)
             self.send_document(
@@ -351,7 +353,10 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def invoice_print(self):
-        return self.env.ref('l10n_ec_einvoice.report_einvoice').report_action(self)
+        if self.type == 'out_refund':
+            return self.env.ref('l10n_ec_einvoice.report_erefund').report_action(self)
+        else:
+            return self.env.ref('l10n_ec_einvoice.report_einvoice').report_action(self)
 
     payment_move_line_ids = fields.Many2many(
         'account.move.line', 

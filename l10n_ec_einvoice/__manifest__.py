@@ -33,6 +33,8 @@
         'views/edocument_layouts.xml',
         'views/eretention_report.xml',
         'views/report_eretention.xml',
+        'views/erefund_report.xml',
+        'views/report_erefund.xml',
         'edi/einvoice_edi.xml',
         'edi/eretention_edi.xml',
         'edi/email_template_einvoice_report.xml'
