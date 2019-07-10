@@ -25,43 +25,10 @@ import openerp.addons.decimal_precision as dp
 #}
 
 
-class Invoice(models.Model):
+class AccountInvoice(models.Model):
 
     _inherit = 'account.invoice'
     __logger = logging.getLogger(_inherit)
-
-    @api.model
-    def _default_journal(self):
-        if self._context.get('default_journal_id', False):
-            return self.env['account.journal'].browse(self._context.get('default_journal_id'))  # noqa
-        inv_type = self._context.get('type', 'out_invoice')
-        inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
-        company_id = self._context.get('company_id', self.env.user.company_id.id)  # noqa
-        domain = [
-        #    ('type', 'in', filter(None, map(TYPE2JOURNAL.get, inv_types))),
-            ('company_id', '=', company_id),
-        ]
-        return self.env['account.journal'].search(domain, limit=1)
-
-    @api.multi
-    def print_move(self,data):
-        # Método para imprimir comprobante contable
-        return self.env.ref('l10n_ec_withholding.account_move_report').report_action(self, data=data)
-
-    @api.multi
-    def print_liq_purchase(self):
-        # Método para imprimir reporte de liquidacion de compra
-        return self.env['report'].get_action(
-            self.move_id,
-            'l10n_ec_withholding.account_liq_purchase_report'
-        )
-
-    @api.multi
-    def print_retention(self, data):
-        """
-        Método para imprimir reporte de retencion
-        """
-        return self.env.ref('l10n_ec_withholding.account_withholding_report').report_action(self, data=data)
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id')  # noqa
@@ -108,6 +75,39 @@ class Invoice(models.Model):
         self.amount_total_company_signed = amount_total_company_signed * sign
         self.amount_total_signed = self.amount_total * sign
         self.amount_untaxed_signed = amount_untaxed_signed * sign
+
+    @api.model
+    def _default_journal(self):
+        if self._context.get('default_journal_id', False):
+            return self.env['account.journal'].browse(self._context.get('default_journal_id'))  # noqa
+        inv_type = self._context.get('type', 'out_invoice')
+        inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
+        company_id = self._context.get('company_id', self.env.user.company_id.id)  # noqa
+        domain = [
+        #    ('type', 'in', filter(None, map(TYPE2JOURNAL.get, inv_types))),
+            ('company_id', '=', company_id),
+        ]
+        return self.env['account.journal'].search(domain, limit=1)
+
+    @api.multi
+    def print_move(self,data):
+        # Método para imprimir comprobante contable
+        return self.env.ref('l10n_ec_withholding.account_move_report').report_action(self, data=data)
+
+    @api.multi
+    def print_liq_purchase(self):
+        # Método para imprimir reporte de liquidacion de compra
+        return self.env['report'].get_action(
+            self.move_id,
+            'l10n_ec_withholding.account_liq_purchase_report'
+        )
+
+    @api.multi
+    def print_retention(self, data):
+        """
+        Método para imprimir reporte de retencion
+        """
+        return self.env.ref('l10n_ec_withholding.account_withholding_report').report_action(self, data=data)
 
     @api.multi
     def name_get(self):
@@ -296,7 +296,7 @@ class Invoice(models.Model):
         """
         if self.retention_id:
             self.retention_id.action_cancel()
-        super(Invoice, self).action_invoice_cancel()
+        super(AccountInvoice, self).action_invoice_cancel()
 
     @api.multi
     def action_invoice_draft(self):
@@ -309,7 +309,7 @@ class Invoice(models.Model):
         for inv in self:
             if inv.retention_id:
                 inv.retention_id.unlink()
-        super(Invoice, self).action_invoice_draft()
+        super(AccountInvoice, self).action_invoice_draft()
         return True
 
     @api.multi
@@ -390,7 +390,7 @@ class Invoice(models.Model):
     @api.multi
     @api.returns('self')
     def refund(self, date_invoice=None, date=None, description=None, journal_id=None):  # noqa
-        new_invoices = super(Invoice, self).refund(date_invoice, date, description, journal_id)  # noqa
+        new_invoices = super(AccountInvoice, self).refund(date_invoice, date, description, journal_id)  # noqa
         new_invoices._onchange_journal_id()
         return new_invoices
 
