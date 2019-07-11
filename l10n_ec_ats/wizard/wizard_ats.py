@@ -180,8 +180,8 @@ class WizardAts(models.TransientModel):
                 'docModificado': auth.type_id.code,
                 'estabModificado': auth.serie_entidad,
                 'ptoEmiModificado': auth.serie_emision,
-                'secModificado': refund.invoice_number[6:15],
-                'autModificado': refund.reference
+                #'secModificado': refund.invoice_number[6:15],
+                #'autModificado': refund.reference
             }
 
     def get_reembolsos(self, invoice):
