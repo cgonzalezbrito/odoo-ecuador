@@ -103,24 +103,8 @@ class PosOrder(models.Model):
 
         self.action_pos_order_invoice()
         self.invoice_id.origin = self.returned_order_id.invoice_id.move_id.name
+        self.invoice_id.refund_invoice_id = self.returned_order_id.invoice_id
         self.invoice_id.type = 'out_refund'
         self.returned_order_id.returned = True
         self.partner_id.compute_refund_credit()
 
-    # @api.multi
-    # def add_payment(self,data):
-    #     super(PosOrder, self).add_payment(data)
-    #     for order in self:
-    #         for statement_id in order.statement_ids:
-    #             if statement_id.journal_id.code == 'NCRD' and order.order_type == 'sale':
-    #                 order.partner_id.compute_refund_credit()
-    #                 if order.partner_id.refund_credit <= 0:
-    #                     self._logger.info('El Cliente no tiene crédito')
-    #                     # mess= {
-    #                     #     'title':_('Sin crédito!'),
-    #                     #     'message':_('El Cliente no tiene crédito')
-    #                     # }
-    #                     # return {'warning': mess}
-    #                 else:
-    #                     order.partner_id.compute_refund_credit()
-    #                     print(order.partner_id.refund_credit)
