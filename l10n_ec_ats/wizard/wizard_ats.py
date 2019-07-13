@@ -162,11 +162,18 @@ class WizardAts(models.TransientModel):
         }
 
     def get_refund(self, invoice):
+        if invoice.refund_invoice_id:
+            return {
+                'docModificado': '01',
+                'estabModificado': invoice.refund_invoice_id.invoice_number[0:3],
+                'ptoEmiModificado': invoice.refund_invoice_id.invoice_number[3:6],
+                'secModificado': invoice.refund_invoice_id.reference,
+                'autModificado': invoice.refund_invoice_id.auth_number,
+            }
         refund = self.env['account.invoice'].search([
             ('number', '=', invoice.origin)
         ])
         if refund:
-            #auth = refund.auth_inv_id
             return {
                 'docModificado': '01',
                 'estabModificado': refund[0].invoice_number[0:3],
@@ -188,7 +195,7 @@ class WizardAts(models.TransientModel):
         if not invoice.auth_inv_id.type_id.code == '41':
             return False
         res = []
-        for r in invoice.refund_ids:
+        for r in invoice.refund_invoice_ids:
             res.append({
                 'tipoComprobanteReemb': r.doc_id.code,
                 'tpIdProvReemb': tpIdProv[r.partner_id.type_id],
@@ -269,13 +276,13 @@ class WizardAts(models.TransientModel):
                     'detalleAir': self.process_lines(inv.tax_line_ids, inv.amount_vat)
                 })                
 
-                if inv.retention_id:
-                    detallecompras.update({'retencion': True})
+                if inv.retention_id and inv.withheld:
+                    detallecompras.update({'retencion': inv.retention_id})
                     detallecompras.update(self.get_withholding(inv.retention_id))  # noqa
                 if inv.type in ['out_refund', 'in_refund']:
                     refund = self.get_refund(inv)
                     if refund:
-                        detallecompras.update({'es_nc': True})
+                        detallecompras.update({'credit_note': inv.type})
                         detallecompras.update(refund)
                 detallecompras.update({
                     'reembolsos': self.get_reembolsos(inv)
@@ -290,6 +297,10 @@ class WizardAts(models.TransientModel):
                             formasDePago.append(pago)
                     
                 detallecompras.update({'formasDePago':formasDePago})
+
+                if (inv.amount_vat_cero + inv.amount_vat) >= 1000:		
+	                    detallecompras.update({'greater1000': formasDePago})                    		
+	
                 compras.append(detallecompras)
 
         return compras
@@ -311,7 +322,7 @@ class WizardAts(models.TransientModel):
                 'parteRelVtas': 'NO',
                 'partner': inv.partner_id,
                 'auth': inv.auth_inv_id,
-                'tipoComprobante': inv.auth_inv_id.type_id.code,
+                'tipoComprobante': '18',
                 'tipoEmision': inv.auth_inv_id.is_electronic and 'E' or 'F',
                 'numeroComprobantes': 1,
                 'baseNoGraIva': inv.amount_novat,

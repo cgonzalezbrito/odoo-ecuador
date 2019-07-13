@@ -39,9 +39,9 @@
           <paisEfecPago>{{ item['pagoExterior']['paisEfecPago']}}</paisEfecPago>
           <aplicConvDobTrib>{{ item['pagoExterior']['aplicConvDobTrib']}}</aplicConvDobTrib>
           <pagExtSujRetNorLeg>{{ item['pagoExterior']['pagoExtSujRetNorLeg']}}</pagExtSujRetNorLeg>
-        </pagoExterior> {% if item['formasDePago'] %}
+        </pagoExterior> {% if item['greater1000'] %}
         <formasDePago> {% for f in item['formasDePago'] %}
-            <formaPago>{{ f['formaPago'] }}</formaPago>{% endfor %}
+          <formaPago>{{ f['formaPago'] }}</formaPago>{% endfor %}
         </formasDePago> {% endif %}
         <air>
           <detalleAir>
@@ -50,20 +50,24 @@
             <porcentajeAir>{{ item['detalleAir']['porcentajeAir'] }}</porcentajeAir>
             <valRetAir>{{ item['detalleAir']['valRetAir'] }}</valRetAir>
           </detalleAir>
-        </air>
-        {% if retencion %}
+        </air> {% if item['retencion'] %}
         <estabRetencion1>{{ item['estabRetencion1'] }}</estabRetencion1>
         <ptoEmiRetencion1>{{ item['ptoEmiRetencion1'] }}</ptoEmiRetencion1>
         <secRetencion1>{{ item['secRetencion1'] }}</secRetencion1>
         <autRetencion1>{{ item['autRetencion1'] }}</autRetencion1>
-        <fechaEmiRet1>{{ item['fechaEmiRet1'] }}</fechaEmiRet1>
-        {% endif %}
+        <fechaEmiRet1>{{ item['fechaEmiRet1'] }}</fechaEmiRet1> {% endif %} {% if item['credit_note'] %}
+        <docModificado>{{ item['docModificado'] }}</docModificado>
+        <estabModificado>{{ item['estabModificado'] }}</estabModificado>
+        <ptoEmiModificado>{{ item['ptoEmiModificado'] }}</ptoEmiModificado>
+        <secModificado>{{ item['secModificado'] }}</secModificado>
+        <autModificado>{{ item['autModificado'] }}</autModificado> {% endif %}
     </detalleCompras>{% endfor %}
   </compras>
   <ventas> {% for item in ventas %}
     <detalleVentas>
       <tpIdCliente>{{ item['tpIdCliente'] }}</tpIdCliente>
-      <idCliente>{{ item['idCliente'] }}</idCliente>
+      <idCliente>{{ item['idCliente'] }}</idCliente>{% if item['tpIdCliente'] != '06' %}
+      <parteRelVtas>{{ item['parteRelVtas'] }}</parteRelVtas>{% endif %}
       <tipoComprobante>{{ item['tipoComprobante'] }}</tipoComprobante>
       <tipoEmision>{{ item['tipoEmision'] }}</tipoEmision>
       <numeroComprobantes>{{ item['numeroComprobantes'] }}</numeroComprobantes>
