@@ -332,12 +332,8 @@ class WizardAts(models.TransientModel):
                 'montoIce': '0.00',
                 'valorRetIva': (abs(inv.taxed_ret_vatb) + abs(inv.taxed_ret_vatsrv)),  # noqa
                 'valorRetRenta': abs(inv.taxed_ret_ir),
-                # 'formasDePago': {
-                #     'formaPago': inv.payment_ids.code
-                # }
             }
 
-            #ventas.append(detalleventas)
             formasDePago = []
             for payment_id in inv.payment_ids:
                 if payment_id.journal_id.epayment_id.code:
@@ -393,7 +389,90 @@ class WizardAts(models.TransientModel):
             }
 
             ventas_end.append(detalle)
-        return ventas_end
+
+        # CREDIT NOTES
+        dmn = [
+            ('state', 'in', ['open', 'paid']),
+            ('date', '>=', period.date_start),
+            ('date', '<=', period.date_stop),
+            ('type', '=', 'out_refund'),
+        ]
+        devoluciones = []
+        for inv in self.env['account.invoice'].search(dmn):
+            detalledev = {
+                'tpIdCliente': tpIdCliente[inv.partner_id.type_id],
+                'idCliente': inv.partner_id.identifier,
+                'parteRelVtas': 'NO',
+                'partner': inv.partner_id,
+                'auth': inv.auth_inv_id,
+                'tipoComprobante': inv.auth_inv_id.type_id.code,
+                'tipoEmision': inv.auth_inv_id.is_electronic and 'E' or 'F',
+                'numeroComprobantes': 1,
+                'baseNoGraIva': inv.amount_novat,
+                'baseImponible': inv.amount_vat_cero,
+                'baseImpGrav': inv.amount_vat,
+                'montoIva': inv.amount_tax,
+                'montoIce': '0.00',
+                'valorRetIva': (abs(inv.taxed_ret_vatb) + abs(inv.taxed_ret_vatsrv)),  # noqa
+                'valorRetRenta': abs(inv.taxed_ret_ir),
+            }
+
+            formasDePago = []
+            for payment_id in inv.payment_ids:
+                if payment_id.journal_id.epayment_id.code:
+                    pago = {'formaPago' : payment_id.journal_id.epayment_id.code}
+                    if pago not in formasDePago:
+                        formasDePago.append(pago)
+
+            detalledev.update({'formasDePago':formasDePago})
+            devoluciones.append(detalledev)
+
+        devoluciones = sorted(devoluciones, key=itemgetter('idCliente'))
+        
+        for ruc, grupo in groupby(devoluciones, key=itemgetter('idCliente')):
+            baseimp = 0
+            nograviva = 0
+            montoiva = 0
+            retiva = 0
+            impgrav = 0
+            retrenta = 0
+            numComp = 0
+            partner_temp = False
+            auth_temp = False
+            formasDePago = []
+            for i in grupo:
+                nograviva += i['baseNoGraIva']
+                baseimp += i['baseImponible']
+                impgrav += i['baseImpGrav']
+                montoiva += i['montoIva']
+                retiva += i['valorRetIva']
+                retrenta += i['valorRetRenta']
+                numComp += 1
+                partner_temp = i['partner']
+                auth_temp = i['auth']
+                if i['formasDePago'] not in formasDePago:
+                    for formaPago in i['formasDePago']:
+                        if formaPago not in formasDePago:
+                            formasDePago.append(formaPago)
+            detalle = {
+                'tpIdCliente': tpIdCliente[partner_temp.type_id],
+                'idCliente': ruc,
+                'parteRelVtas': 'NO',
+                'tipoComprobante': inv.auth_inv_id.type_id.code,
+                'tipoEmision': auth_temp.is_electronic and 'E' or 'F',
+                'numeroComprobantes': numComp,
+                'baseNoGraIva': '%.2f' % nograviva,
+                'baseImponible': '%.2f' % baseimp,
+                'baseImpGrav': '%.2f' % impgrav,
+                'montoIva': '%.2f' % montoiva,
+                'montoIce': '0.00',
+                'valorRetIva': '%.2f' % retiva,
+                'valorRetRenta': '%.2f' % retrenta,
+                'formasDePago': formasDePago
+            }
+
+            ventas_end.append(detalle)
+        return sorted(ventas_end, key=itemgetter('idCliente'))
 
     @api.multi
     def read_anulados(self, period):
