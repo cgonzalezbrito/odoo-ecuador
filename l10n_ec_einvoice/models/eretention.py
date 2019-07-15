@@ -114,7 +114,7 @@ class AccountWithdrawing(models.Model):
 
             aux_acces_key = str(self.clave_acceso)
             emission_code = obj.company_id.emission_code
-            if self.estado_factura == 'process':
+            if self.estado_factura == 'ppr':
                 access_key = self.clave_acceso
             else:
                 access_key, emission_code = self._get_codes(name='account.retention')
@@ -125,44 +125,41 @@ class AccountWithdrawing(models.Model):
             if not inv_xml.validate_xml():
                 self.write({'estado_factura': 'invalid'})
                 return
-                #raise UserError('Documento no valido')
             xades = Xades()
             file_pk12 = obj.company_id.electronic_signature
             password = obj.company_id.password_electronic_signature
             signed_document = xades.sign(ewithdrawing, file_pk12, password)
             self.update_document([access_key, emission_code])
-            if self.estado_factura != 'process':
-                ok, errores = inv_xml.send_receipt(signed_document)
-                if not ok:
-                    self._logger.info(errores)
-                    self.write({'estado_factura': 'send_error'})
-                    if errores == 'ERROR CLAVE ACCESO REGISTRADA ' or errores == 'ERROR ERROR SECUENCIAL REGISTRADO ':
+            ok, errores = inv_xml.send_receipt(signed_document)
+            if not ok:
+                self._logger.info(errores)
+                self.write({'estado_factura': 'send_error'})
+                if errores == 'ERROR CLAVE ACCESO REGISTRADA ' or errores == 'ERROR ERROR SECUENCIAL REGISTRADO ':
 
-                        self.write({
-                            'autorizado_sri': True,
-                            'to_send_einvoice': True,
-                            'estado_correo': 'to_send',
-                            'estado_autorizacion': 'Autorizado',
-                            'ambiente': 'PRODUCCION',
-                            #'fecha_autorizacion': fecha,  # noqa
-                            'estado_factura': 'is_auth',
-                        })
-                        
-                        self.clave_acceso = aux_acces_key
-                        xml_attach = self.add_attachment(ewithdrawing.encode(),aux_acces_key)
-                        self.store_fname = xml_attach[0].datas_fname
-                        self.xml_file = xml_attach[0].datas
+                    self.write({
+                        'autorizado_sri': True,
+                        'to_send_einvoice': True,
+                        'estado_correo': 'to_send',
+                        'estado_autorizacion': 'Autorizado',
+                        'ambiente': 'PRODUCCION',
+                        'estado_factura': 'aut',
+                    })
                     
-                    return
+                    self.clave_acceso = aux_acces_key
+                    xml_attach = self.add_attachment(ewithdrawing.encode(),aux_acces_key)
+                    self.store_fname = xml_attach[0].datas_fname
+                    self.xml_file = xml_attach[0].datas
+                
+                return
 
             auth, m = inv_xml.request_authorization(access_key)
             if not auth:
                 msg = ' '.join(list(itertools.chain(*m)))
                 self._logger.info(msg)
-                self.write({'estado_factura': 'no_auth'})
+                self.write({'estado_factura': 'nat'})
                 return
             if auth.estado == 'EN PROCESO':
-                self.write({'estado_factura': 'process'})
+                self.write({'estado_factura': 'ppr'})
                 return
 
             fecha = auth.fechaAutorizacion.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -174,7 +171,7 @@ class AccountWithdrawing(models.Model):
                 'estado_autorizacion': auth.estado,
                 'ambiente': auth.ambiente,
                 'fecha_autorizacion': fecha,  # noqa
-                'estado_factura': 'is_auth',
+                'estado_factura': 'aut',
             })
 
             auth_eretention = self.render_authorized_document(auth)            
@@ -200,12 +197,6 @@ class AccountWithdrawing(models.Model):
                 'to_send_einvoice': False,
                 'estado_correo': 'sent'
             })
-
-            # self._logger.info('Enviando documento electronico por correo')
-            # template = self.env.ref('l10n_ec_einvoice.email_template_eretention')
-            # self.env['mail.template'].browse(template.id).send_mail(self.id, email_values={'attachment_ids': attachments}, force_send=True, raise_exception=True)
-            # self._logger.info('Documento enviado')
-            # self.sent = True
 
     @api.multi
     def retention_print(self):

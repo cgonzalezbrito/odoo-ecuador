@@ -239,13 +239,11 @@ class AccountInvoice(models.Model):
             if not inv_xml.validate_xml():
                 self.write({'estado_factura': 'invalid'})
                 return
-                #raise UserError('Documento no valido')
             xades = Xades()
             file_pk12 = obj.company_id.electronic_signature
             password = obj.company_id.password_electronic_signature
             signed_document = xades.sign(einvoice, file_pk12, password)
             self.update_document([access_key, emission_code])
-            #if self.estado_factura != 'process':
             ok, errores = inv_xml.send_receipt(signed_document)
             if not ok:
                 self._logger.info(errores)
@@ -258,8 +256,7 @@ class AccountInvoice(models.Model):
                         'estado_correo': 'to_send',
                         'estado_autorizacion': 'Autorizado',
                         'ambiente': 'PRODUCCION',
-                        #'fecha_autorizacion': fecha,  # noqa
-                        'estado_factura': 'is_auth',
+                        'estado_factura': 'aut',
                     })
                     
                     message = """
@@ -279,17 +276,16 @@ class AccountInvoice(models.Model):
                     self.xml_file = xml_attach[0].datas
                     
                 return
-                #raise UserError(errores)
 
             auth, m = inv_xml.request_authorization(access_key)
             if not auth:
                 msg = ' '.join(list(itertools.chain(*m)))
                 self._logger.info(msg)
-                self.write({'estado_factura': 'no_auth'})
+                self.write({'estado_factura': 'nat'})
                 return
                 #raise UserError(msg)
             if auth.estado == 'EN PROCESO':
-                self.write({'estado_factura': 'process'})
+                self.write({'estado_factura': 'ppr'})
                 return
 
             fecha = auth.fechaAutorizacion.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -301,7 +297,7 @@ class AccountInvoice(models.Model):
                 'estado_autorizacion': auth.estado,
                 'ambiente': auth.ambiente,
                 'fecha_autorizacion': fecha,  # noqa
-                'estado_factura': 'is_auth',
+                'estado_factura': 'aut',
             })
             
             message = """

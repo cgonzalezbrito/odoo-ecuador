@@ -79,9 +79,9 @@ class Edocument(models.AbstractModel):
     estado_factura = fields.Selection(
         [('invalid', 'Documento no válido'),
          ('send_error', 'Error al enviar'),
-         ('no_auth', 'No Autorizado'),
-         ('process', 'En Proceso'),
-         ('is_auth', 'Autorizado')],
+         ('nat', 'No Autorizado'),
+         ('ppr', 'En Proceso'),
+         ('aut', 'Autorizado')],
         string='Estado',
         readonly=True,
     )
@@ -95,7 +95,7 @@ class Edocument(models.AbstractModel):
     autorizado_sri = fields.Boolean('Autorizado SRI',readonly=True)
     #is_credit = fields.Boolean('Crédito',readonly=True)
     #is_credit_payment = fields.Boolean('Crédito',readonly=True)
-    to_send_einvoice = fields.Boolean('Enviar email')
+    to_send_einvoice = fields.Boolean('Enviar email',readonly=True)
     security_code = fields.Char('Código de Seguridad', size=8, readonly=True)
     emission_code = fields.Char('Tipo de Emisión', size=1, readonly=True)
     pos_payment_line_ids = fields.Many2many('account.pos.payment','epayment_id',string='Forma de Pago')
