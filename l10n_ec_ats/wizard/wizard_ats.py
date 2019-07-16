@@ -26,7 +26,7 @@ tpIdCliente = {
     'ruc': '04',
     'cedula': '05',
     'pasaporte': '06',
-    'venta_consumidor_final': '07',
+    'venta_consumidor_final': '07'
     }
 
 
@@ -91,7 +91,6 @@ class WizardAts(models.TransientModel):
                 temp[line.tax_id.description]['porcentajeAir'] = '%.2f' % temp[line.tax_id.description]['porcentajeAir']
                 temp[line.tax_id.description]['valRetAir'] += abs(line.amount)
                 temp[line.tax_id.description]['valRetAir'] = '%.2f' % temp[line.tax_id.description]['valRetAir']
-                
         for k, v in temp.items():
             data_air.append(v)
         #print(data_air)
@@ -273,21 +272,20 @@ class WizardAts(models.TransientModel):
                         'aplicConvDobTrib': 'NA',
                         'pagoExtSujRetNorLeg': 'NA'
                     },
-                    'detalleAir': self.process_lines(inv.tax_line_ids, inv.amount_vat)
+                    'detalleAir': self.process_lines(inv.tax_line_ids, inv.amount_novat + inv.amount_vat_cero + inv.amount_vat)
                 })                
 
                 if inv.retention_id and inv.withheld:
                     detallecompras.update({'retencion': inv.retention_id})
                     detallecompras.update(self.get_withholding(inv.retention_id))  # noqa
                 if inv.type in ['out_refund', 'in_refund']:
+                    detallecompras.update({'credit_note': inv.type})
                     refund = self.get_refund(inv)
                     if refund:
-                        detallecompras.update({'credit_note': inv.type})
                         detallecompras.update(refund)
                 detallecompras.update({
                     'reembolsos': self.get_reembolsos(inv)
                 })
-                compras.append(detallecompras)
 
                 formasDePago = []
                 for payment_id in inv.payment_ids:
@@ -298,9 +296,9 @@ class WizardAts(models.TransientModel):
                     
                 detallecompras.update({'formasDePago':formasDePago})
 
-                if (inv.amount_vat_cero + inv.amount_vat) >= 1000:		
-	                    detallecompras.update({'greater1000': formasDePago})                    		
-	
+                if (inv.amount_vat_cero + inv.amount_vat) >= 1000:
+                    detallecompras.update({'greater1000': formasDePago})                    
+
                 compras.append(detallecompras)
 
         return compras
@@ -312,7 +310,7 @@ class WizardAts(models.TransientModel):
             ('date', '>=', period.date_start),
             ('date', '<=', period.date_stop),
             ('type', '=', 'out_invoice'),
-           # ('auth_inv_id.is_electronic', '!=', True)
+            #('auth_inv_id.is_electronic', '!=', True)
         ]
         ventas = []
         for inv in self.env['account.invoice'].search(dmn):
@@ -322,7 +320,7 @@ class WizardAts(models.TransientModel):
                 'parteRelVtas': 'NO',
                 'partner': inv.partner_id,
                 'auth': inv.auth_inv_id,
-                'tipoComprobante': '18',
+                'tipoComprobante': inv.auth_inv_id.type_id.code,
                 'tipoEmision': inv.auth_inv_id.is_electronic and 'E' or 'F',
                 'numeroComprobantes': 1,
                 'baseNoGraIva': inv.amount_novat,
@@ -334,6 +332,7 @@ class WizardAts(models.TransientModel):
                 'valorRetRenta': abs(inv.taxed_ret_ir),
             }
 
+            #ventas.append(detalleventas)
             formasDePago = []
             for payment_id in inv.payment_ids:
                 if payment_id.journal_id.epayment_id.code:
@@ -375,21 +374,21 @@ class WizardAts(models.TransientModel):
                 'tpIdCliente': tpIdCliente[partner_temp.type_id],
                 'idCliente': ruc,
                 'parteRelVtas': 'NO',
-                'tipoComprobante': auth_temp.type_id.code,
+                'tipoCliente': '01',
+                'denoCli': partner_temp.name,
+                'tipoComprobante': '18',
                 'tipoEmision': auth_temp.is_electronic and 'E' or 'F',
                 'numeroComprobantes': numComp,
                 'baseNoGraIva': '%.2f' % nograviva,
                 'baseImponible': '%.2f' % baseimp,
                 'baseImpGrav': '%.2f' % impgrav,
-                'montoIva': '%.2f' % montoiva,
+                'montoIva': '%.2f' % round(montoiva, 2),
                 'montoIce': '0.00',
                 'valorRetIva': '%.2f' % retiva,
                 'valorRetRenta': '%.2f' % retrenta,
                 'formasDePago': formasDePago
             }
-
             ventas_end.append(detalle)
-
         # CREDIT NOTES
         dmn = [
             ('state', 'in', ['open', 'paid']),
@@ -549,14 +548,14 @@ class WizardAts(models.TransientModel):
         ats.Anio = get_date_value(period.date_start, '%Y')
         ats.Mes = get_date_value(period.date_start, '%m')
         ats.numEstabRuc = self.num_estab_ruc.zfill(3)
-        ats.AtstotalVentas = '%.2f' % self._get_ventas(period)
-        ats.totalVentas = '%.2f' % self._get_ventas(period)
+        ats.AtstotalVentas = '0.00'#'%.2f' % self._get_ventas(period)
+        ats.totalVentas = '0.00'#'%.2f' % self._get_ventas(period)
         ats.codigoOperativo = 'IVA'
         ats.compras = self.read_compras(period)
         ats.ventas = self.read_ventas(period)
         ats.codEstab = self.num_estab_ruc
-        ats.ventasEstab = '%.2f' % self._get_ventas(period)
-        ats.ivaComp = '0'
+        ats.ventasEstab = '0.00'#'%.2f' % self._get_ventas(period)
+        ats.ivaComp = '0.00'
         ats.anulados = self.read_anulados(period)
         self._logger.info('ATS')
         ats_rendered = self.render_xml(ats)

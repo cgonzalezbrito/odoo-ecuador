@@ -39,10 +39,10 @@
           <paisEfecPago>{{ item['pagoExterior']['paisEfecPago']}}</paisEfecPago>
           <aplicConvDobTrib>{{ item['pagoExterior']['aplicConvDobTrib']}}</aplicConvDobTrib>
           <pagExtSujRetNorLeg>{{ item['pagoExterior']['pagoExtSujRetNorLeg']}}</pagExtSujRetNorLeg>
-        </pagoExterior> {% if item['greater1000'] %}
-        <formasDePago> {% for f in item['formasDePago'] %}
+        </pagoExterior>{% if item['greater1000'] %}
+        <formasDePago>{% for f in item['formasDePago'] %}
           <formaPago>{{ f['formaPago'] }}</formaPago>{% endfor %}
-        </formasDePago> {% endif %}
+        </formasDePago>{% endif %}
         <air>
           <detalleAir>
             <codRetAir>{{ item['detalleAir']['codRetAir'] }}</codRetAir>
@@ -55,19 +55,21 @@
         <ptoEmiRetencion1>{{ item['ptoEmiRetencion1'] }}</ptoEmiRetencion1>
         <secRetencion1>{{ item['secRetencion1'] }}</secRetencion1>
         <autRetencion1>{{ item['autRetencion1'] }}</autRetencion1>
-        <fechaEmiRet1>{{ item['fechaEmiRet1'] }}</fechaEmiRet1> {% endif %} {% if item['credit_note'] %}
+        <fechaEmiRet1>{{ item['fechaEmiRet1'] }}</fechaEmiRet1>{% endif %} {% if item['credit_note'] %}
         <docModificado>{{ item['docModificado'] }}</docModificado>
         <estabModificado>{{ item['estabModificado'] }}</estabModificado>
         <ptoEmiModificado>{{ item['ptoEmiModificado'] }}</ptoEmiModificado>
         <secModificado>{{ item['secModificado'] }}</secModificado>
-        <autModificado>{{ item['autModificado'] }}</autModificado> {% endif %}
+        <autModificado>{{ item['autModificado'] }}</autModificado>{% endif %}
     </detalleCompras>{% endfor %}
   </compras>
-  <ventas> {% for item in ventas %}
+  <ventas>{% for item in ventas %}
     <detalleVentas>
       <tpIdCliente>{{ item['tpIdCliente'] }}</tpIdCliente>
       <idCliente>{{ item['idCliente'] }}</idCliente>{% if item['tpIdCliente'] != '07' %}
-      <parteRelVtas>{{ item['parteRelVtas'] }}</parteRelVtas>{% endif %}
+      <parteRelVtas>{{ item['parteRelVtas'] }}</parteRelVtas>{% endif %}{% if item['tpIdCliente'] == '06' %}
+      <tipoCliente>{{ item['tipoCliente'] }}</tipoCliente>
+      <denoCli>{{ item['denoCli'] }}</denoCli>{% endif %}
       <tipoComprobante>{{ item['tipoComprobante'] }}</tipoComprobante>
       <tipoEmision>{{ item['tipoEmision'] }}</tipoEmision>
       <numeroComprobantes>{{ item['numeroComprobantes'] }}</numeroComprobantes>
@@ -77,10 +79,10 @@
       <montoIva>{{ item['montoIva'] }}</montoIva>
       <montoIce>{{ item['montoIce'] }}</montoIce>
       <valorRetIva>{{ item['valorRetIva'] }}</valorRetIva>
-      <valorRetRenta>{{ item['valorRetRenta'] }}</valorRetRenta>
-      <formasDePago> {% for f in item['formasDePago'] %}
+      <valorRetRenta>{{ item['valorRetRenta'] }}</valorRetRenta>{% if item['tipoComprobante'] != '04' %}
+      <formasDePago>{% for f in item['formasDePago'] %}
         <formaPago>{{ f['formaPago'] }}</formaPago>{% endfor %}
-      </formasDePago>
+      </formasDePago>{% endif %}
     </detalleVentas>{% endfor %}
   </ventas>
   <ventasEstablecimiento>
@@ -90,7 +92,7 @@
       <ivaComp>{{ ivaComp }}</ivaComp>
     </ventaEst>
   </ventasEstablecimiento>
-  <anulados> {% for item in anulados %}
+  <anulados>{% for item in anulados %}
     <detalleAnulados>
       <tipoComprobante>{{ item['tipoComprobante'] }}</tipoComprobante>
       <establecimiento>{{ item['establecimiento'] }}</establecimiento>
@@ -98,6 +100,6 @@
       <secuencialInicio>{{ item['secuencialInicio'] }}</secuencialInicio>
       <secuencialFin>{{ item['secuencialFin'] }}</secuencialFin>
       <autorizacion>{{ item['autorizacion'] }}</autorizacion>
-    </detalleAnulados> {% endfor %}
+    </detalleAnulados>{% endfor %}
   </anulados>
 </iva>
