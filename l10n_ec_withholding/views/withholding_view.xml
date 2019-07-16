@@ -376,7 +376,6 @@
                         </group>
                         <field name="retention_ir" invisible="1"/>
                         <field name="retention_vat" invisible="1"/>
-
                         <notebook>
                             <page string="Invoice">
                                 <field context="{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type}" name="invoice_line">
@@ -411,7 +410,6 @@
                                     </div>
                                     <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-
                                     <field name="residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="reconciled" invisible="1"/>
                                 </group>
@@ -423,7 +421,6 @@
                                             <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                             <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
                                             <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
-
                                             <field invisible="True" name="base_amount"/>
                                             <field invisible="True" name="tax_amount"/>
                                             <field name="factor_base" invisible="True"/>
