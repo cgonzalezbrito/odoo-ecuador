@@ -129,7 +129,8 @@ class AccountWithdrawing(models.Model):
     date = fields.Date(
         'Fecha Emision',
         readonly=True,
-        states={'draft': [('readonly', False)]}, required=True
+        states={'draft': [('readonly', False)]},
+        required=True
     )
     tax_ids = fields.One2many(
         'account.invoice.tax',
@@ -227,7 +228,7 @@ class AccountWithdrawing(models.Model):
     #         if self.fisical_document:
     #             return
     #         inv_date = datetime.strptime(self.invoice_id.date_invoice, '%Y-%m-%d')  # noqa            
-    #         ret_date = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d') # noqa  #Date == Today MAYBE IT IS BETTER date - date_invoice
+    #         ret_date = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d') # noqa
     #         days = ret_date - inv_date
     #         if days.days not in list(range(0,6)):
     #             raise ValidationError(utils.CODE701)  # noqa

@@ -15,6 +15,8 @@ from openerp.exceptions import (
 )
 import openerp.addons.decimal_precision as dp
 
+from datetime import datetime, timedelta
+
 # mapping invoice type to journal type
 #TYPE2JOURNAL = {
 #    'out_invoice': 'sale',
@@ -238,7 +240,7 @@ class AccountInvoice(models.Model):
         string='Retencion creada',
         store=True,
         default=False,
-        #readonly=True
+        readonly=True
         )
     type = fields.Selection(
         [
@@ -353,7 +355,7 @@ class AccountInvoice(models.Model):
                 })
                 inv.retention_id.action_validate(wd_number)
                 return True
-
+            today = datetime.now() + timedelta(hours=-5)
             withdrawing_data = {
                 'partner_id': inv.partner_id.id,
                 'name': wd_number,
@@ -361,7 +363,7 @@ class AccountInvoice(models.Model):
                 'auth_inv_id': auth_ret.id,
                 'type': inv.type,
                 'in_type': 'ret_%s' % inv.type,
-                'date': inv.date_invoice,
+                'date': today,
                 'manual': False
             }
 

@@ -50,27 +50,7 @@
                     <field name="amount_total" string="Total a Pagar" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 </xpath>
             </field>
-        </record>
-
-        <!--
-            Customer Invoice
-            pendiente agregar boton de comprobante, retencion
-        -->
-
-        <record id="view_account_invoice_tree" model="ir.ui.view">
-            <field name="name">view.account.invoice.tree</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_tree"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='number']" position="replace">
-                    <field name="invoice_number"/>
-                </xpath>
-                <!--xpath expr="//field[@name='amount_total_signed']" position="before">
-                    <field name="amount_vat_cero" sum="Total Base 0"/>
-                    <field name="amount_vat" sum="Total Base 12"/>
-                </xpath-->
-            </field>
-        </record>
+        </record><>
 
         <record id="view_invoice_form" model="ir.ui.view">
             <field name="name">account.invoice.reference.cust.form</field>
