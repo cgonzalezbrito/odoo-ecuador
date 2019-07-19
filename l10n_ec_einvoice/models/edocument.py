@@ -126,7 +126,7 @@ class Edocument(models.AbstractModel):
             'tipoEmision': emission_code,
             'razonSocial': company.namerl,
             'nombreComercial': company.name,
-            'ruc': company.partner_id.identifier,
+            'ruc': company.partner_id.identifier.replace('-','').replace(' ',''),
             'claveAcceso':  access_key,
             'codDoc': utils.tipoDocumento[auth.type_id.code],
             'estab': auth.serie_entidad,

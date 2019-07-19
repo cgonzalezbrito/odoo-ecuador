@@ -92,7 +92,6 @@ class AccountInvoice(models.Model):
                 'valorModificacion': self.amount_total
             }
             infoFactura.update(notacredito)
-            
         else:
             formaPago = []
             if self.pos_payment_line_ids:
@@ -329,7 +328,7 @@ class AccountInvoice(models.Model):
             #attach = attach_ids[0]
             if obj.type == 'out_refund':
                 self.env.ref('l10n_ec_einvoice.report_erefund').render_qweb_pdf(self.ids)
-            else:    
+            else:
                 self.env.ref('l10n_ec_einvoice.report_einvoice').render_qweb_pdf(self.ids)
             pdf_name = str(self.clave_acceso) + '.pdf'
             attach_pdf = self.env['ir.attachment'].search([('name','=',pdf_name)])#self.add_attachment_pdf(pdf,self.clave_acceso)
