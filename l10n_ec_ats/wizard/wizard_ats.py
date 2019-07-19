@@ -110,6 +110,7 @@ class WizardAts(models.TransientModel):
                       FROM account_invoice \
                       WHERE type IN ('out_invoice', 'out_refund') \
                       AND state IN ('open','paid') \
+                      AND fisical_document IS TRUE \
                       AND date BETWEEN '%s' AND '%s'" % (
                         period.date_start,
                         period.date_stop
@@ -326,7 +327,7 @@ class WizardAts(models.TransientModel):
         for inv in self.env['account.invoice'].search(dmn):
             detalleventas = {
                 'tpIdCliente': tpIdCliente[inv.partner_id.type_id],
-                'idCliente': inv.partner_id.identifier,
+                'idCliente': inv.partner_id.identifier.replace('-','').replace(' ',''),
                 'parteRelVtas': 'NO',
                 'partner': inv.partner_id,
                 'auth': inv.auth_inv_id,
@@ -558,13 +559,13 @@ class WizardAts(models.TransientModel):
         ats.Anio = get_date_value(period.date_start, '%Y')
         ats.Mes = get_date_value(period.date_start, '%m')
         ats.numEstabRuc = self.num_estab_ruc.zfill(3)
-        ats.AtstotalVentas = '0.00'#'%.2f' % self._get_ventas(period)
-        ats.totalVentas = '0.00'#'%.2f' % self._get_ventas(period)
+        ats.AtstotalVentas = '%.2f' % self._get_ventas(period)
+        ats.totalVentas = '%.2f' % self._get_ventas(period)
         ats.codigoOperativo = 'IVA'
         ats.compras = self.read_compras(period)
         ats.ventas = self.read_ventas(period)
         ats.codEstab = self.num_estab_ruc
-        ats.ventasEstab = '0.00'#'%.2f' % self._get_ventas(period)
+        ats.ventasEstab = '%.2f' % self._get_ventas(period)
         ats.ivaComp = '0.00'
         ats.anulados = self.read_anulados(period)
         self._logger.info('ATS')
