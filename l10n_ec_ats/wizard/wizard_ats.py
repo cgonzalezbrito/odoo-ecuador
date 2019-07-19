@@ -305,6 +305,16 @@ class WizardAts(models.TransientModel):
 
     @api.multi
     def read_ventas(self, period):
+        def fix_chars(code):
+            special = [
+                [u'%', ' '],
+                [u'º', ' '],
+                [u'Ñ', 'N'],
+                [u'ñ', 'n']
+            ]
+            for f, r in special:
+                code = code.replace(f, r)
+            return code
         dmn = [
             ('state', 'in', ['open', 'paid']),
             ('date', '>=', period.date_start),
@@ -375,7 +385,7 @@ class WizardAts(models.TransientModel):
                 'idCliente': ruc,
                 'parteRelVtas': 'NO',
                 'tipoCliente': '01',
-                'denoCli': partner_temp.name,
+                'denoCli': fix_chars(partner_temp.name),
                 'tipoComprobante': '18',
                 'tipoEmision': auth_temp.is_electronic and 'E' or 'F',
                 'numeroComprobantes': numComp,
