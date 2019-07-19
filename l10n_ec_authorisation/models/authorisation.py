@@ -303,6 +303,7 @@ class AccountInvoice(models.Model):
         string='Factura Fisica',
         default=False,
         store=True,
+        readonly=True,
     )
     _sql_constraints = [
         (

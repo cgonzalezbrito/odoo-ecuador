@@ -121,6 +121,28 @@ class WizardAts(models.TransientModel):
         resultado = sum(map(lambda x: x[0] == 'out_refund' and x[1] * -1 or x[1], res))  # noqa
         return resultado
 
+    @api.model
+    def _get_ventas_estb(self, period):
+        ventas_esb = []
+        diarios = self.env['account.journal'].search([('type', '=', 'sale'),('auth_out_invoice_id.is_electronic','=',False)])
+        for diario in diarios:
+            sql_ventas = "SELECT type, sum(amount_vat+amount_vat_cero+amount_novat) AS base \
+                      FROM account_invoice \
+                      WHERE type IN ('out_invoice', 'out_refund') \
+                      AND state IN ('open','paid') \
+                      AND journal_id IN ('%s')  \
+                      AND date BETWEEN '%s' AND '%s'" % (
+                        diario.id,
+                        period.date_start,
+                        period.date_stop
+                        )
+            sql_ventas += " GROUP BY type"
+            self.env.cr.execute(sql_ventas)
+            res = self.env.cr.fetchall()
+            resultado = sum(map(lambda x: x[0] == 'out_refund' and x[1] * -1 or x[1], res))  # noqa
+            ventas_esb.append({'codEstab':diario.auth_out_invoice_id.serie_entidad, 'ventasEstab':resultado})
+        return ventas_esb
+
     def _get_ret_iva(self, invoice):
         """
         Return (valRetBien10, valRetServ20,
@@ -565,7 +587,7 @@ class WizardAts(models.TransientModel):
         ats.compras = self.read_compras(period)
         ats.ventas = self.read_ventas(period)
         ats.codEstab = self.num_estab_ruc
-        ats.ventasEstab = '%.2f' % self._get_ventas(period)
+        ats.ventasEstab = self._get_ventas_estb(period)
         ats.ivaComp = '0.00'
         ats.anulados = self.read_anulados(period)
         self._logger.info('ATS')

@@ -86,11 +86,11 @@
     </detalleVentas>{% endfor %}
   </ventas>
   <ventasEstablecimiento>
-    <ventaEst>
-      <codEstab>{{ codEstab }}</codEstab>
-      <ventasEstab>{{ ventasEstab }}</ventasEstab>
+    <ventaEst>{% for item in ventasEstab %}
+      <codEstab>{{ item.codEstab }}</codEstab>
+      <ventasEstab>{{ item.ventasEstab }}</ventasEstab>
       <ivaComp>{{ ivaComp }}</ivaComp>
-    </ventaEst>
+    </ventaEst>{% endfor %}
   </ventasEstablecimiento>
   <anulados>{% for item in anulados %}
     <detalleAnulados>
