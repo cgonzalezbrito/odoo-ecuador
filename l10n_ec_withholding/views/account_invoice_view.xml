@@ -4,7 +4,6 @@
         <!--
               Supplier Invoices
         -->
-
         <record id="invoice_supplier_form" model="ir.ui.view">
             <field name="name">account.invoice.supplier.form</field>
             <field name="model">account.invoice</field>
@@ -38,20 +37,23 @@
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="string">Proveedor</attribute>
                 </xpath>
-		            <xpath expr="//field[@name='amount_untaxed']" position="replace">
-	                  <field name="amount_pay" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-	              </xpath>
-	              <xpath expr="//field[@name='amount_tax']" position="after">
-	                  <field name="amount_tax_retention"/>
-	              </xpath>
+                <xpath expr="//field[@name='amount_untaxed']" position="replace">
+                    <field name="amount_pay" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </xpath>
+                <xpath expr="//field[@name='amount_tax']" position="after">
+                    <field name="amount_tax_retention"/>
+                </xpath>
                 <xpath expr="//field[@name='amount_total']" position="replace">
                     <!--field name="amount_pay" string="Total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="amount_tax_retention"/-->
                     <field name="amount_total" string="Total a Pagar" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 </xpath>
             </field>
-        </record><>
+        </record>
 
+        <!--
+              Customer Invoices
+        -->
         <record id="view_invoice_form" model="ir.ui.view">
             <field name="name">account.invoice.reference.cust.form</field>
             <field name="model">account.invoice</field>
@@ -66,12 +68,12 @@
                 <xpath expr="//field[@name='move_id']" position="after">
                     <field name="retention_id"/>
                 </xpath>
-		            <xpath expr="//field[@name='amount_untaxed']" position="replace">
-          		      <field name="amount_pay" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-        	      </xpath>
-        	      <xpath expr="//field[@name='amount_tax']" position="after">
-          		      <field name="amount_tax_retention"/>
-        	      </xpath>
+                <xpath expr="//field[@name='amount_untaxed']" position="replace">
+                    <field name="amount_pay" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </xpath>
+                <xpath expr="//field[@name='amount_tax']" position="after">
+                    <field name="amount_tax_retention"/>
+                </xpath>
                 <xpath expr="//field[@name='amount_total']" position="replace">
                     <field name="amount_pay" string="Total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="amount_tax_retention"/>
@@ -105,8 +107,7 @@
                 <form string="Manual Invoice Taxes">
                     <group>
                         <group>
-                            <field name="tax_id" required="1" domain="[('tax_group_id.code','in',['ret_ir','ret_vat_b','ret_vat_srv'])]"
-                                   options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="tax_id" required="1" domain="[('tax_group_id.code','in',['ret_ir','ret_vat_b','ret_vat_srv'])]" options="{'no_create': True, 'no_create_edit': True}"/>
                             <field name="name"/>
                             <field name="sequence"/>
                             <field name="account_id" groups="account.group_account_user"/>
