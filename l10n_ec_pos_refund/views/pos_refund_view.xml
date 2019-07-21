@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="refund_credit" type="object" class="oe_stat_button" icon="fa-usd" attrs="{'invisible': [('customer', '=', False)]}">
+                    <button name="compute_refund_credit" type="object" class="oe_stat_button" icon="fa-usd" attrs="{'invisible': [('customer', '=', False)]}">
                         <div class="o_form_field o_stat_info" modifiers="{}">
                             <span class="o_stat_value" modifiers="{}">
                                 <field name="refund_credit" widget="monetary" options="{'currency_field': 'currency_id'}"   modifiers="{'readonly':true}"/>
