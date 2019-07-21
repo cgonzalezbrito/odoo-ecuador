@@ -140,24 +140,6 @@ class AccountInvoice(models.Model):
         readonly=True,
         compute='_compute_amount'
     )
-    amount_untaxed = fields.Monetary(
-        string='Untaxed',
-        store=True,
-        readonly=True,
-        compute='_compute_amount'
-    )
-    amount_tax = fields.Monetary(
-        string='Tax',
-        store=True,
-        readonly=True,
-        compute='_compute_amount'
-    )
-    amount_total = fields.Monetary(
-        string='Total a Pagar',
-        store=True,
-        readonly=True,
-        compute='_compute_amount'
-    )
     amount_pay = fields.Monetary(
         string='Total',
         store=True,
