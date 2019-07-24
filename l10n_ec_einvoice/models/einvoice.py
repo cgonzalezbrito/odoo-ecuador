@@ -42,7 +42,7 @@ class AccountInvoice(models.Model):
             'obligadoContabilidad': company.forced_account,
             'tipoIdentificacionComprador': utils.tipoIdentificacion[partner.type_id],  # noqa
             'razonSocialComprador': partner.name,
-            'identificacionComprador': partner.identifier,
+            'identificacionComprador': partner.identifier.replace('-','').replace(' ',''),
             'totalSinImpuestos': '%.2f' % (invoice.amount_untaxed),
             'totalDescuento': '0.00',
             'propina': '0.00',
