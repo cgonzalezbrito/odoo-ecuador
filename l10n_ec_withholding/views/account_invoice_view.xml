@@ -4,8 +4,8 @@
         <!--
               Supplier Invoices
         -->
-        <record id="invoice_supplier_form" model="ir.ui.view">
-            <field name="name">account.invoice.supplier.form</field>
+        <record id="view_supplier_invoice_withholding_form" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.withholding.form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
@@ -53,8 +53,8 @@
         <!--
               Customer Invoices
         -->
-        <record id="view_invoice_form" model="ir.ui.view">
-            <field name="name">account.invoice.reference.cust.form</field>
+        <record id="view_invoice_withholding_form" model="ir.ui.view">
+            <field name="name">account.invoice.withholding.form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
