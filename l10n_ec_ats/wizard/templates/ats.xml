@@ -85,8 +85,8 @@
       </formasDePago>{% endif %}
     </detalleVentas>{% endfor %}
   </ventas>
-  <ventasEstablecimiento>
-    <ventaEst>{% for item in ventasEstab %}
+  <ventasEstablecimiento>{% for item in ventasEstab %}
+    <ventaEst>
       <codEstab>{{ item.codEstab }}</codEstab>
       <ventasEstab>{{ item.ventasEstab }}</ventasEstab>
       <ivaComp>{{ ivaComp }}</ivaComp>
