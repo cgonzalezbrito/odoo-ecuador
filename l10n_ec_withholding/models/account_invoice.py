@@ -5,15 +5,12 @@
 
 import logging
 
-from openerp import (
-    api,
-    fields,
-    models
-)
-from openerp.exceptions import (
+from odoo import api, fields, models
+
+from odoo.exceptions import (
     Warning as UserError
 )
-import openerp.addons.decimal_precision as dp
+import odoo.addons.decimal_precision as dp
 
 from datetime import datetime, timedelta
 
