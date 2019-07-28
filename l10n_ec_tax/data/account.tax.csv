@@ -35,15 +35,15 @@ account_tax507,507,,,ADQUISICIONES Y PAGOS (INCLUYE ACT FIJOS) GRAVADOS TARIFA 0
 account_tax508,508,,,ADQUISICIONES REALIZADAS A CONTRIBUYENTES RISE,purchase,vat,percent,0,0
 account_tax531,531,,,ADQUISICIONES NO OBJETO DE IVA,purchase,novat,percent,0,0
 account_tax532,532,,,ADQUISICIONES EXENTAS DEL PAGO DE IVA,purchase,novat,percent,0,0
-account_tax6091,609-10,,,RETENCIONES A LA EMPRESA DEL 10%,sale,ret_vat_srv,percent,-1.4,10
-account_tax6092,609-20,,,RETENCIONES A LA EMPRESA DEL 20%,sale,ret_vat_b,percent,-2.8,20
-account_tax6093,609-30,,,RETENCIONES A LA EMPRESA DEL 30%,sale,ret_vat_srv,percent,-4.2,30
-account_tax6094,609-70,,,RETENCIONES A LA EMPRESA DEL 70%,sale,ret_vat_srv,percent,-9.8,70
+account_tax6091,609-10,,,RETENCIONES A LA EMPRESA DEL 10%,sale,ret_vat_srv,percent,-1.2,10
+account_tax6092,609-20,,,RETENCIONES A LA EMPRESA DEL 20%,sale,ret_vat_b,percent,-2.4,20
+account_tax6093,609-30,,,RETENCIONES A LA EMPRESA DEL 30%,sale,ret_vat_srv,percent,-3.6,30
+account_tax6094,609-70,,,RETENCIONES A LA EMPRESA DEL 70%,sale,ret_vat_srv,percent,-8.4,70
 account_tax6095,609-100,,,RETENCIONES A LA EMPRESA DEL 100%,sale,ret_vat_b,percent,-12,100
-account_tax721,721,,,RETENCIONES DEL 10%,purchase,ret_vat_srv,percent,-1.4,10
-account_tax723,723,,,RETENCIONES DEL 20%,purchase,ret_vat_b,percent,-2.8,20
-account_tax725,725,,,RETENCIONES DEL 30%,purchase,ret_vat_srv,percent,-4.2,30
-account_tax726,726,,,RETENCIONES DEL 50%,purchase,ret_vat_srv,percent,-7,50
-account_tax727,727,,,RETENCIONES DEL 70%,purchase,ret_vat_srv,percent,-9.8,70
+account_tax721,721,,,RETENCIONES DEL 10%,purchase,ret_vat_srv,percent,-1.2,10
+account_tax723,723,,,RETENCIONES DEL 20%,purchase,ret_vat_b,percent,-2.4,20
+account_tax725,725,,,RETENCIONES DEL 30%,purchase,ret_vat_srv,percent,-3.6,30
+account_tax726,726,,,RETENCIONES DEL 50%,purchase,ret_vat_srv,percent,-6,50
+account_tax727,727,,,RETENCIONES DEL 70%,purchase,ret_vat_srv,percent,-8.4,70
 account_tax729,729,,,RETENCIONES DEL 100%,purchase,ret_vat_b,percent,-12,100
 account_tax_comp2,1,,,COMPENSACIONES 2%,sale,comp,percent,-2,2
