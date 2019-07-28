@@ -18,13 +18,13 @@ import openerp.addons.decimal_precision as dp
 from datetime import datetime, timedelta
 
 # mapping invoice type to journal type
-#TYPE2JOURNAL = {
+# TYPE2JOURNAL = {
 #    'out_invoice': 'sale',
 #    'in_invoice': 'purchase',
 #    'out_refund': 'sale_refund',
 #    'in_refund': 'purchase_refund',
 #    'liq_purchase': 'purchase'
-#}
+# }
 
 
 class AccountInvoice(models.Model):
@@ -38,16 +38,22 @@ class AccountInvoice(models.Model):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line_ids)  # noqa
         amount_manual = 0
         for line in self.tax_line_ids:
+            # Taxes
             if line.manual:
                 amount_manual += line.amount
             if line.tax_id.tax_group_id.code == 'vat':
                 self.amount_untaxed_vat12 += line.base
                 self.amount_tax_vat12 += line.amount
             elif line.tax_id.tax_group_id.code == 'vat0':
-                self.amount_vat_cero += line.base
+                self.amount_untaxed_vat0 += line.base
             elif line.tax_id.tax_group_id.code == 'novat':
-                self.amount_novat += line.base
-            elif line.tax_id.tax_group_id.code == 'no_ret_ir':
+                self.amount_untaxed_novat += line.base
+            elif line.tax_id.tax_group_id.code == 'ice':
+                self.amount_untaxed_ice += line.base
+                self.amount_tax_ice += line.amount
+
+            #   Retentions
+            if line.tax_id.tax_group_id.code == 'no_ret_ir':
                 self.amount_noret_ir += line.base
             elif line.tax_id.tax_group_id.code in ['ret_vat_b', 'ret_vat_srv', 'ret_ir', 'comp']:  # noqa
                 self.amount_tax_retention += line.amount
@@ -60,14 +66,14 @@ class AccountInvoice(models.Model):
                 elif line.tax_id.tax_group_id.code == 'ret_ir':
                     self.amount_tax_ret_ir += line.base
                     self.taxed_ret_ir += line.amount
-            elif line.tax_id.tax_group_id.code == 'ice':
-                self.amount_ice += line.amount
-        if self.amount_untaxed_vat12 == 0 and self.amount_vat_cero == 0:
-            # base vat not defined, amount_vat by default
-            self.amount_vat_cero = self.amount_untaxed
 
-        self.amount_untaxed = self.amount_untaxed_vat12
-        self.amount_tax = self.amount_tax_vat12
+        if self.amount_untaxed_vat12 == 0 and self.amount_untaxed_vat0 == 0:
+            # base vat not defined, amount_vat by default
+            self.amount_untaxed_vat0 = self.amount_untaxed
+
+        self.amount_untaxed = self.amount_untaxed_vat12 + self.amount_untaxed_vat0 + \
+            self.amount_untaxed_novat + self.amount_untaxed_ice
+        self.amount_tax = self.amount_tax_vat12 + self.amount_tax_ice
 
         self.amount_total = self.amount_untaxed + self.amount_tax + self.amount_tax_retention + amount_manual  # noqa
         self.amount_pay = self.amount_tax + self.amount_untaxed
@@ -90,13 +96,13 @@ class AccountInvoice(models.Model):
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
         company_id = self._context.get('company_id', self.env.user.company_id.id)  # noqa
         domain = [
-        #    ('type', 'in', filter(None, map(TYPE2JOURNAL.get, inv_types))),
+            #    ('type', 'in', filter(None, map(TYPE2JOURNAL.get, inv_types))),
             ('company_id', '=', company_id),
         ]
         return self.env['account.journal'].search(domain, limit=1)
 
     @api.multi
-    def print_move(self,data):
+    def print_move(self, data):
         # Método para imprimir comprobante contable
         return self.env.ref('l10n_ec_withholding.account_move_report').report_action(self, data=data)
 
@@ -132,7 +138,13 @@ class AccountInvoice(models.Model):
 
     PRECISION_DP = dp.get_precision('Account')
 
-    amount_ice = fields.Monetary(
+    amount_untaxed_ice = fields.Monetary(
+        string='Base ICE',
+        store=True,
+        readonly=True,
+        compute='_compute_amount'
+    )
+    amount_tax_ice = fields.Monetary(
         string='ICE',
         store=True,
         readonly=True,
@@ -204,13 +216,13 @@ class AccountInvoice(models.Model):
         readonly=True,
         compute='_compute_amount'
     )
-    amount_vat_cero = fields.Monetary(
+    amount_untaxed_vat0 = fields.Monetary(
         string='Base IVA 0%',
         store=True,
         readonly=True,
         compute='_compute_amount'
     )
-    amount_novat = fields.Monetary(
+    amount_untaxed_novat = fields.Monetary(
         string='Base No IVA',
         store=True,
         readonly=True,
@@ -227,13 +239,13 @@ class AccountInvoice(models.Model):
         string="Tiene Retención en IR",
         store=True,
         readonly=True
-        )
+    )
     withheld = fields.Boolean(
         string='Retencion creada',
         store=True,
         default=False,
         readonly=True
-        )
+    )
     type = fields.Selection(
         [
             ('out_invoice', 'Customer Invoice'),
@@ -421,4 +433,4 @@ class AccountInvoiceTax(models.Model):
         self.name = self.tax_id.description
         self.account_id = self.tax_id.account_id and self.tax_id.account_id.id
         self.base = self.retention_id.invoice_id.amount_untaxed
-        self.amount = self.tax_id.compute_all(self.retention_id.invoice_id.amount_untaxed)['taxes'][0]['amount'] # noqa
+        self.amount = self.tax_id.compute_all(self.retention_id.invoice_id.amount_untaxed)['taxes'][0]['amount']  # noqa
