@@ -41,8 +41,8 @@ class AccountInvoice(models.Model):
             if line.manual:
                 amount_manual += line.amount
             if line.tax_id.tax_group_id.code == 'vat':
-                self.amount_vat += line.base
-                self.amount_tax += line.amount
+                self.amount_untaxed_vat12 += line.base
+                self.amount_tax_vat12 += line.amount
             elif line.tax_id.tax_group_id.code == 'vat0':
                 self.amount_vat_cero += line.base
             elif line.tax_id.tax_group_id.code == 'novat':
@@ -62,9 +62,13 @@ class AccountInvoice(models.Model):
                     self.taxed_ret_ir += line.amount
             elif line.tax_id.tax_group_id.code == 'ice':
                 self.amount_ice += line.amount
-        if self.amount_vat == 0 and self.amount_vat_cero == 0:
+        if self.amount_untaxed_vat12 == 0 and self.amount_vat_cero == 0:
             # base vat not defined, amount_vat by default
             self.amount_vat_cero = self.amount_untaxed
+
+        self.amount_untaxed = self.amount_untaxed_vat12
+        self.amount_tax = self.amount_tax_vat12
+
         self.amount_total = self.amount_untaxed + self.amount_tax + self.amount_tax_retention + amount_manual  # noqa
         self.amount_pay = self.amount_tax + self.amount_untaxed
         # continue odoo code for *signed fields
@@ -134,8 +138,14 @@ class AccountInvoice(models.Model):
         readonly=True,
         compute='_compute_amount'
     )
-    amount_vat = fields.Monetary(
+    amount_untaxed_vat12 = fields.Monetary(
         string='Base 12 %',
+        store=True,
+        readonly=True,
+        compute='_compute_amount'
+    )
+    amount_tax_vat12 = fields.Monetary(
+        string='IVA 12 %',
         store=True,
         readonly=True,
         compute='_compute_amount'
