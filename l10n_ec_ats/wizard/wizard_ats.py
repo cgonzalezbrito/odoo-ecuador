@@ -105,7 +105,7 @@ class WizardAts(models.TransientModel):
             }
 
     @api.model
-    def _get_ventas(self, period):
+    def _get_ventas(self, period): #Need Probe
         sql_ventas = "SELECT type, sum(amount_vat+amount_vat_cero+amount_novat) AS base \
                       FROM account_invoice \
                       WHERE type IN ('out_invoice', 'out_refund') \
@@ -124,23 +124,31 @@ class WizardAts(models.TransientModel):
     @api.model
     def _get_ventas_estb(self, period):
         ventas_esb = []
-        diarios = self.env['account.journal'].search([('type', '=', 'sale'),('auth_out_invoice_id.is_electronic','=',False)])
+        establecimientos = []
+        diarios = self.env['account.journal'].search([('type', '=', 'sale'),('active','=',True)])
         for diario in diarios:
-            sql_ventas = "SELECT type, sum(amount_vat+amount_vat_cero+amount_novat) AS base \
-                      FROM account_invoice \
-                      WHERE type IN ('out_invoice', 'out_refund') \
-                      AND state IN ('open','paid') \
-                      AND journal_id IN ('%s')  \
-                      AND date BETWEEN '%s' AND '%s'" % (
-                        diario.id,
-                        period.date_start,
-                        period.date_stop
-                        )
-            sql_ventas += " GROUP BY type"
-            self.env.cr.execute(sql_ventas)
-            res = self.env.cr.fetchall()
-            resultado = sum(map(lambda x: x[0] == 'out_refund' and x[1] * -1 or x[1], res))  # noqa
-            ventas_esb.append({'codEstab':diario.auth_out_invoice_id.serie_entidad, 'ventasEstab':resultado})
+            if diario.auth_out_invoice_id.serie_entidad not in establecimientos:
+                establecimientos.append(diario.auth_out_invoice_id.serie_entidad)
+
+        for establecimiento in establecimientos:
+            diarios = self.env['account.journal'].search([('type', '=', 'sale'),('active','=',True),('auth_out_invoice_id.is_electronic','=',False),('auth_out_invoice_id.serie_entidad','=',establecimiento)])
+            resultado = 0
+            for diario in diarios:
+                sql_ventas = "SELECT type, sum(amount_vat+amount_vat_cero+amount_novat) AS base \
+                          FROM account_invoice \
+                          WHERE type IN ('out_invoice', 'out_refund') \
+                          AND state IN ('open','paid') \
+                          AND journal_id IN ('%s')  \
+                          AND date BETWEEN '%s' AND '%s'" % (
+                            diario.id,
+                            period.date_start,
+                            period.date_stop
+                            )
+                sql_ventas += " GROUP BY type"
+                self.env.cr.execute(sql_ventas)
+                res = self.env.cr.fetchall()
+                resultado += sum(map(lambda x: x[0] == 'out_refund' and x[1] * -1 or x[1], res))  # noqa
+            ventas_esb.append({'codEstab':establecimiento, 'ventasEstab':'%.2f' % round(resultado,2)})
         return ventas_esb
 
     def _get_ret_iva(self, invoice):
