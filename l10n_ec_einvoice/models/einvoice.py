@@ -46,7 +46,7 @@ class AccountInvoice(models.Model):
             'totalSinImpuestos': '%.2f' % (invoice.amount_untaxed),
             'totalDescuento': '0.00',
             'propina': '0.00',
-            'importeTotal': '{:.2f}'.format(invoice.amount_pay),
+            'importeTotal': '{:.2f}'.format(invoice.amount_total),
             'moneda': 'DOLAR',
             #'formaPago': invoice.epayment_ids.code,
             'valorRetIva': '{:.2f}'.format(invoice.taxed_ret_vatsrv+invoice.taxed_ret_vatb),  # noqa
@@ -124,7 +124,7 @@ class AccountInvoice(models.Model):
                 
                 pago = {
                     'codigo': '20',
-                    'monto': '{:.2f}'.format(invoice.amount_pay),
+                    'monto': '{:.2f}'.format(invoice.amount_total),
                     'plazo': str(plazo),
                     'unidadTiem': 'dias',
                 }
