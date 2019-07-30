@@ -105,7 +105,7 @@ class WizardAts(models.TransientModel):
             }
 
     @api.model
-    def _get_ventas(self, period): #Need Probe
+    def _get_ventas(self, period):
         sql_ventas = "SELECT type, sum(amount_vat+amount_vat_cero+amount_novat) AS base \
                       FROM account_invoice \
                       WHERE type IN ('out_invoice', 'out_refund') \
@@ -122,7 +122,7 @@ class WizardAts(models.TransientModel):
         return resultado
 
     @api.model
-    def _get_ventas_estb(self, period):
+    def _get_ventas_estb(self, period):  #Need Probe
         ventas_esb = []
         establecimientos = []
         diarios = self.env['account.journal'].search([('type', '=', 'sale'),('active','=',True)])
