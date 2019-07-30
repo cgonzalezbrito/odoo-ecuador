@@ -12,13 +12,17 @@
           <!--field name="report_template" ref="l10n_ec_einvoice.account_report_einvoice"/-->
           <field name="body_html">
             <![CDATA[
-            <p>Estimad@ ${ object.partner_id.name },
-
-            Adjunto encontrará su factura electrónica número ${ object.invoice_number }, con fecha
-            de emisión ${ object.date_invoice } por un total de ${ object.amount_total }. <br/><br/>
-
-            Saludos,<br/>
-            ${(object.company_id.name)}
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Estimad@ ${ object.partner_id.name },</p>
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Gracias por su compra en ${object.company_id.name}.<br></p>
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Adjunto encontrará su factura electrónica:</p>
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;text-align: center;"><b style="font-weight:bold;">NÚMERO</b>: ${ object.invoice_number }</p>
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;text-align: center;"><b style="font-weight:bold;">FECHA DE EMISIÓN: </b>${ object.date_invoice }</p>
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;text-align: center;"><b style="font-weight:bold;">FECHA DE AUTORIZACIÓN: </b>${object.fecha_autorizacion}<b style="font-weight:bold;"><br></b></p>
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;text-align: center;"><b style="font-weight:bold;">CLAVE DE ACCESO: </b>${object.clave_acceso}<b style="font-weight:bold;"><br></b></p>
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;text-align: center;"><b style="font-weight:bold;">TOTAL: </b><b style="font-weight:bold;"> </b>${ object.amount_total }</p>
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">&nbsp;<br> Saludos,<b style="font-weight:bold;"><br></b></p>
+            <p style="font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px 0px 9px; font-size: 13px; font-family: &quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif; text-align: left;"><b style="font-weight:bold;"> ${(object.company_id.name)} </b></p>
+            <p style="font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px 0px 9px; font-size: 13px; font-family: &quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif; text-align: left;"><br>${(object.company_id.report_header)} </p>
           ]]>
           </field>
        </record>

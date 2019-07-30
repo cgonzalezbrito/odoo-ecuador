@@ -98,7 +98,7 @@ class AccountInvoice(models.Model):
                 for pos_payment_id in self.pos_payment_line_ids:
                     pago = {
                         'codigo': pos_payment_id.code,
-                        'monto': pos_payment_id.payment_amount, 
+                        'monto': '{:.2f}'.format(float(pos_payment_id.payment_amount)), 
                     }
                     formaPago.append(pago)
                     self.payment_term = pos_payment_id.epayment_id.name
@@ -108,7 +108,7 @@ class AccountInvoice(models.Model):
                 for payment_id in self.payment_ids:
                     pago = {
                         'codigo': payment_id.journal_id.epayment_id.code,
-                        'monto': payment_id.amount, 
+                        'monto': '{:.2f}'.format(float(payment_id.amount)), 
                     }
                     formaPago.append(pago)
                     self.payment_term = payment_id.journal_id.epayment_id.name

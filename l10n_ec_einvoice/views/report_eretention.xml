@@ -106,7 +106,7 @@
                                 <span t-esc="line.group_id.name"/>
                             </div>
                             <div class="col-xs-1" style="padding-left: 0px; text-align: center;">
-                                <span t-esc="'%.2f' % (abs(line.tax_id.percent_report))"/>
+                                <span t-esc="line.tax_id.percent_report"/>
                             </div>
                             <div class="col-xs-1" style="padding-left: 0px; text-align: right;">
                                 <span t-esc="'%.2f' % (abs(line.amount))"/>
