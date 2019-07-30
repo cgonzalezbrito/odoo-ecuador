@@ -153,6 +153,7 @@
                     <header>
                         <button name="action_cancel" string="Anular" type="object" states="draft,done"/>
                         <button name="button_validate" string="Validar" class="oe_highlight" type="object" states="draft"/>
+                        <button name="retention_print" string="Imprimir Retención" type="object" states="done" class="btn btn-primary" icon="fa-print"/>
                         <button name="action_draft" string="Volver a Borrador" type="object" states="cancel"/>
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -168,6 +169,7 @@
                                 <field name="partner_id" domain="[('customer','=',True)]" options="{'no_create': True, 'no_create_edit': True}" attrs="{'required':[('to_cancel','=',False)]}" string="Cliente"/>
                                 <field name="name" placeholder="001001000234768"/>
                                 <field name="invoice_id" domain="[('partner_id','=',partner_id),('type','=','out_invoice'),('retention_id','=',False)]" options="{'no_create': True, 'no_create_edit': True}" attrs="{'required':[('to_cancel','=',False)], 'invisible':[('to_cancel','=',True)]}"/>
+                                <field name="auth_number" required="1"/>
                             </group>
                             <group>
                                 <field name="date"/>

@@ -202,6 +202,11 @@ class AccountWithdrawing(models.Model):
         states={'draft': [('readonly', False)]},
         default=lambda self: self.env['res.company']._company_default_get('account.invoice')  # noqa
         )
+    auth_number = fields.Char(
+        'Autorización',
+        readonly=True,
+        states=STATES_VALUE,
+        )
 
     _sql_constraints = [
         (
@@ -229,6 +234,21 @@ class AccountWithdrawing(models.Model):
     #         if days.days not in list(range(0,6)):
     #             raise ValidationError(utils.CODE701)  # noqa
 
+    @api.constrains('auth_number')
+    def check_reference(self):
+        """
+        Metodo que verifica la longitud de la autorizacion
+        10: documento fisico
+        35: factura electronica modo online
+        49: factura electronica modo offline
+        """
+        if self.type not in ['in_invoice', 'liq_purchase']:
+            return
+        if self.auth_number and len(self.auth_number) not in [10, 35, 49]:
+            raise UserError(
+                u'Debe ingresar 10, 35 o 49 dígitos según el documento.'
+            )
+            
     @api.onchange('name')
     @api.constrains('name')
     def _onchange_name(self):
