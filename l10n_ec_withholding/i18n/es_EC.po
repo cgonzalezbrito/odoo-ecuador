@@ -779,7 +779,7 @@ msgstr ""
 
 #. module: l10n_ec_withdrawing
 #: view:account.invoice:l10n_ec_withdrawing.view_retention_authinv_form
-#: field:account.invoice,amount_pay:0
+#: field:account.invoice,amount_total:0
 #: field:account.retention,amount_total:0
 msgid "Total"
 msgstr ""

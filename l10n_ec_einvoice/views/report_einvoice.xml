@@ -176,7 +176,7 @@
                                     <strong><span>TOTAL</span></strong>
                                 </div>
                                 <div class="col-xs-5" style="border-bottom: 1px solid darkgray;">
-                                    <span t-field="o.amount_pay"
+                                    <span t-field="o.amount_total"
                                           t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </div>
                             </div>

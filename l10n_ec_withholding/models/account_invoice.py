@@ -5,15 +5,12 @@
 
 import logging
 
-from openerp import (
-    api,
-    fields,
-    models
-)
-from openerp.exceptions import (
+from odoo import api, fields, models
+
+from odoo.exceptions import (
     Warning as UserError
 )
-import openerp.addons.decimal_precision as dp
+import odoo.addons.decimal_precision as dp
 
 from datetime import datetime, timedelta
 
@@ -42,8 +39,8 @@ class AccountInvoice(models.Model):
             if line.manual:
                 amount_manual += line.amount
             if line.tax_id.tax_group_id.code == 'vat':
-                self.amount_untaxed_vat12 += line.base
-                self.amount_tax_vat12 += line.amount
+                self.amount_untaxed_vat += line.base
+                self.amount_tax_vat += line.amount
             elif line.tax_id.tax_group_id.code == 'vat0':
                 self.amount_untaxed_vat0 += line.base
             elif line.tax_id.tax_group_id.code == 'novat':
@@ -67,16 +64,16 @@ class AccountInvoice(models.Model):
                     self.amount_tax_ret_ir += line.base
                     self.taxed_ret_ir += line.amount
 
-        if self.amount_untaxed_vat12 == 0 and self.amount_untaxed_vat0 == 0:
+        if self.amount_untaxed_vat == 0 and self.amount_untaxed_vat0 == 0:
             # base vat not defined, amount_vat by default
             self.amount_untaxed_vat0 = self.amount_untaxed
 
-        self.amount_untaxed = self.amount_untaxed_vat12 + self.amount_untaxed_vat0 + \
+        self.amount_untaxed = self.amount_untaxed_vat + self.amount_untaxed_vat0 + \
             self.amount_untaxed_novat + self.amount_untaxed_ice
-        self.amount_tax = self.amount_tax_vat12 + self.amount_tax_ice
+        self.amount_tax = self.amount_tax_vat + self.amount_tax_ice
 
         self.amount_total = self.amount_untaxed + self.amount_tax + self.amount_tax_retention + amount_manual  # noqa
-        self.amount_pay = self.amount_tax + self.amount_untaxed
+
         # continue odoo code for *signed fields
         amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
@@ -150,20 +147,14 @@ class AccountInvoice(models.Model):
         readonly=True,
         compute='_compute_amount'
     )
-    amount_untaxed_vat12 = fields.Monetary(
+    amount_untaxed_vat = fields.Monetary(
         string='Base 12 %',
         store=True,
         readonly=True,
         compute='_compute_amount'
     )
-    amount_tax_vat12 = fields.Monetary(
+    amount_tax_vat = fields.Monetary(
         string='IVA 12 %',
-        store=True,
-        readonly=True,
-        compute='_compute_amount'
-    )
-    amount_pay = fields.Monetary(
-        string='Total',
         store=True,
         readonly=True,
         compute='_compute_amount'
