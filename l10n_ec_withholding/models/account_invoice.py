@@ -49,7 +49,7 @@ class AccountInvoice(models.Model):
                 self.amount_untaxed_ice += line.base
                 self.amount_tax_ice += line.amount
 
-            #   Withholdings
+            #   Retentions
             if line.tax_id.tax_group_id.code == 'no_ret_ir':
                 self.amount_noret_ir += line.base
             elif line.tax_id.tax_group_id.code in ['ret_vat_b', 'ret_vat_srv', 'ret_ir', 'comp']:  # noqa
@@ -135,7 +135,6 @@ class AccountInvoice(models.Model):
 
     PRECISION_DP = dp.get_precision('Account')
 
-    #   Taxes
     amount_untaxed_ice = fields.Monetary(
         string='Base ICE',
         store=True,
@@ -160,20 +159,6 @@ class AccountInvoice(models.Model):
         readonly=True,
         compute='_compute_amount'
     )
-    amount_untaxed_vat0 = fields.Monetary(
-        string='Base IVA 0%',
-        store=True,
-        readonly=True,
-        compute='_compute_amount'
-    )
-    amount_untaxed_novat = fields.Monetary(
-        string='Base No IVA',
-        store=True,
-        readonly=True,
-        compute='_compute_amount'
-    )
-
-    #   Withholdings
     amount_noret_ir = fields.Monetary(
         string='Monto no sujeto a IR',
         store=True,
@@ -218,6 +203,18 @@ class AccountInvoice(models.Model):
     )
     taxed_ret_vatsrv = fields.Monetary(
         string='Retencion en IVA',
+        store=True,
+        readonly=True,
+        compute='_compute_amount'
+    )
+    amount_untaxed_vat0 = fields.Monetary(
+        string='Base IVA 0%',
+        store=True,
+        readonly=True,
+        compute='_compute_amount'
+    )
+    amount_untaxed_novat = fields.Monetary(
+        string='Base No IVA',
         store=True,
         readonly=True,
         compute='_compute_amount'
