@@ -86,7 +86,7 @@
                             <span><strong>Razón de Modificación</strong></span>
                         </div>
                         <div class="col-xs-4" style="padding-left: 0px; margin-bottom: 10px;">
-                            <span> DEVOLUCIÓN DE MERCADERIA </span>
+                            <span t-esc="o.refund_reason or 'DEVOLUCIÓN DE MERCADERÍA'"/>
                         </div>
                     </div>
                     <div class="row" style="background-color: silver; text-align: center; margin-bottom: 10px;">
