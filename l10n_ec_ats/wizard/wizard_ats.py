@@ -325,6 +325,9 @@ class WizardAts(models.TransientModel):
                         if pago not in formasDePago:
                             formasDePago.append(pago)
                     
+                if (not formasDePago):
+                    formasDePago.append({'formaPago' : '20'})
+                    
                 detallecompras.update({'formasDePago':formasDePago})
 
                 if (inv.amount_vat_cero + inv.amount_vat) >= 1000:
