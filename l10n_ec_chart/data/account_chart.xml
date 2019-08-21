@@ -319,6 +319,13 @@
             <field ref="account.data_account_type_stock" name="user_type_id"/>
             <field name="chart_template_id" ref="l10n_ec_chart.account_ec_chart_template"/>
         </record>
+        <record model="account.account.template" id="101040103">
+            <field name="name">EXISTENCIAS</field>
+            <field name="code">101040103</field>
+            <field name="reconcile" eval="False"/>
+            <field ref="account.data_account_type_current_assets" name="user_type_id"/>
+            <field name="chart_template_id" ref="l10n_ec_chart.account_ec_chart_template"/>
+        </record>
         <record model="account.account.template" id="102010101">
             <field name="name">EDIFICIOS</field>
             <field name="code">102010101</field>
