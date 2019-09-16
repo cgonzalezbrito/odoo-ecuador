@@ -4,11 +4,13 @@
     'name': "l10n_ec_pos",
     'version': '11.0.0.1',
     'description': """
-        Agregar campos del partner requeridos en el POS
+        Add required partner fields in POS. Create invoices when sales are validate. Credit Notes.
     """,
     'summary': """
-        Cambios en el POS para Ecuador.
-        Migrado por cgonzalezbrito.
+        epayment is an auxiliar field used for einvoces to be authorized even if pos session stills open. Generate access keys.
+        Create invoices whyn sales are validate. Credit Notes.
+        New credit journal. Code = NCRD.
+        Modified by cgonzalezbrito.
     """,
     'author': "Cristian Salamea",
     'website': "http://www.ayni.com.ec",
@@ -22,7 +24,9 @@
     ],
     'data': [
         'data/pos.xml',
-        'views.xml',
+        'data/credit.xml',
+        'views/pos_view.xml',
+        'views/pos_refund_view.xml',
         'ticket_layout.xml',
         'close_control_report.xml',
         'report_closing_control.xml',

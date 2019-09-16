@@ -325,6 +325,9 @@ class WizardAts(models.TransientModel):
                         if pago not in formasDePago:
                             formasDePago.append(pago)
                     
+                if (not formasDePago):
+                    formasDePago.append({'formaPago' : '20'})
+                    
                 detallecompras.update({'formasDePago':formasDePago})
 
                 if (inv.amount_vat_cero + inv.amount_vat) >= 1000:
@@ -498,6 +501,8 @@ class WizardAts(models.TransientModel):
                 'tpIdCliente': tpIdCliente[partner_temp.type_id],
                 'idCliente': ruc,
                 'parteRelVtas': 'NO',
+                'tipoCliente': '01',
+                'denoCli': fix_chars(inv.partner_id.name),
                 'tipoComprobante': inv.auth_inv_id.type_id.code,
                 'tipoEmision': auth_temp.is_electronic and 'E' or 'F',
                 'numeroComprobantes': numComp,

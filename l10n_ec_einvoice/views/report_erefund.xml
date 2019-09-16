@@ -147,7 +147,7 @@
                                     <span><strong>Subtotal diferente de 0%</strong></span>
                                 </div>
                                 <div class="col-xs-5" style="border-bottom: 1px solid darkgray;">
-                                <span t-field="o.amount_vat"
+                                <span t-field="o.amount_untaxed_vat"
                                       t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </div>
                             </div>
@@ -156,7 +156,7 @@
                                     <span><strong>Subtotal 0%</strong></span>
                                 </div>
                                 <div class="col-xs-5" style="border-bottom: 1px solid darkgray;">
-                                <span t-field="o.amount_vat_cero"
+                                <span t-field="o.amount_untaxed_vat0"
                                       t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </div>
                             </div>
@@ -165,7 +165,7 @@
                                     <span><strong>Subtotal No obj. de IVA</strong></span>
                                 </div>
                                 <div class="col-xs-5" style="border-bottom: 1px solid darkgray;">
-                                <span t-field="o.amount_novat"
+                                <span t-field="o.amount_untaxed_novat"
                                       t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </div>
                             </div>
@@ -183,7 +183,7 @@
                                     <span><strong>Total Descuento</strong></span>
                                 </div>
                                 <div class="col-xs-5" style="border-bottom: 1px solid darkgray;">
-                                <span t-esc="o.amount_novat"
+                                <span t-esc="o.amount_untaxed_novat"
                                       t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </div>
                             </div>
