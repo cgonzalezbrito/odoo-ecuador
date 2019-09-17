@@ -330,7 +330,7 @@ class WizardAts(models.TransientModel):
                     
                 detallecompras.update({'formasDePago':formasDePago})
 
-                if (inv.amount_vat_cero + inv.amount_vat) >= 1000:
+                if (inv.amount_vat_cero + inv.amount_vat + inv.amount_tax_vat) >= 1000:
                     detallecompras.update({'greater1000': formasDePago})
 
                 compras.append(detallecompras)
