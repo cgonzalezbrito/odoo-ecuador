@@ -10,3 +10,11 @@ Este módulo permite:
 
   * ingresar CI/RUC en POS
   * Configurar un partner por defecto
+
+ Depende de:
+ https://apps.odoo.com/apps/modules/11.0/account_invoice_refund_link/ o
+
+ https://github.com/xoes-oca/account_invoice_refund_link/tree/11.0
+
+ Con esta dependencia se enlaza las notas de crédito con las facturas.
+
