@@ -26,9 +26,9 @@
         'data/credit.xml',
         'views/pos_view.xml',
         'views/pos_refund_view.xml',
-        'ticket_layout.xml',
-        'close_control_report.xml',
-        'report_closing_control.xml',
+        'views/ticket_layout.xml',
+        'views/close_control_report.xml',
+        'views/report_closing_control.xml',
     ],
     'qweb': [
         'static/src/xml/l10n_ec_pos.xml',
