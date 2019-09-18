@@ -15,7 +15,7 @@ class AccountEpayment(models.Model):
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    default_partner_id = fields.Many2one('res.partner', 'Default Partner')
+    default_partner_id = fields.Many2one('res.partner', 'Default Partner', default=lambda self:self.env['res.partner'].search([('identifier','=','9999999999999'),('name','=','CONSUMIDOR FINAL'),]))
     sucursal = fields.Char(string="Dirección Sucursal")
     seq_access_key = fields.Many2one('ir.sequence', default=lambda self:self.env['ir.sequence'].search([('code','=','pos.edocuments.code')]))
 
