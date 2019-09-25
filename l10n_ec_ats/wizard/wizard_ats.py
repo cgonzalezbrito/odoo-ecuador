@@ -525,7 +525,8 @@ class WizardAts(models.TransientModel):
             ('state', '=', 'cancel'),
             ('date', '>=', period.date_start),
             ('date', '<=', period.date_stop),
-            ('type', 'in', ['out_invoice', 'liq_purchase'])
+            ('type', 'in', ['out_invoice', 'liq_purchase']),
+            ('auth_inv_id.is_electronic', '!=', True)
         ]
         anulados = []
         for inv in self.env['account.invoice'].search(dmn):
@@ -535,9 +536,9 @@ class WizardAts(models.TransientModel):
                 'tipoComprobante': auth.type_id.code,
                 'establecimiento': auth.serie_entidad,
                 'ptoEmision': auth.serie_emision,
-                'secuencialInicio': inv.invoice_number[6:9],
-                'secuencialFin': inv.invoice_number[6:9],
-                'autorizacion': aut
+                'secuencialInicio': auth.num_start,
+                'secuencialFin': auth.num_end,
+                'autorizacion': auth.name
             }
             anulados.append(detalleanulados)
 
