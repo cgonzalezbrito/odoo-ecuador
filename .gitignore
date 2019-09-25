@@ -54,6 +54,7 @@ docs/_build/
 # Additional addons
 *cbc
 *account_invoice_refund_link*
+asset/
 
 *.*~
 #*.*#
