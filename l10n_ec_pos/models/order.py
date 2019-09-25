@@ -15,7 +15,7 @@ class AccountEpayment(models.Model):
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    default_partner_id = fields.Many2one('res.partner', 'Default Partner')
+    default_partner_id = fields.Many2one('res.partner', 'Default Partner', default=lambda self:self.env['res.partner'].search([('identifier','=','9999999999999'),('name','=','CONSUMIDOR FINAL'),]))
     sucursal = fields.Char(string="Dirección Sucursal")
     seq_access_key = fields.Many2one('ir.sequence', default=lambda self:self.env['ir.sequence'].search([('code','=','pos.edocuments.code')]))
 
@@ -174,7 +174,6 @@ class PosOrder(models.Model):
                 order.sale_journal.sequence_number_next = order.sale_journal.auth_out_invoice_id.sequence_id.number_next_actual
                 
             order.invoice_id.reference = order.invoice_id.reference.zfill(9)
-            #order.invoice_id.date_invoice = order.date_order
             order.invoice_id.date_invoice = datetime.now() + timedelta(hours=-5)
 
             for statement_id in order.statement_ids:
@@ -187,8 +186,10 @@ class PosOrder(models.Model):
 
                 order.invoice_id.pos_payment_line_ids = [(0,0,pos_payment_line)]
 
-            order.access_key = order.get_access_key(order.sale_journal.id,order.invoice_id.date_invoice)
-            order.invoice_id.clave_acceso = order.access_key
+            # Create access key only if is_electronic journal
+            if order.sale_journal.auth_out_invoice_id.is_electronic:
+                order.access_key = order.get_access_key(order.sale_journal.id,order.invoice_id.date_invoice)
+                order.invoice_id.clave_acceso = order.access_key
             order.invoice_id.sudo().action_invoice_open()
             for statement_id in order.statement_ids:
                 if statement_id.journal_id.code == 'NCRD' and order.order_type == 'sale':
