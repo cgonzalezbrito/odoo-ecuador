@@ -347,7 +347,7 @@ class WizardAts(models.TransientModel):
                 [u'ñ', 'n']
             ]
             for f, r in special:
-                code = code.replace(f, r)
+                code = code.replace(f, r).replace('-','').replace(' ','')
             return code
         dmn = [
             ('state', 'in', ['open', 'paid']),
