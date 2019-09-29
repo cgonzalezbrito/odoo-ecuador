@@ -55,6 +55,8 @@ docs/_build/
 *cbc
 *account_invoice_refund_link*
 asset/
+custom_maintenance/
+telegram/
 
 *.*~
 #*.*#
