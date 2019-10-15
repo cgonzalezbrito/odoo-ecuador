@@ -347,6 +347,15 @@ class AccountInvoice(models.Model):
                 self.message_post(body=message)
 
     @api.multi
+    def action_delete_items(self):
+        for obj in self:
+            for line in obj.invoice_line_ids:
+                obj.write({
+                    'invoice_line_ids':[(2,line.id)]
+                })
+            
+
+    @api.multi
     def invoice_print(self):
         if self.type == 'out_refund':
             return self.env.ref('l10n_ec_einvoice.report_erefund').report_action(self)
