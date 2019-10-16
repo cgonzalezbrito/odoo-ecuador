@@ -14,7 +14,7 @@
 
     'author': "jfinlay@riseup.net",
     'website': "http://www.lalibre.net",
-    'version': '10.0.0.1',
+    'version': '11.0.0.1',
     'depends': [
         'base',
         'hr',
@@ -23,7 +23,7 @@
         'hr_holidays',
         'hr_recruitment',
         #'l10n_ec_sri',
-        'web_readonly_store'
+        #'web_readonly_store'
     ],
     'data': [
         'security/ir.model.access.csv',
