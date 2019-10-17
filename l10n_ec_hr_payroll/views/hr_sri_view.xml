@@ -11,7 +11,7 @@
             <field name="name">hr.sri.retention.form</field>
             <field name="model">hr.sri.retention</field>
             <field name="arch" type="xml">
-                <form string="SRI Retention tax table">
+                <form string="Tabla de retenciones SRI">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -29,7 +29,7 @@
                             </group>
                         </group>
                         <notebook colspan="4">
-                            <page string="Table">
+                            <page string="Tabla">
                                 <field name="line_ids" nolabel="1" colspan="4">
                                     <tree editable="bottom" string="Detail">
                                         <field name="basic_fraction" />
@@ -39,10 +39,10 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Maximum Deductible">
+                            <page string="Maximo Deducible">
                                 <field name="projection_ids" nolabel="1" />
                             </page>
-                            <page string="Exoneration's">
+                            <page string="Exoneración">
                                 <group>
                                     <field name="old_age"/>
                                     <field name="exoneration_ids" nolabel="1" colspan="4">
@@ -64,7 +64,7 @@
             <field name="name">hr.sri.retention.view.tree</field>
             <field name="model">hr.sri.retention</field>
             <field name="arch" type="xml">
-                <tree string="SRI Retention tax">
+                <tree string="Retenciones SRI">
                     <field name="name" select="1" />
                     <field name="year" select="1" />
                 </tree>
@@ -86,14 +86,14 @@
 			<field name="name">l10n.ec.sri.deduction.form</field>
 			<field name="model">hr.sri.deduction</field>
 			<field name="arch" type="xml">
-				<form string="Tax Rent Deductions">
+				<form string="Deducciones de Impuesto a la Renta">
                     <sheet>
                         <group>
 					        <field name="code" select="1" />
 					        <field name="name" select="1" />
                         </group>
 					    <newline />
-					    <group string="Description" colspan="4">
+					    <group string="Descripción" colspan="4">
 						    <field name="description" nolabel="1" select="1" />
 					    </group>
                     </sheet>

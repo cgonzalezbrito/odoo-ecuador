@@ -9,9 +9,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="replace" >
                     <field name="name" class="oe_read_only" />
-                    <field name="lastname" placeholder="Father's Lastname" class="oe_edit_only" />
-                    <field name="second_lastname" placeholder="Mother's Lastname" class="oe_edit_only" />
-                    <field name="names" placeholder="Name's" class="oe_edit_only" />
+                    <field name="lastname" placeholder="Apellido paterno" class="oe_edit_only" />
+                    <field name="second_lastname" placeholder="Apellido materno" class="oe_edit_only" />
+                    <field name="names" placeholder="Nombres" class="oe_edit_only" />
                 </xpath>
                 <xpath expr="//field[@name='job_id']" position="after" >
                     <field name="flag" invisible="1" />
@@ -28,7 +28,7 @@
                 </xpath>
                 <xpath expr="//field[@name='address_home_id']" position="attributes">
                     <attribute name="required">1</attribute>
-                    <attribute name="domain">[('vat', '!=', False),('vat', 'in', [identification_id, passport_id])]</attribute>
+                    <!--attribute name="domain">[('vat', '!=', False),('vat', 'in', [identification_id, passport_id])]</attribute-->
                     <attribute name="context">"{'show_address': 1, 'employee_name': name, 'employee_identification': identification_id, 'employee_passport': passport_id}"</attribute>
                 </xpath>
                 <xpath expr="//field[@name='birthday']" position="attributes">
@@ -39,7 +39,7 @@
                     <field name="old_age" invisible="1"/>
                 </xpath>
                 <xpath expr="//notebook" position="inside">
-                    <page string="Family Responsibilities">
+                    <page string="Responsabilidades Familiares">
                         <field name="family_ids" >
                             <tree string="Family Responsibilities">
                                 <field name="relation" />
