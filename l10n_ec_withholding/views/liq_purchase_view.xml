@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_liq_purchase_form" model="ir.ui.view">
+            <field name="name">account.liq.purchase.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <!--field name="type">form</field-->
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="domain"> "['|',('customer','in',{'out_invoice':[True]}.get(type,[])),('supplier','in',{'liq_purchase':[True]}.get(type,[])),('company_id','=',company_id)]"</attribute>
+                </xpath>
+                <xpath expr="//field[@name='journal_id']" position="attributes">
+                    <attribute name="domain">"[('type','in',{'out_invoice':['sale'],'out_refund':['sale'],'in_refund':['purchase'],'in_invoice':['purchase'],'liq_purchase':['purchase']}.get(type,[])),('company_id','=',company_id)]"</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            Liquid Purchase Action Window
+        -->
+
+        <record id="action_liq_purchase_tree" model="ir.actions.act_window">
+            <field name="name">Liquidaciones de Compra</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account.invoice_tree"/>
+            <field name="context">{'type':'liq_purchase', 'journal_type': 'purchase'}</field>
+            <field name="domain">[('type','=','liq_purchase')]</field>
+        </record>
+
+        <record id="action_liq_purchase_tree_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_liq_purchase_tree"/>
+        </record>
+
+        <record id="action_liq_purchase_tree_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_liq_purchase_form"/>
+            <field name="act_window_id" ref="action_liq_purchase_tree"/>
+        </record>
+
+        <!--
+            Liquid Purchase Menu
+        -->
+
+        <menuitem action="action_liq_purchase_tree" id="menu_action_liq_purchase" parent="account.menu_finance_payables_documents"/>
+
+    </data>
+</odoo>
