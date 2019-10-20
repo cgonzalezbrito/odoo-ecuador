@@ -24,7 +24,13 @@
 		                placeholder="Documentos para Retenciones"
 		                domain="[('in_type','=','internal')]"
 		                context="{'default_in_type': 'internal'}"
-				        attrs="{'invisible': [('type','!=','purchase')], 'required': [('type','=','purchase')]}"/>
+				        attrs="{'invisible': [('type','!=','purchase')]}"/>
+				    <field name="auth_liq_purcha_id"
+		                string="Liquidaciones de Compra"
+		                placeholder="Liquidaciones de Compra de bienes y prestación de servicios"
+		                domain="[('in_type','=','internal')]"
+		                context="{'default_in_type': 'internal'}"
+				        attrs="{'invisible': [('type','!=','purchase')]}"/>
 	        	</field>
 		    </field>
 		</record>
@@ -41,11 +47,9 @@
 		        <field name="fiscal_position_id" position="after">
 		        	<field name="auth_inv_id" domain="[('in_type','=','internal')]"
 		                required="1" options="{'no_create':True, 'no_create_edit': True}"/>
-		       	</field>
-		        <field name="fiscal_position_id" position="after">
-		        	<field name="reference" string="Número de Factura"/>
+		            <field name="reference" string="Número de Factura"/>
 		        	<field name="fisical_document" string="Factura Física" invisible="True"/>
-		        </field>
+		       	</field>
 		        <field name="number" position="replace">
 		        	<field name="invoice_number" class="oe_inline"/>
 		        </field>

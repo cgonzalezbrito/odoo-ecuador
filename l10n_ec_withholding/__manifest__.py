@@ -29,5 +29,6 @@
         'views/report_account_move.xml',
         'views/reports.xml',
         'views/withholding_view.xml',
+        'views/liq_purchase_view.xml',
     ]
 }
