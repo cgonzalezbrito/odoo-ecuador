@@ -559,9 +559,9 @@ class WizardAts(models.TransientModel):
                 'tipoComprobante': auth.type_id.code,
                 'establecimiento': auth.serie_entidad,
                 'ptoEmision': auth.serie_emision,
-                'secuencialInicio': ret.name[6:9],
-                'secuencialFin': ret.name[6:9],
-                'autorizacion': aut
+                'secuencialInicio': auth.num_start,
+                'secuencialFin': auth.num_end,
+                'autorizacion': auth.name
             }
             anulados.append(detalleanulados)
         return anulados
