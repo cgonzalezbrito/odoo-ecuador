@@ -6,8 +6,8 @@
       <field name="model">res.company</field>
       <field name="inherit_id" ref="base.view_company_form"/>
       <field name="arch" type="xml">
-        <xpath expr="//field[@name='sequence']" position="after">
-          <page string="Human resources">
+        <notebook position="inside">
+          <page string="Recursos Humanos">
             <group colspan="4" cols="2">
               <field name="basic_wage"/>
               <field name="iess_personal"/>
@@ -17,7 +17,7 @@
               <field name="default_payroll_journal_id"/>
             </group>
           </page>
-        </xpath>
+        </notebook>
       </field>
     </record>
   </data>

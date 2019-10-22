@@ -129,6 +129,8 @@
                         string="Generar Doc. Electrónica" class="oe_highlight"/>
                 <button name="action_send_einvoice_email" type="object" attrs="{'invisible':[('to_send_einvoice','!=',True)]}"
                         string="Enviar Correo Electrónico" class="oe_highlight"/>
+                <button name="action_delete_items" type="object" attrs="{'invisible':['|',('state','!=','draft'),('type','!=','out_refund')]}"
+                        string="Borrar Items" class="oe_highlight"/>
             </xpath>
             <notebook>
               <page string="Pagos">
