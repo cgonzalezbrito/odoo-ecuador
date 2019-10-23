@@ -172,17 +172,6 @@ odoo.define('l10n_ec_pos', function(require) {
         },
     });
 
-    
-    screens.PaymentScreenWidget.include({
-        
-        customer_changed: function() {
-            var client = this.pos.get_client();
-            this.$('.js_customer_name').text( client ? client.name : _t('Customer') ); 
-            console.log(client.refund_credit);
-            this.$('.js_customer_credit').text(client.refund_credit)
-        },
-    });
-
     for (var i=0; i<pos_models.length; i++){
         var model = pos_models[i];
         if (model.model === 'res.partner') {
