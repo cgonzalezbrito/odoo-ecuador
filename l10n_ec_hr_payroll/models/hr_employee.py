@@ -83,7 +83,7 @@ class HrEmployee(models.Model):
     lastname = fields.Char(_('Lastname'), required=True)
     second_lastname = fields.Char(_('Second Lastname'))
     flag = fields.Boolean(_('Job Change'))
-    age = fields.Integer(compute=_check_age, string=_('Age'))
+    age = fields.Integer(compute=_check_age, string=_('Edad'))
     old_age = fields.Boolean(
         compute=_check_age, string=("Old Age"),
         store=False, oldname='tercera_edad'
@@ -92,10 +92,10 @@ class HrEmployee(models.Model):
         'Department'), related='job_id.department_id', readonly=True)
     parent_id = fields.Many2one('hr.employee', string=_(
         'Manager'), related='department_id.manager_id', readonly=True)
-    disability = fields.Boolean(_('Disability'))
+    disability = fields.Boolean(_('Discapacidad'))
     conadis_id = fields.Char(_('CONADIS No'))
-    disability_type = fields.Char(_('Disability Type'))
-    disability_percent = fields.Float(_('Disability Percent'))
+    disability_type = fields.Char(_('Tipo de Discapacidad'))
+    disability_percent = fields.Float(_('Porcentaje'))
     family_ids = fields.One2many('hr.family', 'employee_id', string=_('Family'))
     children = fields.Integer(compute=_get_children, string="Children", store=True)
     marital = fields.Selection(selection_add=[('union_fact', _('Union of Fact'))])

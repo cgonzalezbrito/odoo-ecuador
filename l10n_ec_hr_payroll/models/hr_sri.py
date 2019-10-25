@@ -32,7 +32,7 @@ class HrSriRetention(models.Model):
     year = fields.Char(string=_('Year'), default=_default_year, required=True)
     active = fields.Boolean(string=_('Active'), default=True)
     line_ids = fields.One2many('hr.sri.retention.line', 'ret_id', string=_('Details'))
-    max_deductible = fields.Float(string=_('Maximum deductible'), default=0.0)
+    max_deductible = fields.Float(string=_('Maximo Deducible'), default=0.0)
     projection_ids = fields.One2many('hr.sri.projection', 'ret_id', string=_('Projections'))
     old_age = fields.Float(string=_('Exoneration for the elderly'), required=True)
     exoneration_ids = fields.One2many('hr.sri.exoneration.line',
@@ -45,7 +45,7 @@ class HrSriRetentionLine(models.Model):
     _rec_name = 'basic_fraction'
     _order = 'basic_fraction asc'
 
-    basic_fraction = fields.Float(string=_('Basic Fraction'), required=True, default=0.0)
+    basic_fraction = fields.Float(string=_('Fraccion Básica'), required=True, default=0.0)
     excess_up = fields.Float(string=_('Excess Up'), required=True, default=0.0)
     basic_fraction_tax = fields.Integer(string=_('Basic Fraction Tax'), required=True, default=0)
     percent = fields.Integer(string=_('Excess Fraction (%)'), required=True, default=0)

@@ -43,30 +43,30 @@ class HrFamily(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string=_('Employee'))
     name = fields.Char(_('Name'), required=True)
-    birthday = fields.Date(_('Birthday'), required=True)
-    age = fields.Integer(compute=_compute_age, string=_('Age'), store=True)
-    relation = fields.Selection([('spouse', _('Spouse')),
-                                 ('child', _('Child')),
-                                 ('father', _('Father')),
-                                 ('mother', _('Mother')),
-                                 ('uncle', _('Uncle')),
-                                 ('brother', _('Brother')),
-                                 ('nephew', _('Nephew')),
-                                 ('other', 'Other')], string=_('Relation'), required=True)
-    other = fields.Char(_('Other'))
-    date_marriage = fields.Date(_('Date Of Marriage'))
-    years_marriage = fields.Integer(compute=_compute_age, string=_('Years Of Marriage'), store=True)
-    gender = fields.Selection([('male', _('Male')),
-                               ('female', _('Female')),
-                               ('other', _('Other'))], string=_('Gender'))
-    identification_id = fields.Char(_('Identification No'))
-    passport_id = fields.Char(_('Passport No'))
-    disability = fields.Boolean(_('Disability'))
+    birthday = fields.Date(_('Fecha de Nacimiento'), required=True)
+    age = fields.Integer(compute=_compute_age, string=_('Edad'), store=True)
+    relation = fields.Selection([('spouse', _('Conyugue')),
+                                 ('child', _('Hijo/a')),
+                                 ('father', _('Padre')),
+                                 ('mother', _('Madre')),
+                                 ('uncle', _('Tío/a')),
+                                 ('brother', _('Hermano/a')),
+                                 ('nephew', _('Sobrino/a')),
+                                 ('other', 'Otro')], string=_('Relación'), required=True)
+    other = fields.Char(_('Otro'))
+    date_marriage = fields.Date(_('Fecha de Matrimonio'))
+    years_marriage = fields.Integer(compute=_compute_age, string=_('Años de casdo'), store=True)
+    gender = fields.Selection([('male', _('Masculino')),
+                               ('female', _('Femenino')),
+                               ('other', _('Otro'))], string=_('Género'))
+    identification_id = fields.Char(_('Identificación No'))
+    passport_id = fields.Char(_('Pasaporte No'))
+    disability = fields.Boolean(_('Discapacidad'))
     conadis_id = fields.Char(_('CONADIS No'))
-    disability_type = fields.Char(_('Disability Type'))
-    disability_percent = fields.Float(_('Disability Percent'))
-    guardianship = fields.Boolean(_('Guardianship'))
-    phone = fields.Char(_('Contact Number'))
+    disability_type = fields.Char(_('Tipo de Discapacidad'))
+    disability_percent = fields.Float(_('Porcentaje'))
+    guardianship = fields.Boolean(_('Custodia'))
+    phone = fields.Char(_('Número de contacto'))
 
     @api.constrains('identification_id', 'passport_id')
     def _check_identification_number(self):

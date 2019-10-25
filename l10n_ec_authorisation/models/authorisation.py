@@ -219,7 +219,11 @@ class AccountJournal(models.Model):
     )
     auth_retention_id = fields.Many2one(
         'account.authorisation',
-        'Para Retenciones'
+        'Secuencia Retenciones'
+    )
+    auth_liq_purcha_id = fields.Many2one(
+        'account.authorisation',
+        'Secuencia Liquidaciones de Compra'
     )
 
 
@@ -236,6 +240,8 @@ class AccountInvoice(models.Model):
                 self.auth_inv_id = self.journal_id.auth_out_invoice_id
             elif self.type == 'out_refund':
                 self.auth_inv_id = self.journal_id.auth_out_refund_id
+            elif self.type == 'liq_purchase':
+                self.auth_inv_id = self.journal_id.auth_liq_purcha_id
             self.auth_number = not self.auth_inv_id.is_electronic and self.auth_inv_id.name  # noqa
             number = '{0}'.format(
                 str(self.auth_inv_id.sequence_id.number_next_actual).zfill(9)

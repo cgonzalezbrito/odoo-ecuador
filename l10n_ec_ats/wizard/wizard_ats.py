@@ -325,10 +325,13 @@ class WizardAts(models.TransientModel):
                         if pago not in formasDePago:
                             formasDePago.append(pago)
                     
+                if (not formasDePago):
+                    formasDePago.append({'formaPago' : '20'})
+                    
                 detallecompras.update({'formasDePago':formasDePago})
 
-                if (inv.amount_vat_cero + inv.amount_vat) >= 1000:
-                    detallecompras.update({'greater1000': formasDePago})
+                if (inv.amount_vat_cero + inv.amount_vat + inv.amount_tax_vat) >= 1000:
+                    detallecompras.update({'greater1000': formasDePago or '20'})
 
                 compras.append(detallecompras)
 
@@ -344,7 +347,7 @@ class WizardAts(models.TransientModel):
                 [u'ñ', 'n']
             ]
             for f, r in special:
-                code = code.replace(f, r)
+                code = code.replace(f, r).replace('-','').replace(' ','')
             return code
         dmn = [
             ('state', 'in', ['open', 'paid']),
@@ -380,6 +383,9 @@ class WizardAts(models.TransientModel):
                     pago = {'formaPago' : payment_id.journal_id.epayment_id.code}
                     if pago not in formasDePago:
                         formasDePago.append(pago)
+
+            if not formasDePago:
+                formasDePago.append({'formaPago' : '20'})
 
             detalleventas.update({'formasDePago':formasDePago})
             ventas.append(detalleventas)
@@ -498,6 +504,8 @@ class WizardAts(models.TransientModel):
                 'tpIdCliente': tpIdCliente[partner_temp.type_id],
                 'idCliente': ruc,
                 'parteRelVtas': 'NO',
+                'tipoCliente': '01',
+                'denoCli': fix_chars(inv.partner_id.name),
                 'tipoComprobante': inv.auth_inv_id.type_id.code,
                 'tipoEmision': auth_temp.is_electronic and 'E' or 'F',
                 'numeroComprobantes': numComp,
@@ -520,7 +528,8 @@ class WizardAts(models.TransientModel):
             ('state', '=', 'cancel'),
             ('date', '>=', period.date_start),
             ('date', '<=', period.date_stop),
-            ('type', 'in', ['out_invoice', 'liq_purchase'])
+            ('type', 'in', ['out_invoice', 'liq_purchase']),
+            ('auth_inv_id.is_electronic', '!=', True)
         ]
         anulados = []
         for inv in self.env['account.invoice'].search(dmn):
@@ -530,9 +539,9 @@ class WizardAts(models.TransientModel):
                 'tipoComprobante': auth.type_id.code,
                 'establecimiento': auth.serie_entidad,
                 'ptoEmision': auth.serie_emision,
-                'secuencialInicio': inv.invoice_number[6:9],
-                'secuencialFin': inv.invoice_number[6:9],
-                'autorizacion': aut
+                'secuencialInicio': auth.num_start,
+                'secuencialFin': auth.num_end,
+                'autorizacion': auth.name
             }
             anulados.append(detalleanulados)
 
@@ -540,18 +549,19 @@ class WizardAts(models.TransientModel):
             ('state', '=', 'cancel'),
             ('date', '>=', period.date_start),
             ('date', '<=', period.date_stop),
-            ('in_type', '=', 'ret_in_invoice')
+            ('in_type', '=', 'ret_in_invoice'),
+            ('auth_inv_id.is_electronic', '!=', True)
         ]
         for ret in self.env['account.retention'].search(dmn_ret):
-            auth = ret.auth_id
-            aut = auth.is_electronic and inv.numero_autorizacion or auth.name
+            auth = ret.auth_inv_id
+            aut = auth.is_electronic and ret.numero_autorizacion or auth.name
             detalleanulados = {
                 'tipoComprobante': auth.type_id.code,
                 'establecimiento': auth.serie_entidad,
                 'ptoEmision': auth.serie_emision,
-                'secuencialInicio': ret.name[6:9],
-                'secuencialFin': ret.name[6:9],
-                'autorizacion': aut
+                'secuencialInicio': auth.num_start,
+                'secuencialFin': auth.num_end,
+                'autorizacion': auth.name
             }
             anulados.append(detalleanulados)
         return anulados

@@ -4,11 +4,12 @@
     'name': "l10n_ec_pos",
     'version': '11.0.0.1',
     'description': """
-        Agregar campos del partner requeridos en el POS
+        Add required partner fields in POS. Create invoices when sales are validate. Credit Notes.
     """,
     'summary': """
-        Cambios en el POS para Ecuador.
-        Migrado por cgonzalezbrito.
+        Generate access keys.
+        Create invoices when sales are validate. Credit Notes.
+        New credit journal. Code = NCRD.
     """,
     'author': "Cristian Salamea",
     'website': "http://www.ayni.com.ec",
@@ -18,14 +19,15 @@
         'point_of_sale',
         'l10n_ec_authorisation',
         'account_invoice_refund_link',
-        'l10n_ec_pos_refund'
     ],
     'data': [
         'data/pos.xml',
-        'views.xml',
-        'ticket_layout.xml',
-        'close_control_report.xml',
-        'report_closing_control.xml',
+        'data/credit.xml',
+        'views/pos_view.xml',
+        'views/pos_refund_view.xml',
+        'views/ticket_layout.xml',
+        'views/close_control_report.xml',
+        'views/report_closing_control.xml',
     ],
     'qweb': [
         'static/src/xml/l10n_ec_pos.xml',

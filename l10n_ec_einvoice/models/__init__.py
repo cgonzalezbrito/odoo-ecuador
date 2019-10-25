@@ -6,3 +6,4 @@ from . import company
 from . import edocument
 from . import einvoice
 from . import eretention
+from . import eliqurchase

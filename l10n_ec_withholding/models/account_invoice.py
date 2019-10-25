@@ -15,13 +15,13 @@ import odoo.addons.decimal_precision as dp
 from datetime import datetime, timedelta
 
 # mapping invoice type to journal type
-# TYPE2JOURNAL = {
-#    'out_invoice': 'sale',
-#    'in_invoice': 'purchase',
-#    'out_refund': 'sale_refund',
-#    'in_refund': 'purchase_refund',
-#    'liq_purchase': 'purchase'
-# }
+TYPE2JOURNAL = {
+   'out_invoice': ['sale'],
+   'in_invoice': ['purchase'],
+   'out_refund': ['sale_refund'],
+   'in_refund': ['purchase_refund'],
+   'liq_purchase': ['purchase']
+}
 
 
 class AccountInvoice(models.Model):
@@ -93,7 +93,7 @@ class AccountInvoice(models.Model):
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
         company_id = self._context.get('company_id', self.env.user.company_id.id)  # noqa
         domain = [
-            #    ('type', 'in', filter(None, map(TYPE2JOURNAL.get, inv_types))),
+            ('type', 'in', [filter(None,map(TYPE2JOURNAL.get, inv_types))]),
             ('company_id', '=', company_id),
         ]
         return self.env['account.journal'].search(domain, limit=1)

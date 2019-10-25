@@ -23,7 +23,8 @@ class AccountInvoice(models.Model):
     _logger = logging.getLogger('account.edocument')
     TEMPLATES = {
         'out_invoice': 'out_invoice.xml',
-        'out_refund': 'out_refund.xml'
+        'out_refund': 'out_refund.xml',
+        'liq_purchase': 'liq_purchase.xml'
     }
 
     def _info_factura(self, invoice):
@@ -345,6 +346,15 @@ class AccountInvoice(models.Model):
             """ 
             if not self.to_send_einvoice:
                 self.message_post(body=message)
+
+    @api.multi
+    def action_delete_items(self):
+        for obj in self:
+            for line in obj.invoice_line_ids:
+                obj.write({
+                    'invoice_line_ids':[(2,line.id)]
+                })
+            
 
     @api.multi
     def invoice_print(self):
