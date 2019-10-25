@@ -160,6 +160,9 @@ class PosOrder(models.Model):
     def action_pos_order_invoice(self):
         super(PosOrder, self).action_pos_order_invoice()
         for order in self:
+            # if not order.partner_id:
+            #     partner = self.env['res.partner'].search([('identifier','=','9999999999999')], limit=1)
+            #     order.partner_id = partner[0]
             if order.order_type  == 'refund':
                 order.invoice_id.auth_inv_id = order.sale_journal.auth_out_refund_id
                 order.invoice_id.reference = order.sale_journal.auth_out_refund_id.sequence_id.number_next_actual

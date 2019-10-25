@@ -331,7 +331,7 @@ class WizardAts(models.TransientModel):
                 detallecompras.update({'formasDePago':formasDePago})
 
                 if (inv.amount_vat_cero + inv.amount_vat + inv.amount_tax_vat) >= 1000:
-                    detallecompras.update({'greater1000': formasDePago})
+                    detallecompras.update({'greater1000': formasDePago or '20'})
 
                 compras.append(detallecompras)
 
@@ -559,9 +559,9 @@ class WizardAts(models.TransientModel):
                 'tipoComprobante': auth.type_id.code,
                 'establecimiento': auth.serie_entidad,
                 'ptoEmision': auth.serie_emision,
-                'secuencialInicio': ret.name[6:9],
-                'secuencialFin': ret.name[6:9],
-                'autorizacion': aut
+                'secuencialInicio': auth.num_start,
+                'secuencialFin': auth.num_end,
+                'autorizacion': auth.name
             }
             anulados.append(detalleanulados)
         return anulados

@@ -96,7 +96,7 @@
     <detalleAnulados>
       <tipoComprobante>{{ item['tipoComprobante'] }}</tipoComprobante>
       <establecimiento>{{ item['establecimiento'] }}</establecimiento>
-      <puntoEmision>{{ item['puntoEmision'] }}</puntoEmision>
+      <puntoEmision>{{ item['ptoEmision'] }}</puntoEmision>
       <secuencialInicio>{{ item['secuencialInicio'] }}</secuencialInicio>
       <secuencialFin>{{ item['secuencialFin'] }}</secuencialFin>
       <autorizacion>{{ item['autorizacion'] }}</autorizacion>
