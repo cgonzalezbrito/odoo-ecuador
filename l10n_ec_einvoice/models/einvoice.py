@@ -23,7 +23,8 @@ class AccountInvoice(models.Model):
     _logger = logging.getLogger('account.edocument')
     TEMPLATES = {
         'out_invoice': 'out_invoice.xml',
-        'out_refund': 'out_refund.xml'
+        'out_refund': 'out_refund.xml',
+        'liq_purchase': 'liq_purchase.xml'
     }
 
     def _info_factura(self, invoice):

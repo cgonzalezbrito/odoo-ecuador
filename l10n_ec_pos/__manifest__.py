@@ -7,10 +7,9 @@
         Add required partner fields in POS. Create invoices when sales are validate. Credit Notes.
     """,
     'summary': """
-        epayment is an auxiliar field used for einvoces to be authorized even if pos session stills open. Generate access keys.
-        Create invoices whyn sales are validate. Credit Notes.
+        Generate access keys.
+        Create invoices when sales are validate. Credit Notes.
         New credit journal. Code = NCRD.
-        Modified by cgonzalezbrito.
     """,
     'author': "Cristian Salamea",
     'website': "http://www.ayni.com.ec",
