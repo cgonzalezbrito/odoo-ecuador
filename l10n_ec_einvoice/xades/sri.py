@@ -21,7 +21,8 @@ SCHEMAS = {
     'out_refund': 'schemas/nota_credito.xsd',
     'withdrawing': 'schemas/retencion.xsd',
     'delivery': 'schemas/guia_remision.xsd',
-    'in_refund': 'schemas/nota_debito.xsd'
+    'in_refund': 'schemas/nota_debito.xsd',
+    'liq_purchase': 'schemas/Liquidacion_Compra_V_1_1_0.xsd'
 }
 
 

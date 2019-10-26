@@ -221,7 +221,7 @@ class AccountInvoice(models.Model):
         la generacion de la factura y envio de email
         """
         for obj in self:
-            if obj.type not in ['out_invoice', 'out_refund']:
+            if obj.type not in ['out_invoice', 'out_refund', 'liq_purchase']:
                 continue
             self.check_date(obj.date_invoice)
             self.check_before_sent()
@@ -322,7 +322,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_send_einvoice_email(self):
         for obj in self:
-            if obj.type not in ['out_invoice', 'out_refund']:
+            if obj.type not in ['out_invoice', 'out_refund', 'liq_purchase']:
                 continue
             inv_name = str(self.clave_acceso) + '.xml'
             attach = self.env['ir.attachment'].search([('name','=',inv_name)])

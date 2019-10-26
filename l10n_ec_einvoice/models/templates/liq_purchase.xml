@@ -15,31 +15,24 @@
    </infoTributaria>
    <infoLiquidacionCompra>
       <fechaEmision>{{ fechaEmision }}</fechaEmision> {# dd/mm/aaaa #}
-      <dirEstablecimiento>{{ dirEstablecimiento }}</dirEstablecimiento>
       <contribuyenteEspecial>{{ contribuyenteEspecial }}</contribuyenteEspecial>
       <obligadoContabilidad>{{ obligadoContabilidad }}</obligadoContabilidad>
-      <tipoIdentificacionProveedor>{{ tipoIdentificacionProveedor }}</tipoIdentificacionProveedor>
-      <razonSocialProveedor>{{ razonSocialProveedor }}</razonSocialProveedor>
-      <identificacionProveedor>{{ identificacionProveedor }}</identificacionProveedor>
-	  <direccionProveedor>{{ direccionProveedor }}</direccionProveedor>
+      <tipoIdentificacionProveedor>{{ tipoIdentificacionComprador }}</tipoIdentificacionProveedor>
+      <razonSocialProveedor>{{ razonSocialComprador }}</razonSocialProveedor>
+      <identificacionProveedor>{{ identificacionComprador }}</identificacionProveedor>
       <totalSinImpuestos>{{ totalSinImpuestos }}</totalSinImpuestos>
       <totalDescuento>{{ totalDescuento }}</totalDescuento>
-      <codDocReembolso>{{ codDocReembolso }}</codDocReembolso>
-      <totalComprobantesReembolso>{{ totalComprobantesReembolso }}</totalComprobantesReembolso>
-      <totalBaseImponibleReembolso>{{ totalBaseImponibleReembolso }}</totalBaseImponibleReembolso>
-      <totalImpuestoReembolso>{{ totalImpuestoReembolso }}</totalImpuestoReembolso>
-      <totalConImpuestos>{% for item in totalConImpuestos %}
+      <totalConImpuestos> {% for item in totalConImpuestos %}
          <totalImpuesto>
             <codigo>{{ item['codigo'] }}</codigo>
             <codigoPorcentaje>{{ item['codigoPorcentaje'] }}</codigoPorcentaje>
-			<descuentoAdicional>{{ descuentoAdicional }}</descuentoAdicional>
             <baseImponible>{{ item['baseImponible'] }}</baseImponible>
-			<tarifa>{{ item['tarifa'] }}</tarifa>
+			   <tarifa>{{ item['tarifa'] }}</tarifa>
             <valor>{{ item['valor'] }}</valor>
          </totalImpuesto>{% endfor %}
-      </totalConImpuestos>      
+      </totalConImpuestos>
       <importeTotal>{{ importeTotal }}</importeTotal>
-	  <moneda>{{ moneda }}</moneda>
+	  <moneda>DOLAR</moneda>
       <pagos> {% for pago in formaPago %}
          <pago>
             <formaPago>{{ pago['codigo'] }}</formaPago>
@@ -49,61 +42,23 @@
          </pago>{% endfor %}
       </pagos>
    </infoLiquidacionCompra>
-   <detalles>
+   <detalles> {% for item in detalles %}
       <detalle>
-         <codigoPrincipal>{{ codigoPrincipal }}</codigoPrincipal>
-         <codigoAuxiliar>{{ codigoAuxiliar }}</codigoAuxiliar>
-         <descripcion>{{ descripcion }}</descripcion>
-         <unidadMedida>{{ unidadMedida }}</unidadMedida>
-         <cantidad>{{ cantidad }}</cantidad>
-         <precioUnitario>{{ precioUnitario }}</precioUnitario>
-         <descuento>{{ descuento }}</descuento>
-         <precioTotalSinImpuesto>{{ precioTotalSinImpuesto }}</precioTotalSinImpuesto>
-         <detallesAdicionales>
-            <detAdicional nombre="nombre0" valor="valor0"></detAdicional>
-			<detAdicional nombre="nombre1" valor="valor1"></detAdicional>
-         </detallesAdicionales>
-         <impuestos>
+         <codigoPrincipal>{{ item['codigoPrincipal'] }}</codigoPrincipal>
+         <descripcion>{{ item['descripcion'] }}</descripcion>
+         <cantidad>{{ item['cantidad'] }}</cantidad>
+         <precioUnitario>{{ item['precioUnitario'] }}</precioUnitario>
+         <descuento>{{ item['descuento'] }}</descuento>
+         <precioTotalSinImpuesto>{{ item['precioTotalSinImpuesto'] }}</precioTotalSinImpuesto>
+         <impuestos>  {% for tax in item['impuestos'] %}
             <impuesto>
-               <codigo>{{ codigo }}</codigo>
-               <codigoPorcentaje>{{ codigoPorcentaje }}</codigoPorcentaje>
-               <tarifa>{{ tarifa }}</tarifa>
-               <baseImponible>{{ baseImponible }}</baseImponible>
-               <valor>{{ valor }}</valor>
-            </impuesto>
+               <codigo>{{ tax['codigo'] }}</codigo>
+               <codigoPorcentaje>{{ tax['codigoPorcentaje'] }}</codigoPorcentaje>
+               <tarifa>{{ tax['tarifa'] }}</tarifa>
+               <baseImponible>{{ tax['baseImponible'] }}</baseImponible>
+               <valor>{{ tax['valor'] }}</valor>
+            </impuesto> {% endfor %}
          </impuestos>
-      </detalle> 	  
+      </detalle> {% endfor %}
    </detalles>
-	<reembolsos>
-      <reembolsoDetalle>
-         <tipoIdentificacionProveedorReembolso>{{ tipoIdentificacionProveedorReembolso }}</tipoIdentificacionProveedorReembolso>
-         <identificacionProveedorReembolso>{{ identificacionProveedorReembolso }}</identificacionProveedorReembolso>
-         <codPaisPagoProveedorReembolso>{{ codPaisPagoProveedorReembolso }}</codPaisPagoProveedorReembolso>
-         <tipoProveedorReembolso>{{ tipoProveedorReembolso }}</tipoProveedorReembolso>
-         <codDocReembolso>{{ codDocReembolso }}</codDocReembolso>
-         <estabDocReembolso>{{ estabDocReembolso }}</estabDocReembolso>
-         <ptoEmiDocReembolso>{{ ptoEmiDocReembolso }}</ptoEmiDocReembolso>
-         <secuencialDocReembolso>{{ secuencialDocReembolso }}</secuencialDocReembolso>
-         <fechaEmisionDocReembolso>{{ fechaEmisionDocReembolso }}</fechaEmisionDocReembolso>
-         <numeroautorizacionDocReemb>{{ numeroautorizacionDocReemb }}</numeroautorizacionDocReemb>
-         <detalleImpuestos>
-            <detalleImpuesto>
-               <codigo>{{ codigo }}</codigo>
-               <codigoPorcentaje>{{ codigoPorcentaje }}</codigoPorcentaje>
-               <tarifa>{{ tarifa }}</tarifa>
-               <baseImponibleReembolso>{{ baseImponibleReembolso }}</baseImponibleReembolso>
-               <impuestoReembolso>{{ impuestoReembolso }}</impuestoReembolso>
-            </detalleImpuesto>
-         </detalleImpuestos>
-      </reembolsoDetalle>      
-   </reembolsos>
-   <maquinaFiscal>
-      <marca>{{ marca }}</marca>
-      <modelo>{{ modelo }}</modelo>
-      <serie>{{ serie }}</serie>
-	</maquinaFiscal>   
-   <infoAdicional>
-      <campoAdicional nombre="nombre0">{{ campoAdicional }}</campoAdicional>      
-      <campoAdicional nombre="nombre1">{{ campoAdicional }}</campoAdicional>    
-   </infoAdicional>
 </liquidacionCompra>
