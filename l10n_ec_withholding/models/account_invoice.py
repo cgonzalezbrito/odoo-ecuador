@@ -346,11 +346,11 @@ class AccountInvoice(models.Model):
             if inv.retention_id:
                 ret_taxes.write({
                     'retention_id': inv.retention_id.id,
-                    'num_document': inv.invoice_number
+                    'num_document': inv.invoice_number,
                 })
                 inv.retention_id.action_validate(wd_number)
                 return True
-            today = datetime.now() + timedelta(hours=-5)
+            #today = datetime.now() + timedelta(hours=-5)
             withdrawing_data = {
                 'partner_id': inv.partner_id.id,
                 'name': wd_number,
@@ -358,7 +358,7 @@ class AccountInvoice(models.Model):
                 'auth_inv_id': auth_ret.id,
                 'type': inv.type,
                 'in_type': 'ret_%s' % inv.type,
-                'date': today,
+                'date': inv.date_invoice,
                 'manual': False
             }
 

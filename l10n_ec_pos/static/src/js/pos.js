@@ -172,6 +172,70 @@ odoo.define('l10n_ec_pos', function(require) {
         },
     });
 
+    screens.PaymentScreenWidget.include({
+
+        order_is_valid: function(force_validation) {
+            var self = this;
+            var order = this.pos.get_order();
+            
+            // FIXME: this check is there because the backend is unable to
+            // process empty orders. This is not the right place to fix it.
+            if (order.get_orderlines().length === 0) {
+                this.gui.show_popup('error',{
+                    'title': _t('Empty Order'),
+                    'body':  _t('There must be at least one product in your order before it can be validated'),
+                });
+                return false;
+            }
+
+            if (!order.get_client()){
+                alert('No ha seleccionado Cliente')
+                return false;
+            }
+
+            if (!order.is_paid() || this.invoicing) {
+                return false;
+            }
+
+            // The exact amount must be paid if there is no cash payment method defined.
+            if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
+                var cash = false;
+                for (var i = 0; i < this.pos.cashregisters.length; i++) {
+                    cash = cash || (this.pos.cashregisters[i].journal.type === 'cash');
+                }
+                if (!cash) {
+                    this.gui.show_popup('error',{
+                        title: _t('Cannot return change without a cash payment method'),
+                        body:  _t('There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration'),
+                    });
+                    return false;
+                }
+            }
+
+            // if the change is too large, it's probably an input error, make the user confirm.
+            if (!force_validation && order.get_total_with_tax() > 0 && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
+                this.gui.show_popup('confirm',{
+                    title: _t('Please Confirm Large Amount'),
+                    body:  _t('Are you sure that the customer wants to  pay') + 
+                           ' ' + 
+                           this.format_currency(order.get_total_paid()) +
+                           ' ' +
+                           _t('for an order of') +
+                           ' ' +
+                           this.format_currency(order.get_total_with_tax()) +
+                           ' ' +
+                           _t('? Clicking "Confirm" will validate the payment.'),
+                    confirm: function() {
+                        self.validate_order('confirm');
+                    },
+                });
+                return false;
+            }
+
+            return true;
+        },
+    })
+
     for (var i=0; i<pos_models.length; i++){
         var model = pos_models[i];
         if (model.model === 'res.partner') {
