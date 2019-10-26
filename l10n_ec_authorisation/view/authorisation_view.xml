@@ -72,7 +72,7 @@
 	          <field name="invoice_number" class="oe_inline"/>
 	        </field>
 	        <field name="reference" position="after">
-	          <field name="auth_number" required="1"/>
+	          <field name="auth_number" attrs="{'invisible': [('type','in',['liq_purchase'])], 'required': [('type','not in',['liq_purchase'])]}"/>
 	        </field>
 	        <field name="date_due" position="after">
 	          <field name="sustento_id" class="oe_inline oe_edit_only"
