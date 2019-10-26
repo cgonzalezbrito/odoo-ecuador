@@ -109,7 +109,7 @@ class AccountWithdrawing(models.Model):
         """
         """
         for obj in self:
-            self.check_date(obj.date)
+            #self.check_date(obj.date)
             self.check_before_sent()
 
             aux_acces_key = str(self.clave_acceso)
