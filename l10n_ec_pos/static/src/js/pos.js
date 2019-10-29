@@ -234,7 +234,7 @@ odoo.define('l10n_ec_pos', function(require) {
 
             return true;
         },
-    })
+    });
 
     for (var i=0; i<pos_models.length; i++){
         var model = pos_models[i];

@@ -72,7 +72,7 @@
         </record>
 
         <record id="action_l10n_ec_sri_retention" model="ir.actions.act_window">
-            <field name="name">SRI Retention tax table</field>
+            <field name="name">Tabla de retenciones SRI</field>
             <field name="res_model">hr.sri.retention</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -105,7 +105,7 @@
 			<field name="name">l10n.ec.sri.deduction.tree</field>
 			<field name="model">hr.sri.deduction</field>
 			<field name="arch" type="xml">
-				<tree string="Tax Rent Deductions">
+				<tree string="Deducciones de Impuesto a la Renta">
 					<field name="code" select="1" />
 					<field name="name" select="1" />
 			        <field name="description" select="1" />
@@ -114,7 +114,7 @@
 		</record>
 
 		<record id="action_l10n_ec_sri_deduction" model="ir.actions.act_window">
-			<field name="name">Tax Rent Deductions</field>
+			<field name="name">Deducciones de Impuesto a la Renta</field>
 			<field name="res_model">hr.sri.deduction</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
