@@ -27,7 +27,7 @@ class HrContract(models.Model):
         'Department'), related='employee_id.department_id', readonly=True)
     job_id = fields.Many2one('hr.job', string=_(
         'Job Title'), related='employee_id.job_id', readonly=True)
-    representante_legal = fields.Boolean('Es representante legal', )
+    representante_legal = fields.Boolean('Es rep. legal?', )
     iess_representante_legal = fields.Boolean(
         '¿IESS de representánte legal?',
         help="Aplica la regla salarial del IESS, vigente desde enero de 2018", )
@@ -41,7 +41,7 @@ class HrContract(models.Model):
         string='Impuesto a la renta a pagar ($)',
         help='Dejar en cero si se desea que el sistema calcule el impuesto a pagar',
     )
-    basic_wage = fields.Boolean(_('Basic Wage'), oldname='sueldo_basico')
+    basic_wage = fields.Boolean('Sueldo_básico')
     hour_cost = fields.Float(_('Hour Cost'), compute='_get_hour_cost', store=True)
     prestamos = fields.One2many(
         'hr.contract.prestamo', 'hr_contract_id',

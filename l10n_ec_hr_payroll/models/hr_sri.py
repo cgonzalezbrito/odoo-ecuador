@@ -46,11 +46,11 @@ class HrSriRetentionLine(models.Model):
     _order = 'basic_fraction asc'
 
     basic_fraction = fields.Float(string=_('Fraccion Básica'), required=True, default=0.0)
-    excess_up = fields.Float(string=_('Excess Up'), required=True, default=0.0)
-    basic_fraction_tax = fields.Integer(string=_('Basic Fraction Tax'), required=True, default=0)
-    percent = fields.Integer(string=_('Excess Fraction (%)'), required=True, default=0)
+    excess_up = fields.Float(string=_('Excedente'), required=True, default=0.0)
+    basic_fraction_tax = fields.Integer(string=_('Impuesto Fraccion Básica'), required=True, default=0)
+    percent = fields.Integer(string=_('Excedente Fracción (%)'), required=True, default=0)
     ret_id = fields.Many2one('hr.sri.retention', string=_(
-        'Retention Table'), ondelete='cascade', default=0.0)
+        'Tabla Retenciones'), ondelete='cascade', default=0.0)
 
 
 class HrSriDeduction(models.Model):
