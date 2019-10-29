@@ -88,6 +88,7 @@
                         </group>
                         <group>
                             <field name="group_id"/>
+                            <field name="date"/>
                             <field name="fiscal_year" readonly="1" invisible="1"/>
                             <field name="fiscal_period" readonly="1"/>
                             <field name="manual"/>

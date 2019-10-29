@@ -13,6 +13,14 @@ class AccountInvoiceTax(models.Model):
 
     _inherit = 'account.invoice.tax'
 
+    @api.model
+    def _default_fiscal_period(self):
+        return time.strftime('%m'+'/'+'%Y')
+
+    @api.model
+    def _default_date(self):
+        return time
+
     fiscal_year = fields.Char(
         'Ejercicio Fiscal',
         size=4,
@@ -21,7 +29,13 @@ class AccountInvoiceTax(models.Model):
     fiscal_period = fields.Char(
         'Periodo Fiscal',
         size=7,
-        default=time.strftime('%m'+'/'+'%Y')
+        default=_default_fiscal_period
+    )
+    date = fields.Date(
+        'Fecha contable',
+        readonly=True,
+        required=True,
+        default=_default_date
     )
     group_id = fields.Many2one(
         related='tax_id.tax_group_id',

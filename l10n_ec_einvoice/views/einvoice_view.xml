@@ -80,13 +80,13 @@
     </record>
 
     <!--
-        Customer Invoice
+        Supplier Invoice
     -->
 
     <record id="view_account_invoice_tree" model="ir.ui.view">
         <field name="name">view.account.invoice.tree</field>
         <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_tree"/>
+        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='number']" position="replace">
                 <field name="invoice_number"/>
@@ -99,13 +99,13 @@
     </record>
 
     <!--
-        Supplier Invoice
+        Customer Invoice
     -->
 
     <record id="view_account_invoice_tree" model="ir.ui.view">
         <field name="name">view.account.invoice.tree</field>
         <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+        <field name="inherit_id" ref="account.invoice_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='number']" position="replace">
                 <field name="invoice_number"/>
