@@ -83,8 +83,8 @@
         Supplier Invoice
     -->
 
-    <record id="view_account_invoice_tree" model="ir.ui.view">
-        <field name="name">view.account.invoice.tree</field>
+    <record id="view_account_supplier_invoice_tree" model="ir.ui.view">
+        <field name="name">view.account.invoice.supplier.tree</field>
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_tree"/>
         <field name="arch" type="xml">
@@ -170,7 +170,7 @@
     </record>
 
     <!-- Liq Purchase Button-->
-    <record id="view_account_einvoice_form" model="ir.ui.view">
+    <record id="view_account_einvoice_liq_purchase_form" model="ir.ui.view">
         <field name="name">account.liq_purchase_einvoice.form</field>
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
