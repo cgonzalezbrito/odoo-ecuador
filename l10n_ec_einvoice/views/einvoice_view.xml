@@ -125,7 +125,8 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_invoice_sent']" position="replace"/>
             <xpath expr="//button[@name='action_invoice_sent']" position="replace">
-                <button name="action_generate_einvoice" type="object" attrs="{'invisible':['|',('autorizado_sri','=',True),('state','=','draft')]}"
+                <button name="action_generate_einvoice" type="object" 
+                        attrs="{'invisible':['|','|',('autorizado_sri','=',True),('state','=','draft'),('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}"
                         string="Generar Doc. Electrónica" class="oe_highlight"/>
                 <button name="action_send_einvoice_email" type="object" attrs="{'invisible':[('to_send_einvoice','!=',True)]}"
                         string="Enviar Correo Electrónico" class="oe_highlight"/>
@@ -137,7 +138,7 @@
               <attribute name="readonly">False</attribute>
             </xpath>
             <notebook>
-              <page string="Pagos">
+              <page string="Pagos" attrs="{'invisible':[('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}">
                 <field name="pos_payment_line_ids" colspan="4" nolabel="1">
                   <tree editable="bottom" string="epayment lines">
                     <field name="code"/>
@@ -147,7 +148,7 @@
                   </tree>
                 </field>
               </page>
-              <page string="Facturación Electrónica" name="electronic_invoice">
+              <page string="Facturación Electrónica" name="electronic_invoice" attrs="{'invisible':[('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}">
                 <group colspan="2">
                   <field name="clave_acceso"/>
                   <field name="ambiente"/>
@@ -172,18 +173,19 @@
     <!-- Liq Purchase Button-->
     <record id="view_account_einvoice_liq_purchase_form" model="ir.ui.view">
         <field name="name">account.liq_purchase_einvoice.form</field>
+        <field name="name">account.liq_purchase_einvoice.form</field>
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='print_move']" position="before"/>
             <xpath expr="//button[@name='print_move']" position="before">
-                <button name="action_generate_einvoice" type="object" attrs="{'invisible':['|','|',('autorizado_sri','=',True),('state','=','draft'),('type','!=','liq_purchase')]}"
+                <button name="action_generate_einvoice" type="object" attrs="{'invisible':['|','|',('autorizado_sri','=',True),('state','=','draft'),('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}"
                         string="Generar Doc. Electrónica" class="oe_highlight"/>
                 <button name="action_send_einvoice_email" type="object" attrs="{'invisible':[('to_send_einvoice','!=',True)]}"
                         string="Enviar Correo Electrónico" class="oe_highlight"/>
             </xpath>
             <notebook>
-              <page string="Facturación Electrónica" name="electronic_invoice" attrs="{'invisible':[('type','!=','liq_purchase')]}">
+              <page string="Facturación Electrónica" name="electronic_invoice" attrs="{'invisible':[('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}">
                 <group colspan="2">
                   <field name="clave_acceso"/>
                   <field name="ambiente"/>
@@ -204,6 +206,7 @@
             </notebook>
         </field>
     </record>
+
 
     <!-- eRetention Form -->
     <record id="view_account_eretention_form" model="ir.ui.view">
