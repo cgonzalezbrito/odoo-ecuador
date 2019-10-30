@@ -14,7 +14,7 @@ class account_einvoice_wizard(models.TransientModel):
 		"""
 		Metodo ...
 		"""
-		invoices = self.env['account.invoice'].search([('autorizado_sri','=',False),('type','in',['out_invoice', 'out_refund']),('state','!=','draft')])   
+		invoices = self.env['account.invoice'].search([('autorizado_sri','=',False),('type','in',['out_invoice', 'out_refund']),('state','not in',['draft','cancel'])])   
 
 		for invoice in reversed(invoices):
 			self._logger.info('Factura %s', invoice.invoice_number)

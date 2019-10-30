@@ -16,12 +16,12 @@ class AccountInvoiceTax(models.Model):
     fiscal_year = fields.Char(
         'Ejercicio Fiscal',
         size=4,
-        default=time.strftime('%Y')
+    #    default=time.strftime('%Y')
     )
     fiscal_period = fields.Char(
         'Periodo Fiscal',
         size=7,
-        default=time.strftime('%m'+'/'+'%Y')
+    #    default=time.strftime('%m'+'/'+'%Y')
     )
     group_id = fields.Many2one(
         related='tax_id.tax_group_id',

@@ -117,43 +117,27 @@
         </field>
     </record>
 
-    <!-- Button-->
-    <record id="view_account_einvoice_form" model="ir.ui.view">
-        <field name="name">account.einvoice.form</field>
+    <!-- Liq Purchase Button-->
+    <!--record id="view_account_einvoice_form" model="ir.ui.view">
+        <field name="name">account.liq_purchase_einvoice.form</field>
         <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_invoice_sent']" position="replace"/>
-            <xpath expr="//button[@name='action_invoice_sent']" position="replace">
-                <button name="action_generate_einvoice" type="object" attrs="{'invisible':['|',('autorizado_sri','=',True),('state','=','draft')]}"
+            <xpath expr="//button[@name='print_move']" position="before"/>
+            <xpath expr="//button[@name='print_move']" position="before">
+                <button name="action_generate_einvoice" type="object" attrs="{'invisible':['|','|',('autorizado_sri','=',True),('state','=','draft'),('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}"
                         string="Generar Doc. Electrónica" class="oe_highlight"/>
                 <button name="action_send_einvoice_email" type="object" attrs="{'invisible':[('to_send_einvoice','!=',True)]}"
                         string="Enviar Correo Electrónico" class="oe_highlight"/>
-                <button name="action_delete_items" type="object" attrs="{'invisible':['|',('state','!=','draft'),('type','!=','out_refund')]}"
-                        string="Borrar Items" class="oe_highlight"/>
-            </xpath>
-            <xpath expr="//field[@name='refund_invoice_id']" position="attributes">
-              <attribute name="attrs">{'invisible':[('type', 'not in', ['out_refund'])]}</attribute>
-              <attribute name="readonly">False</attribute>
             </xpath>
             <notebook>
-              <page string="Pagos">
-                <field name="pos_payment_line_ids" colspan="4" nolabel="1">
-                  <tree editable="bottom" string="epayment lines">
-                    <field name="code"/>
-                    <field name="journal_id"/>
-                    <field name="epayment_id"/>
-                    <field name="payment_amount"/>
-                  </tree>
-                </field>
-              </page>
-              <page string="Facturación Electrónica" name="electronic_invoice">
+              <page string="Facturación Electrónica" name="electronic_invoice" attrs="{'invisible':[('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}">
                 <group colspan="2">
                   <field name="clave_acceso"/>
                   <field name="ambiente"/>
                   <field name="autorizado_sri"/>
                   <field name="estado_factura"/>
-	                <field name="estado_correo"/>
+                  <field name="estado_correo"/>
                 </group>
                 <group colspan="2">
                   <field name="numero_autorizacion" invisible="1"/>
@@ -167,29 +151,47 @@
               </page>
             </notebook>
         </field>
-    </record>
+    </record-->
 
-    <!-- Liq Purchase Button-->
+
+    <!-- Button-->
     <record id="view_account_einvoice_form" model="ir.ui.view">
-        <field name="name">account.liq_purchase_einvoice.form</field>
+        <field name="name">account.einvoice.form</field>
         <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="inherit_id" ref="account.invoice_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='print_move']" position="before"/>
-            <xpath expr="//button[@name='print_move']" position="before">
-                <button name="action_generate_einvoice" type="object" attrs="{'invisible':['|','|',('autorizado_sri','=',True),('state','=','draft'),('type','!=','liq_purchase')]}"
+            <xpath expr="//button[@name='action_invoice_sent']" position="replace"/>
+            <xpath expr="//button[@name='action_invoice_sent']" position="replace">
+                <button name="action_generate_einvoice" type="object" 
+                        attrs="{'invisible':['|','|',('autorizado_sri','=',True),('state','=','draft'),('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}"
                         string="Generar Doc. Electrónica" class="oe_highlight"/>
                 <button name="action_send_einvoice_email" type="object" attrs="{'invisible':[('to_send_einvoice','!=',True)]}"
                         string="Enviar Correo Electrónico" class="oe_highlight"/>
+                <button name="action_delete_items" type="object" attrs="{'invisible':['|',('state','!=','draft'),('type','!=','out_refund')]}"
+                        string="Borrar Items" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//field[@name='refund_invoice_id']" position="attributes">
+              <attribute name="attrs">{'invisible':[('type', 'not in', ['out_refund'])]}</attribute>
+              <attribute name="readonly">False</attribute>
             </xpath>
             <notebook>
-              <page string="Facturación Electrónica" name="electronic_invoice" attrs="{'invisible':[('type','!=','liq_purchase')]}">
+              <page string="Pagos" attrs="{'invisible':[('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}">
+                <field name="pos_payment_line_ids" colspan="4" nolabel="1">
+                  <tree editable="bottom" string="epayment lines">
+                    <field name="code"/>
+                    <field name="journal_id"/>
+                    <field name="epayment_id"/>
+                    <field name="payment_amount"/>
+                  </tree>
+                </field>
+              </page>
+              <page string="Facturación Electrónica" name="electronic_invoice" attrs="{'invisible':[('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}">
                 <group colspan="2">
                   <field name="clave_acceso"/>
                   <field name="ambiente"/>
                   <field name="autorizado_sri"/>
                   <field name="estado_factura"/>
-                  <field name="estado_correo"/>
+	                <field name="estado_correo"/>
                 </group>
                 <group colspan="2">
                   <field name="numero_autorizacion" invisible="1"/>
