@@ -80,6 +80,25 @@
     </record>
 
     <!--
+        Supplier Invoice
+    -->
+
+    <record id="view_account_supplier_invoice_tree" model="ir.ui.view">
+        <field name="name">view.account.invoice.supplier.tree</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='number']" position="replace">
+                <field name="invoice_number"/>
+            </xpath>
+            <!--xpath expr="//field[@name='amount_total_signed']" position="before">
+                <field name="amount_vat_cero" sum="Total Base 0"/>
+                <field name="amount_vat" sum="Total Base 12"/>
+            </xpath-->
+        </field>
+    </record>
+
+    <!--
         Customer Invoice
     -->
 
@@ -97,62 +116,6 @@
             </xpath-->
         </field>
     </record>
-
-    <!--
-        Supplier Invoice
-    -->
-
-    <record id="view_account_invoice_tree" model="ir.ui.view">
-        <field name="name">view.account.invoice.tree</field>
-        <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='number']" position="replace">
-                <field name="invoice_number"/>
-            </xpath>
-            <!--xpath expr="//field[@name='amount_total_signed']" position="before">
-                <field name="amount_vat_cero" sum="Total Base 0"/>
-                <field name="amount_vat" sum="Total Base 12"/>
-            </xpath-->
-        </field>
-    </record>
-
-    <!-- Liq Purchase Button-->
-    <!--record id="view_account_einvoice_form" model="ir.ui.view">
-        <field name="name">account.liq_purchase_einvoice.form</field>
-        <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_supplier_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//button[@name='print_move']" position="before"/>
-            <xpath expr="//button[@name='print_move']" position="before">
-                <button name="action_generate_einvoice" type="object" attrs="{'invisible':['|','|',('autorizado_sri','=',True),('state','=','draft'),('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}"
-                        string="Generar Doc. Electrónica" class="oe_highlight"/>
-                <button name="action_send_einvoice_email" type="object" attrs="{'invisible':[('to_send_einvoice','!=',True)]}"
-                        string="Enviar Correo Electrónico" class="oe_highlight"/>
-            </xpath>
-            <notebook>
-              <page string="Facturación Electrónica" name="electronic_invoice" attrs="{'invisible':[('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}">
-                <group colspan="2">
-                  <field name="clave_acceso"/>
-                  <field name="ambiente"/>
-                  <field name="autorizado_sri"/>
-                  <field name="estado_factura"/>
-                  <field name="estado_correo"/>
-                </group>
-                <group colspan="2">
-                  <field name="numero_autorizacion" invisible="1"/>
-                  <field name="fecha_autorizacion"/>
-                  <field name="estado_autorizacion" invisible="1"/>
-                  <field name="to_send_einvoice"/>
-                  <field name="store_fname" invisible="1"/>
-                  <field name="xml_file" filename="store_fname" class="oe_link" attrs="{'invisible':[('autorizado_sri','!=',True)]}"/>
-                  <field name="payment_term" invisible="1"/>
-                </group>
-              </page>
-            </notebook>
-        </field>
-    </record-->
-
 
     <!-- Button-->
     <record id="view_account_einvoice_form" model="ir.ui.view">
@@ -206,6 +169,44 @@
             </notebook>
         </field>
     </record>
+
+    <!-- Liq Purchase Button-->
+    <record id="view_account_einvoice_liq_purchase_form" model="ir.ui.view">
+        <field name="name">account.liq_purchase_einvoice.form</field>
+        <field name="name">account.liq_purchase_einvoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='print_move']" position="before"/>
+            <xpath expr="//button[@name='print_move']" position="before">
+                <button name="action_generate_einvoice" type="object" attrs="{'invisible':['|','|',('autorizado_sri','=',True),('state','=','draft'),('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}"
+                        string="Generar Doc. Electrónica" class="oe_highlight"/>
+                <button name="action_send_einvoice_email" type="object" attrs="{'invisible':[('to_send_einvoice','!=',True)]}"
+                        string="Enviar Correo Electrónico" class="oe_highlight"/>
+            </xpath>
+            <notebook>
+              <page string="Facturación Electrónica" name="electronic_invoice" attrs="{'invisible':[('type','not in',['out_invoice', 'out_refund', 'liq_purchase'])]}">
+                <group colspan="2">
+                  <field name="clave_acceso"/>
+                  <field name="ambiente"/>
+                  <field name="autorizado_sri"/>
+                  <field name="estado_factura"/>
+                  <field name="estado_correo"/>
+                </group>
+                <group colspan="2">
+                  <field name="numero_autorizacion" invisible="1"/>
+                  <field name="fecha_autorizacion"/>
+                  <field name="estado_autorizacion" invisible="1"/>
+                  <field name="to_send_einvoice"/>
+                  <field name="store_fname" invisible="1"/>
+                  <field name="xml_file" filename="store_fname" class="oe_link" attrs="{'invisible':[('autorizado_sri','!=',True)]}"/>
+                  <field name="payment_term" invisible="1"/>
+                </group>
+              </page>
+            </notebook>
+        </field>
+    </record>
+
 
     <!-- eRetention Form -->
     <record id="view_account_eretention_form" model="ir.ui.view">

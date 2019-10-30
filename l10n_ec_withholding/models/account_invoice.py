@@ -283,6 +283,9 @@ class AccountInvoice(models.Model):
         to_open_invoices.action_date_assign()
         to_open_invoices.action_move_create()
         to_open_invoices.action_number()
+        for line in to_open_invoices.tax_line_ids:
+            line.date = to_open_invoices.date_invoice
+            line.fiscal_period = line.date[5:7] + '/' + line.date[0:4]
         to_open_invoices.action_withholding_create()
         return to_open_invoices.invoice_validate()
 
@@ -425,3 +428,4 @@ class AccountInvoiceTax(models.Model):
         self.account_id = self.tax_id.account_id and self.tax_id.account_id.id
         self.base = self.retention_id.invoice_id.amount_untaxed
         self.amount = self.tax_id.compute_all(self.retention_id.invoice_id.amount_untaxed)['taxes'][0]['amount']  # noqa
+        self.date = self.retention_id.invoice_id.date_invoice
