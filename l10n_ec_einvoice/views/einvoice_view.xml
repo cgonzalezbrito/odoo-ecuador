@@ -79,44 +79,6 @@
         </field>
     </record>
 
-    <!--
-        Supplier Invoice
-    -->
-
-    <record id="view_account_supplier_invoice_tree" model="ir.ui.view">
-        <field name="name">view.account.invoice.supplier.tree</field>
-        <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='number']" position="replace">
-                <field name="invoice_number"/>
-            </xpath>
-            <!--xpath expr="//field[@name='amount_total_signed']" position="before">
-                <field name="amount_vat_cero" sum="Total Base 0"/>
-                <field name="amount_vat" sum="Total Base 12"/>
-            </xpath-->
-        </field>
-    </record>
-
-    <!--
-        Customer Invoice
-    -->
-
-    <record id="view_account_invoice_tree" model="ir.ui.view">
-        <field name="name">view.account.invoice.tree</field>
-        <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='number']" position="replace">
-                <field name="invoice_number"/>
-            </xpath>
-            <!--xpath expr="//field[@name='amount_total_signed']" position="before">
-                <field name="amount_vat_cero" sum="Total Base 0"/>
-                <field name="amount_vat" sum="Total Base 12"/>
-            </xpath-->
-        </field>
-    </record>
-
     <!-- Button-->
     <record id="view_account_einvoice_form" model="ir.ui.view">
         <field name="name">account.einvoice.form</field>
@@ -206,7 +168,6 @@
         </field>
     </record>
 
-
     <!-- eRetention Form -->
     <record id="view_account_eretention_form" model="ir.ui.view">
         <field name="name">account.eretention.form</field>
@@ -221,7 +182,7 @@
               <button name="action_generate_document" string="Retención Electrónica" 
                 type="object" states="done" class="btn btn-primary" 
                 attrs="{'invisible':['|',('autorizado_sri','=',True),('state','=','draft')]}"/>
-              <button name="action_send_eretention_email" string="Correo" type="object" states="done" class="btn btn-primary" attrs="{'invisible':[('to_send_einvoice','!=',True)]}"/>
+              <button name="action_send_eretention_email" string="Enviar Correo Electrónico" type="object" states="done" class="btn btn-primary" attrs="{'invisible':[('to_send_einvoice','!=',True)]}"/>
               <button name="retention_print" string="Imprimir Retención" type="object" states="done" class="btn btn-primary" icon="fa-print" attrs="{'invisible':[('autorizado_sri','!=',True)]}"/>
           </xpath>
 
