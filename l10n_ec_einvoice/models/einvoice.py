@@ -49,7 +49,6 @@ class AccountInvoice(models.Model):
             'propina': '0.00',
             'importeTotal': '{:.2f}'.format(invoice.amount_total),
             'moneda': 'DOLAR',
-            #'formaPago': invoice.epayment_ids.code,
             'valorRetIva': '{:.2f}'.format(invoice.taxed_ret_vatsrv+invoice.taxed_ret_vatb),  # noqa
             'valorRetRenta': '{:.2f}'.format(invoice.amount_tax_ret_ir)
         }
@@ -317,7 +316,6 @@ class AccountInvoice(models.Model):
             xml_attach = self.add_attachment(auth_einvoice.encode(),self.clave_acceso)
             self.store_fname = xml_attach[0].datas_fname
             self.xml_file = xml_attach[0].datas
-            #self.action_send_einvoice_email()auth, m = inv_xml.request_authorization(access_key)
 
     @api.multi
     def action_send_einvoice_email(self):
@@ -353,8 +351,7 @@ class AccountInvoice(models.Model):
             for line in obj.invoice_line_ids:
                 obj.write({
                     'invoice_line_ids':[(2,line.id)]
-                })
-            
+                })           
 
     @api.multi
     def invoice_print(self):
