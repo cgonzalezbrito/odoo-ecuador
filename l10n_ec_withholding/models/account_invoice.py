@@ -353,7 +353,7 @@ class AccountInvoice(models.Model):
                 })
                 inv.retention_id.action_validate(wd_number)
                 return True
-            #today = datetime.now() + timedelta(hours=-5)
+            today = datetime.now() + timedelta(hours=-5)
             withdrawing_data = {
                 'partner_id': inv.partner_id.id,
                 'name': wd_number,
@@ -361,7 +361,7 @@ class AccountInvoice(models.Model):
                 'auth_inv_id': auth_ret.id,
                 'type': inv.type,
                 'in_type': 'ret_%s' % inv.type,
-                'date': inv.date_invoice,
+                'date': today,
                 'manual': False
             }
 
