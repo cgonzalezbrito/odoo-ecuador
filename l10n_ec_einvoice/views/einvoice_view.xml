@@ -173,7 +173,6 @@
     <!-- Liq Purchase Button-->
     <record id="view_account_einvoice_liq_purchase_form" model="ir.ui.view">
         <field name="name">account.liq_purchase_einvoice.form</field>
-        <field name="name">account.liq_purchase_einvoice.form</field>
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
