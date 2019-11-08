@@ -79,19 +79,19 @@ class HrEmployee(models.Model):
                     ('employee_id', '=', row.id),
                     ('relation', '=', 'child')])
 
-    names = fields.Char(_('Name\'s'), required=True)
-    lastname = fields.Char(_('Lastname'), required=True)
-    second_lastname = fields.Char(_('Second Lastname'))
+    names = fields.Char(_('Nombre\'s'), required=True)
+    lastname = fields.Char(_('Primer Apellido'), required=True)
+    second_lastname = fields.Char(_('Segundo Apellido'))
     flag = fields.Boolean(_('Job Change'))
     age = fields.Integer(compute=_check_age, string=_('Edad'))
     old_age = fields.Boolean(
-        compute=_check_age, string=("Old Age"),
-        store=False, oldname='tercera_edad'
+        compute=_check_age, string=("Tercera Edad"),
+        store=True, oldname='tercera_edad'
     )
-    department_id = fields.Many2one('hr.department', string=_(
-        'Department'), related='job_id.department_id', readonly=True)
-    parent_id = fields.Many2one('hr.employee', string=_(
-        'Manager'), related='department_id.manager_id', readonly=True)
+    # department_id = fields.Many2one('hr.department', string=_(
+    #     'Department'), related='job_id.department_id', readonly=True)
+    # parent_id = fields.Many2one('hr.employee', string=_(
+    #     'Manager'), related='department_id.manager_id', readonly=True)
     disability = fields.Boolean(_('Discapacidad'))
     conadis_id = fields.Char(_('CONADIS No'))
     disability_type = fields.Char(_('Tipo de Discapacidad'))

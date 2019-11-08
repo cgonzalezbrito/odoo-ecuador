@@ -30,84 +30,84 @@ class HrPayslip(models.Model):
 
     journal_id = fields.Many2one(default=_get_default_journal, )
 
-    def get_worked_day_lines(self, cr, uid, contract_ids, date_from, date_to, context=None):
-        """
-        @param contract_ids: list of contract id
-        @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
-        """
-        def verificar_ausencia_contrato(contrato, dia):
-            resultado = True
-            if contrato.date_start:
-                dia_inicio = datetime.strptime(contrato.date_start, "%Y-%m-%d")
-                if dia >= dia_inicio:
-                    if contrato.date_end:
-                        dia_fin = datetime.strptime(contrato.date_end, "%Y-%m-%d")
-                        if dia <= dia_fin:
-                            resultado = False
-                    else:
-                        resultado = False
-            return resultado
+    # def get_worked_day_lines(self, cr, uid, contract_ids, date_from, date_to, context=None):
+    #     """
+    #     @param contract_ids: list of contract id
+    #     @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
+    #     """
+    #     def verificar_ausencia_contrato(contrato, dia):
+    #         resultado = True
+    #         if contrato.date_start:
+    #             dia_inicio = datetime.strptime(contrato.date_start, "%Y-%m-%d")
+    #             if dia >= dia_inicio:
+    #                 if contrato.date_end:
+    #                     dia_fin = datetime.strptime(contrato.date_end, "%Y-%m-%d")
+    #                     if dia <= dia_fin:
+    #                         resultado = False
+    #                 else:
+    #                     resultado = False
+    #         return resultado
 
-        def was_on_leave(employee_id, datetime_day, context=None):
-            res = {}
-            day = datetime_day.strftime("%Y-%m-%d")
-            holiday_ids = self.pool.get('hr.holidays').search(cr, uid, [
-                ('state', '=', 'validate'),
-                ('employee_id', '=', employee_id),
-                ('type', '=', 'remove'),
-                ('date_from', '<=', day),
-                ('date_to', '>=', day)])
-            if holiday_ids:
-                res['data'] = self.pool.get('hr.holidays').browse(
-                    cr, uid, holiday_ids, context=context)[0]
-                res['type'] = 'ausent'
-            return res
+    #     def was_on_leave(employee_id, datetime_day, context=None):
+    #         res = {}
+    #         day = datetime_day.strftime("%Y-%m-%d")
+    #         holiday_ids = self.pool.get('hr.holidays').search(cr, uid, [
+    #             ('state', '=', 'validate'),
+    #             ('employee_id', '=', employee_id),
+    #             ('type', '=', 'remove'),
+    #             ('date_from', '<=', day),
+    #             ('date_to', '>=', day)])
+    #         if holiday_ids:
+    #             res['data'] = self.pool.get('hr.holidays').browse(
+    #                 cr, uid, holiday_ids, context=context)[0]
+    #             res['type'] = 'ausent'
+    #         return res
 
-        res = []
-        for contract in self.pool.get('hr.contract').browse(cr, uid, contract_ids, context=context):
-            attendances = {
-                'name': _("Normal Working Days paid at 100%"),
-                'sequence': 1,
-                'code': 'WORK100',
-                'number_of_days': 0.0,
-                'number_of_hours': 0.0,
-                'contract_id': contract.id,
-            }
-            leaves = {}
-            day_from = datetime.strptime(date_from, "%Y-%m-%d")
-            day_to = datetime.strptime(date_to, "%Y-%m-%d")
+    #     res = []
+    #     for contract in self.pool.get('hr.contract').browse(cr, uid, contract_ids, context=context):
+    #         attendances = {
+    #             'name': _("Normal Working Days paid at 100%"),
+    #             'sequence': 1,
+    #             'code': 'WORK100',
+    #             'number_of_days': 0.0,
+    #             'number_of_hours': 0.0,
+    #             'contract_id': contract.id,
+    #         }
+    #         leaves = {}
+    #         day_from = datetime.strptime(date_from, "%Y-%m-%d")
+    #         day_to = datetime.strptime(date_to, "%Y-%m-%d")
 
-            # FIXME Código tomado de hr_holidays para determinar el número de días del mes.
-            # Reescribir el código para buscar una forma más adecuada de hacer este cálculo.
-            DATETIME_FORMAT = "%Y-%m-%d"
-            from_dt = datetime.strptime(date_from, DATETIME_FORMAT)
-            to_dt = datetime.strptime(date_to, DATETIME_FORMAT)
-            range_len = to_dt - from_dt
-            nb_of_days = (range_len.days + float(range_len.seconds) / 86400) + 1
-            for day in range(0, int(nb_of_days)):
-                leave_type = was_on_leave(contract.employee_id.id, day_from +
-                                          timedelta(days=day), context=context)
-                leave_contract = verificar_ausencia_contrato(
-                    contract, day_from + timedelta(days=day))
+    #         # FIXME Código tomado de hr_holidays para determinar el número de días del mes.
+    #         # Reescribir el código para buscar una forma más adecuada de hacer este cálculo.
+    #         DATETIME_FORMAT = "%Y-%m-%d"
+    #         from_dt = datetime.strptime(date_from, DATETIME_FORMAT)
+    #         to_dt = datetime.strptime(date_to, DATETIME_FORMAT)
+    #         range_len = to_dt - from_dt
+    #         nb_of_days = (range_len.days + float(range_len.seconds) / 86400) + 1
+    #         for day in range(0, int(nb_of_days)):
+    #             leave_type = was_on_leave(contract.employee_id.id, day_from +
+    #                                       timedelta(days=day), context=context)
+    #             leave_contract = verificar_ausencia_contrato(
+    #                 contract, day_from + timedelta(days=day))
 
-                """ El número de días trabajados siempre es 30, indistintamente del número real de días
-                    en el mes. ¿Debemos permitir que el número de días pueda ser variable? """
-                attendances['number_of_days'] = 30
-                if leave_type:
-                    # the employee had to work
-                    if leave_type['data'] in leaves:
-                        leaves[leave_type['data']]['number_of_days'] += 1.0
-                    elif leave_type['type'] == 'ausent':
-                        leaves[leave_type['data']] = {
-                            'name': leave_type['data'].holiday_status_id.name,
-                            'sequence': 5,
-                            'code': leave_type['data'].holiday_status_id.code or '',
-                            'number_of_days': 1.0,
-                            'contract_id': contract.id,
-                        }
-            leaves = [value for key, value in leaves.items()]
-            res += [attendances] + leaves
-        return res
+    #             """ El número de días trabajados siempre es 30, indistintamente del número real de días
+    #                 en el mes. ¿Debemos permitir que el número de días pueda ser variable? """
+    #             attendances['number_of_days'] = 30
+    #             if leave_type:
+    #                 # the employee had to work
+    #                 if leave_type['data'] in leaves:
+    #                     leaves[leave_type['data']]['number_of_days'] += 1.0
+    #                 elif leave_type['type'] == 'ausent':
+    #                     leaves[leave_type['data']] = {
+    #                         'name': leave_type['data'].holiday_status_id.name,
+    #                         'sequence': 5,
+    #                         'code': leave_type['data'].holiday_status_id.code or '',
+    #                         'number_of_days': 1.0,
+    #                         'contract_id': contract.id,
+    #                     }
+    #         leaves = [value for key, value in leaves.items()]
+    #         res += [attendances] + leaves
+    #     return res
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
         def _sum_salary_rule_category(localdict, category, amount):
