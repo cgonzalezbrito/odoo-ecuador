@@ -40,9 +40,10 @@
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 if contract.basic_wage and contract.wage != employee.company_id.basic_wage:
-        contracts = contract.search([('basic_wage', '=', True)])
-        if contracts:
-            contracts.write({'wage': employee.company_id.basic_wage})
+    contracts = contract.search([('basic_wage', '=', True)])
+    if contracts:
+        contracts.write({'wage': employee.company_id.basic_wage})
+
 dias = 30
 unpaid = 0
 
