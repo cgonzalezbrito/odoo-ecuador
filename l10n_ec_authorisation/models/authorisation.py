@@ -341,6 +341,10 @@ class AccountInvoice(models.Model):
                     }
                 }
 
+    @api.onchange('auth_inv_id')
+    def _onchange_auth_inv_id(self):
+        self._compute_invoice_number()
+
     @api.constrains('auth_number')
     def check_reference(self):
         """
