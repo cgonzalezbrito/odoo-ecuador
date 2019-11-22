@@ -57,6 +57,22 @@ class AccountAuthorisation(models.Model):
             res.append((record.id, name))
         return res
 
+    @api.multi
+    def action_automatic_compute_active(self):
+        """
+        Metodo ...
+        """
+        now = datetime.strptime(time.strftime("%Y-%m-%d"), '%Y-%m-%d')
+        authorisations = self.env['account.authorisation'].search([('in_type','!=','internal')])  
+
+        for author in authorisations:
+            if not author.expiration_date:
+                return
+        
+            due_date = datetime.strptime(author.expiration_date, '%Y-%m-%d')
+            author.active = now < due_date
+
+
     @api.one
     @api.depends('expiration_date')
     def _compute_active(self):
