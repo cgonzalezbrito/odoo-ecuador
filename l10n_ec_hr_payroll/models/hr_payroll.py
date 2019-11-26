@@ -109,6 +109,8 @@ class HrPayslip(models.Model):
     #         res += [attendances] + leaves
     #     return res
 
+    # DEPRECATED !!!
+
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:

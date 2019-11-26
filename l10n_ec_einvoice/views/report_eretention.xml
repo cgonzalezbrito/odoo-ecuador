@@ -100,7 +100,12 @@
                                 <span t-esc="line.fiscal_year"/>
                             </div>
                             <div class="col-xs-1" style="padding-left: 0px; text-align: center;">
-                                <span t-esc="'%.2f' % line.base"/>
+                                <div t-if="line.group_id.code == 'ret_vat_b' or line.group_id.code == 'ret_vat_srv'">
+                                    <span t-esc="'%.2f' % (line.base * 0.12)"/>
+                                </div>
+                                <div t-else="">
+                                    <span t-esc="'%.2f' % line.base"/>
+                                </div>
                             </div>
                             <div class="col-xs-2" style="padding-left: 0px; text-align: center;">
                                 <span t-esc="line.group_id.name"/>
