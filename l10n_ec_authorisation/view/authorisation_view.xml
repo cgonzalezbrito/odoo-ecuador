@@ -59,6 +59,17 @@
 		    </field>
 	    </record>
 
+	    <record id="view_account_invoice_tree" model="ir.ui.view">
+	        <field name="name">account.invoice.reference.cust.tree</field>
+	        <field name="model">account.invoice</field>
+	        <field name="inherit_id" ref="account.invoice_tree"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='number']" position="replace">
+	                <field name="invoice_number"/>
+	            </xpath>
+	        </field>
+	    </record>
+
 	    <!--
 	        Supplier Invoices
 	    -->
@@ -91,6 +102,17 @@
 	                 required="1"/>
 	        </xpath>
 	      </field>
+	    </record>
+
+	    <record id="view_account_invoice_supplier_tree" model="ir.ui.view">
+	        <field name="name">account.invoice.supplier.tree</field>
+	        <field name="model">account.invoice</field>
+	        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='number']" position="replace">
+	                <field name="invoice_number"/>
+	            </xpath>
+	        </field>
 	    </record>
 
 	    <!--

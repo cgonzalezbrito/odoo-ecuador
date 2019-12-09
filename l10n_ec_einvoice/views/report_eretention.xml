@@ -103,6 +103,9 @@
                                 <div t-if="line.group_id.code == 'ret_vat_b' or line.group_id.code == 'ret_vat_srv'">
                                     <span t-esc="'%.2f' % (line.base * 0.12)"/>
                                 </div>
+                                <div t-elif="line.tax_id.description == '322'">
+                                    <span t-esc="'%.2f' % (line.base * 0.10)"/>
+                                </div>
                                 <div t-else="">
                                     <span t-esc="'%.2f' % line.base"/>
                                 </div>

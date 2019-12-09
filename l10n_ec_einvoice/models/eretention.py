@@ -57,7 +57,9 @@ class AccountWithdrawing(models.Model):
                 return code
 
         def get_line_base(linea):
-            if linea.group_id.code in ['ret_vat_b', 'ret_vat_srv']:
+            if linea.tax_id.description == '322':
+                return '%.2f' % (linea.base*0.10)
+            elif linea.group_id.code in ['ret_vat_b', 'ret_vat_srv']:
                 return '%.2f' % (linea.base*0.12)
             else:
                 return '%.2f' % (linea.base)
