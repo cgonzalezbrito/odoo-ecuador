@@ -161,7 +161,10 @@ class AccountWithdrawing(models.Model):
                 self.write({'estado_factura': 'nat'})
                 return
             if auth.estado == 'EN PROCESO':
-                self.write({'estado_factura': 'ppr'})
+                self.write({
+                    'estado_factura': 'ppr',
+                    'clave_acceso':access_key,
+                })
                 return
 
             fecha = auth.fechaAutorizacion.strftime(DEFAULT_SERVER_DATETIME_FORMAT)

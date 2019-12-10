@@ -38,7 +38,7 @@ class account_einvoice_wizard(models.TransientModel):
 		"""
 		Metodo ...
 		"""
-		retentions = self.env['account.retention'].search([('autorizado_sri','=',False),('in_type','=','ret_in_invoice')])   
+		retentions = self.env['account.retention'].search([('autorizado_sri','=',False),('in_type','=','ret_in_invoice'),('state','=','done')])   
 
 		for ret in reversed(retentions):
 			self._logger.info('Retencion %s', ret.withholding_number)
