@@ -210,7 +210,8 @@ class Edocument(models.AbstractModel):
         dt = datetime.strptime(date_invoice, '%Y-%m-%d')
         days = (datetime.now() - dt).days
         if days > LIMIT_TO_SEND:
-            raise UserError(MESSAGE_TIME_LIMIT)
+            self._logger.info(MESSAGE_TIME_LIMIT)
+            #raise UserError(MESSAGE_TIME_LIMIT)
 
     @api.multi
     def update_document(self, codes):
