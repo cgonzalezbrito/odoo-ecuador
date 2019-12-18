@@ -64,13 +64,19 @@ class AccountWithdrawing(models.Model):
             else:
                 return '%.2f' % (linea.base)
 
+        def get_line_percent_report(linea):
+            if linea.group_id.code in ['ret_vat_b', 'ret_vat_srv']:
+                return '%.2f' % (linea.tax_id.percent_report*100/0.12)
+            else:
+                return line.tax_id.percent_report
+
         impuestos = []
         for line in retention.tax_ids:
             impuesto = {
                 'codigo': utils.tabla20[line.group_id.code],
                 'codigoRetencion': get_codigo_retencion(line),
                 'baseImponible': get_line_base(line),
-                'porcentajeRetener': str(line.tax_id.percent_report),
+                'porcentajeRetener': str(get_line_percent_report(line)),#str(line.tax_id.percent_report),
                 'valorRetenido': '%.2f' % (abs(line.amount)),
                 'codDocSustento': '01',
                 'numDocSustento': retention.invoice_id.invoice_number,
