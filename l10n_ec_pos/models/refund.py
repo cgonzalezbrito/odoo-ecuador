@@ -88,8 +88,8 @@ class PosOrder(models.Model):
         
     def action_credit_invoice(self):
         #Nota de Crédito
-        if self.partner_id.type_id == 'CONSUMIDOR FINAL':
-            raise UserError('No puede realizar Notas de Crédito a consumidor final')
+        if self.partner_id.type_id == 'venta_consumidor_final':
+            raise UserError('No puede realizar Notas de Crédito a Consumidor Final')
         journal = self.env['account.journal'].search([('code','=','NCRD')])
         payment_context = {
             "active_ids": self.id, 
