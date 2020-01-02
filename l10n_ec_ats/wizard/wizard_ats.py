@@ -87,7 +87,7 @@ class WizardAts(models.TransientModel):
                 temp[line.tax_id.description]['baseImpAir'] += line.base
                 temp[line.tax_id.description]['baseImpAir'] = '%.2f' % temp[line.tax_id.description]['baseImpAir']
                 temp[line.tax_id.description]['codRetAir'] = line.tax_id.description  # noqa
-                temp[line.tax_id.description]['porcentajeAir'] = abs(int(line.tax_id.amount))  # noqa
+                temp[line.tax_id.description]['porcentajeAir'] = abs(int(line.tax_id.percent_report))  # noqa
                 temp[line.tax_id.description]['porcentajeAir'] = '%.2f' % temp[line.tax_id.description]['porcentajeAir']
                 temp[line.tax_id.description]['valRetAir'] += abs(line.amount)
                 temp[line.tax_id.description]['valRetAir'] = '%.2f' % temp[line.tax_id.description]['valRetAir']
