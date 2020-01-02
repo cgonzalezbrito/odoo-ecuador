@@ -95,14 +95,14 @@ class WizardAts(models.TransientModel):
             data_air.append(v)
         #print(data_air)
         if data_air:
-            return data_air[0]
+            return data_air
         else:
-            return {
-                'baseImpAir': '%.2f' % baseImponible,
-                'codRetAir': '332',
-                'porcentajeAir': '0.00',
-                'valRetAir': '0.00'
-            }
+            return [{
+                            'baseImpAir': '%.2f' % baseImponible,
+                            'codRetAir': '332',
+                            'porcentajeAir': '0.00',
+                            'valRetAir': '0.00'
+                        }]
 
     @api.model
     def _get_ventas(self, period):
