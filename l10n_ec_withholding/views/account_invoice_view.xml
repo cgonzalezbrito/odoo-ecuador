@@ -36,6 +36,10 @@
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="string">Proveedor</attribute>
                 </xpath>
+                <xpath expr="//field[@name='amount_untaxed']" position="after">
+                    <field name="amount_untaxed_vat0"/>
+                    <field name="amount_untaxed_vat"/>
+                </xpath>
                 <xpath expr="//field[@name='amount_tax']" position="after">
                     <field name="amount_tax_retention"/>
                 </xpath>
@@ -55,9 +59,16 @@
                 </xpath>
                 <xpath expr="//field[@name='move_id']" position="after">
                     <field name="retention_id"/>
+                    <field name="discount_global"/>
+                </xpath>
+                <xpath expr="//field[@name='amount_untaxed']" position="replace">
+                    <field name="amount_untaxed_vat0"/>
+                    <field name="amount_untaxed_vat"/>
+                    <field name="amount_untaxed_discount"/>
                 </xpath>
                 <xpath expr="//field[@name='amount_tax']" position="after">
                     <field name="amount_tax_retention"/>
+                    <field name="amount_total_discount"/>
                 </xpath>
             </field>
         </record>

@@ -87,7 +87,7 @@ class WizardAts(models.TransientModel):
                 temp[line.tax_id.description]['baseImpAir'] += line.base
                 temp[line.tax_id.description]['baseImpAir'] = '%.2f' % temp[line.tax_id.description]['baseImpAir']
                 temp[line.tax_id.description]['codRetAir'] = line.tax_id.description  # noqa
-                temp[line.tax_id.description]['porcentajeAir'] = abs(int(line.tax_id.amount))  # noqa
+                temp[line.tax_id.description]['porcentajeAir'] = abs(int(line.tax_id.percent_report))  # noqa
                 temp[line.tax_id.description]['porcentajeAir'] = '%.2f' % temp[line.tax_id.description]['porcentajeAir']
                 temp[line.tax_id.description]['valRetAir'] += abs(line.amount)
                 temp[line.tax_id.description]['valRetAir'] = '%.2f' % temp[line.tax_id.description]['valRetAir']
@@ -95,14 +95,14 @@ class WizardAts(models.TransientModel):
             data_air.append(v)
         #print(data_air)
         if data_air:
-            return data_air[0]
+            return data_air
         else:
-            return {
-                'baseImpAir': '%.2f' % baseImponible,
-                'codRetAir': '332',
-                'porcentajeAir': '0.00',
-                'valRetAir': '0.00'
-            }
+            return [{
+                            'baseImpAir': '%.2f' % baseImponible,
+                            'codRetAir': '332',
+                            'porcentajeAir': '0.00',
+                            'valRetAir': '0.00'
+                        }]
 
     @api.model
     def _get_ventas(self, period):

@@ -30,43 +30,60 @@ class AccountInvoice(models.Model):
     __logger = logging.getLogger(_inherit)
 
     @api.one
-    @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id')  # noqa
+    @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'discount_global')  # noqa
     def _compute_amount(self):
-        self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line_ids)  # noqa
+        super(AccountInvoice, self)._compute_amount()
+
+        self.amount_untaxed_vat = 0.0
+        self.amount_untaxed_vat0 = 0.0
+        self.amount_untaxed_novat = 0.0
+        self.amount_untaxed_ice = 0.0
+
+        print("amount_untaxed %f" % self.amount_untaxed)
+        print("amount_tax %f" % self.amount_tax)
+        print("amount_total %f" % self.amount_total)
+
+        #   Voy a descontar el 10%
+        discount = self.discount_global / 100.0
+        reduced = 1.0 - discount
+
+        self.amount_untaxed_discount = self.amount_untaxed * discount
+        self.amount_total_discount = self.amount_total * discount
+
         amount_manual = 0
         for line in self.tax_line_ids:
             # Taxes
             if line.manual:
                 amount_manual += line.amount
             if line.tax_id.tax_group_id.code == 'vat':
-                self.amount_untaxed_vat += line.base
-                self.amount_tax_vat += line.amount
+                self.amount_untaxed_vat += line.base * reduced
+                self.amount_tax_vat += line.amount * reduced
             elif line.tax_id.tax_group_id.code == 'vat0':
-                self.amount_untaxed_vat0 += line.base
+                self.amount_untaxed_vat0 += line.base * reduced
             elif line.tax_id.tax_group_id.code == 'novat':
-                self.amount_untaxed_novat += line.base
+                self.amount_untaxed_novat += line.base * reduced
             elif line.tax_id.tax_group_id.code == 'ice':
-                self.amount_untaxed_ice += line.base
-                self.amount_tax_ice += line.amount
+                self.amount_untaxed_ice += line.base * reduced
+                self.amount_tax_ice += line.amount * reduced
 
-            #   Retentions
+            #   Withholdings
             if line.tax_id.tax_group_id.code == 'no_ret_ir':
-                self.amount_noret_ir += line.base
+                self.amount_noret_ir += line.base * reduced
             elif line.tax_id.tax_group_id.code in ['ret_vat_b', 'ret_vat_srv', 'ret_ir', 'comp']:  # noqa
-                self.amount_tax_retention += line.amount
+                self.amount_tax_retention += line.amount * reduced
                 if line.tax_id.tax_group_id.code == 'ret_vat_b':
-                    self.amount_tax_ret_vatb += line.base
-                    self.taxed_ret_vatb += line.amount
+                    self.amount_tax_ret_vatb += line.base * reduced
+                    self.taxed_ret_vatb += line.amount * reduced
                 elif line.tax_id.tax_group_id.code == 'ret_vat_srv':
-                    self.amount_tax_ret_vatsrv += line.base
-                    self.taxed_ret_vatsrv += line.amount
+                    self.amount_tax_ret_vatsrv += line.base * reduced
+                    self.taxed_ret_vatsrv += line.amount * reduced
                 elif line.tax_id.tax_group_id.code == 'ret_ir':
-                    self.amount_tax_ret_ir += line.base
-                    self.taxed_ret_ir += line.amount
+                    self.amount_tax_ret_ir += line.base * reduced
+                    self.taxed_ret_ir += line.amount * reduced
 
-        if self.amount_untaxed_vat == 0 and self.amount_untaxed_vat0 == 0:
+        #if self.amount_untaxed_vat == 0 and self.amount_untaxed_vat0 == 0:
             # base vat not defined, amount_vat by default
-            self.amount_untaxed_vat0 = self.amount_untaxed
+        #    self.amount_untaxed_vat0 = self.amount_untaxed
 
         self.amount_untaxed = self.amount_untaxed_vat + self.amount_untaxed_vat0 + \
             self.amount_untaxed_novat + self.amount_untaxed_ice
@@ -172,13 +189,13 @@ class AccountInvoice(models.Model):
         compute='_compute_amount'
     )
     amount_untaxed_vat = fields.Monetary(
-        string='Base 12 %',
+        string='Base IVA 12%',
         store=True,
         readonly=True,
         compute='_compute_amount'
     )
     amount_tax_vat = fields.Monetary(
-        string='IVA 12 %',
+        string='IVA 12%',
         store=True,
         readonly=True,
         compute='_compute_amount'
