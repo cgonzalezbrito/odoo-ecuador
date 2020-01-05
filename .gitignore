@@ -55,6 +55,7 @@ docs/_build/
 *cbc
 *account_invoice_refund_link*
 *l10n_ec_bank*
+*custom_pos_keyboard_shortcut*
 asset/
 custom_maintenance/
 telegram/
