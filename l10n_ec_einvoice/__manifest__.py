@@ -37,6 +37,7 @@
         'views/report_erefund.xml',
         'edi/einvoice_edi.xml',
         'edi/eretention_edi.xml',
-        'edi/email_template_einvoice_report.xml'
+        'edi/email_template_einvoice_report.xml',
+        'edi/email_template_eretention_report.xml'
     ],
 }

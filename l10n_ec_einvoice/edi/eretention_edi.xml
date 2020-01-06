@@ -7,7 +7,7 @@
             <field name="subject">RETENCIÓN ELECTRONICA ${object.company_id.name}</field>
             <field name="email_to">${object.partner_id.email|safe}</field>
             <field name="lang">${object.lang}</field>
-            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="model_id" ref="account.model_account_retention"/>
             <field name="auto_delete" eval="True"/>
             <!--field name="report_template" ref="account_report_eretention"/-->
             <field name="body_html">

@@ -38,7 +38,7 @@ class account_einvoice_wizard(models.TransientModel):
 		"""
 		Metodo ...
 		"""
-		retentions = self.env['account.retention'].search([('autorizado_sri','=',False),('in_type','=','ret_in_invoice'),('state','=','done')])   
+		retentions = self.env['account.retention'].search([('autorizado_sri','=',False),('in_type','=','ret_in_invoice'),('state','=','done')])
 
 		for ret in reversed(retentions):
 			self._logger.info('Retencion %s', ret.withholding_number)
@@ -57,19 +57,24 @@ class account_einvoice_wizard(models.TransientModel):
 			ret.sudo().action_send_eretention_email()
 			ret.to_send_einvoice = False
 
+	@api.multi
+	def action_send_edocuments_report(self):
 
-	# @api.multi
-	# def action_report_failures(self):
-	# 	"""
-	# 	Metodo ...
-	# 	"""
-	# 	invoices_sri = self.env['account.invoice'].search([('autorizado_sri','=',False),('type','in',['out_invoice', 'out_refund'])])
+		invoices = self.env['account.invoice'].search([('autorizado_sri','=',False),('type','in',['out_invoice', 'out_refund']),('state','not in',['draft','cancel'])])
+		retentions = self.env['account.retention'].search([('autorizado_sri','=',False),('in_type','=','ret_in_invoice'),('state','=','done')])
 
-	# 	if invoices_sri:
-	# 		self._logger.info('Las Facturas: ')
-	# 		for invoice in invoices_sri:
-	# 			self._logger.info('%s', invoice.invoice_number)
-	# 		self._logger.info('No han sido autorizadas por el SRI. Por favor revisar.')
-	# 		#self.ensure_one()
- #        	template = self.env.ref('l10n_ec_einvoice.email_template_einvoice_report')
- #        	#self.env['mail.template'].browse(template.id).send_mail(invoices_sri, force_send=True, raise_exception=True)
+		if invoices:
+			for invoice in invoices:
+				invoice.ensure_one()
+				template = invoice.env.ref('l10n_ec_einvoice.email_template_einvoice_report')
+				invoice.env['mail.template'].browse(template.id).send_mail(invoice.id, force_send=True, raise_exception=True)
+				invoice._logger.info('Existen facturas no autorizadas')
+				break
+
+		if retentions:
+			for retention in retentions:
+				retention.ensure_one()
+				template = retention.env.ref('l10n_ec_einvoice.email_template_eretention_report')
+				retention.env['mail.template'].browse(template.id).send_mail(retention.id, force_send=True, raise_exception=True)
+				break
+
