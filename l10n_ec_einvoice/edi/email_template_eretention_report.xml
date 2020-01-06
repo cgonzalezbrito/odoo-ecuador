@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <data noupdate="1">
-    <record id="email_template_einvoice_report" model="mail.template">
-      <field name="name">Send eInvoice Report</field>
+    <record id="email_template_eretention_report" model="mail.template">
+      <field name="name">Send eRetention Report</field>
           <field name="email_from">${object.company_id and object.company_id.email or ''}</field>
-          <field name="subject">REPORTE DE FACTURAS ELECTRONICAS ${object.company_id.name}</field>
+          <field name="subject">REPORTE DE RETENCIONES ELECTRONICAS ${object.company_id.name}</field>
           <field name="email_to">${object.company_id and object.company_id.email or ''}</field>
           <field name="lang">${object.lang}</field>
-          <field name="model_id" ref="account.model_account_invoice"/>
+          <field name="model_id" ref="account.model_account_retention"/>
           <field name="auto_delete" eval="True"/>
           <field name="body_html">        
             <![CDATA[
-            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">REPORTE DE FACTURAS ELECTRÓNICAS NO ENVIADAS AL SRI</p>
-            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Existen Facturas No Autorizadas.</p>
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">REPORTE DE RETENCIONES ELECTRÓNICAS NO ENVIADAS AL SRI</p>
+            <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Existen Retenciones No Autorizadas.</p>
             <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Por favor, revisar.<br></p>
             <p style="margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">${object.company_id.name}.<br></p>
           ]]>

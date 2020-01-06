@@ -4,7 +4,7 @@
 
 import logging
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from datetime import datetime, timedelta
 
 import psycopg2
