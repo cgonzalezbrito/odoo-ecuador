@@ -343,10 +343,10 @@ class AccountInvoice(models.Model):
                 'to_send_einvoice': False,
                 'estado_correo': 'sent'
             })
-            message = """
-            El correo electrónico al cliente ha sido enviado correctamente<br><br>
-            """ 
             if not self.to_send_einvoice:
+                message = """
+                El correo electrónico al cliente ha sido enviado correctamente<br><br>
+                """ 
                 self.message_post(body=message)
 
     @api.multi
