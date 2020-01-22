@@ -197,6 +197,11 @@ odoo.define('l10n_ec_pos', function(require) {
                 return false;
             }
 
+            if (order.get_total_paid() <= 0){
+                alert('No se pueden crear facturas con base imponible igual a $0.00');
+                return false;
+            }
+
             // The exact amount must be paid if there is no cash payment method defined.
             if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
                 var cash = false;

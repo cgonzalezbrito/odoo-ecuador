@@ -199,7 +199,7 @@
                                             </group>
                                             <group>
                                                 <field name="group_id" invisible="1"/>
-                                                <field name="fiscal_year" readonly="1"/>
+                                                <field name="fiscal_year"/>
                                                 <field name="manual" invisible="1"/>
                                                 <field name="amount"/>
                                                 <field name="base"/>

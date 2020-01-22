@@ -4,6 +4,7 @@ import os
 import base64
 import io
 import logging
+import ssl
 
 from lxml import etree
 from lxml.etree import fromstring, DocumentInvalid
@@ -74,6 +75,7 @@ class DocumentXML(object):
             # TODO: implementar modo offline
             raise UserError('Error SRI', 'Servicio SRI no disponible.')
 
+        #ssl._create_default_https_context = ssl._create_unverified_context
         client = Client(SriService.get_active_ws()[0])
         result = client.service.validarComprobante(buffer_xml.decode())
         self.logger.info('Estado de respuesta documento: %s' % result.estado)

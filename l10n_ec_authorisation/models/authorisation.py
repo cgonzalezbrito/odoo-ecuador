@@ -371,9 +371,9 @@ class AccountInvoice(models.Model):
         """
         if self.type not in ['in_invoice', 'liq_purchase']:
             return
-        if self.auth_number and len(self.auth_number) not in [10, 35, 49]:
+        if self.auth_number and len(self.auth_number) not in [10, 37, 49]:
             raise UserError(
-                u'Debe ingresar 10, 35 o 49 dígitos según el documento.'
+                u'Debe ingresar 10, 37 o 49 dígitos según el documento.'
             )
 
     @api.multi
