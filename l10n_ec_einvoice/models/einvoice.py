@@ -144,7 +144,8 @@ class AccountInvoice(models.Model):
                 [u'%', ' '],
                 [u'º', ' '],
                 [u'Ñ', 'N'],
-                [u'ñ', 'n']
+                [u'ñ', 'n'],
+                [u'&', 'y']
             ]
             for f, r in special:
                 code = code.replace(f, r)
@@ -247,34 +248,8 @@ class AccountInvoice(models.Model):
             if not ok:
                 self._logger.info(errores)
                 self.write({'estado_factura': 'send_error'})
-                if errores == 'ERROR CLAVE ACCESO REGISTRADA ' or errores == 'ERROR ERROR SECUENCIAL REGISTRADO ':
-
-                    self.write({
-                        'autorizado_sri': True,
-                        'to_send_einvoice': True,
-                        'estado_correo': 'to_send',
-                        'estado_autorizacion': 'Autorizado',
-                        'ambiente': 'PRODUCCION',
-                        'estado_factura': 'aut',
-                    })
-                    
-                    message = """
-                    DOCUMENTO ELECTRONICO GENERADO <br><br>
-                    CLAVE DE ACCESO / NUMERO DE AUTORIZACION: %s <br>
-                    ESTADO: AUTORIZADO <br>
-                    FECHA DE AUTORIZACIÓN:  <br>
-                    AMBIENTE: PRODUCCION <br>
-                    """ % (
-                        aux_acces_key,
-                    )
-                    
-                    self.message_post(body=message)
-                    self.clave_acceso = aux_acces_key
-                    xml_attach = self.add_attachment(einvoice.encode(),aux_acces_key)
-                    self.store_fname = xml_attach[0].datas_fname
-                    self.xml_file = xml_attach[0].datas
-                    
-                return
+                if errores != 'ERROR CLAVE ACCESO REGISTRADA ' and errores != 'ERROR ERROR SECUENCIAL REGISTRADO ':
+                    return
 
             auth, m = inv_xml.request_authorization(access_key)
             if not auth:
