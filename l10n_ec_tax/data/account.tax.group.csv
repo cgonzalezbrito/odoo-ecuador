@@ -1,7 +1,7 @@
 id,code,name,sequence
 ret_ir,ret_ir,Retención Impuesto a la Renta,
 no_ret_ir,no_ret_ir,No sujeto a Retención Impuesto a la Renta,
-vat,vat,IVA diferente de 0%,
+vat,vat,IVA 12%,
 vat0,vat0,IVA 0,
 novat,novat,No objeto de IVA,
 ret_vat_srv,ret_vat_srv,Retención IVA Servicios,

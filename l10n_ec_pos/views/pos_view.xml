@@ -33,6 +33,7 @@
                     <label for="pos_ec" class="col-md-3" string="Diario" modifiers="{}"/>
                     <div class="content-group mt16" modifiers="{}">
                       <field name="invoice_journal_id"/>
+                      <field name="electronic_journal" invisible="1"/>
                     </div>
                   </div>
                   <div class="o_setting_right_pane" modifiers="{}">

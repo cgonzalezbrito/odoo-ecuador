@@ -73,43 +73,49 @@ odoo.define('l10n_ec_pos', function(require) {
             var ruc = this.pos.company.vat;
             var env = this.pos.company.env_service;
             var journal = this.pos.config.invoice_journal_id[0];
+            var electronic_jornal = this.pos.config.electronic_journal;
             var seq = this.pos.config.seq_access_key[0];
             var mod;
 
             var QWeb = core.qweb;
 
-            if (first_receipt) {
-                first_receipt = false;
-                rpc.query({
-                    model: 'pos.order',
-                    method: 'get_inv_number',
-                    args:[
-                        [''],
-                        [journal],
-                    ],
-                }).then(function(res_inv_number){
-                    inv_number = res_inv_number;
+            if (electronic_jornal){
+
+                if (first_receipt) {
+                    first_receipt = false;
                     rpc.query({
                         model: 'pos.order',
-                        method: 'get_pos_code',
+                        method: 'get_inv_number',
                         args:[
                             [''],
-                            [seq],
+                            [journal],
                         ],
-                    }).then(function (res_sequence){
-                        sequence = res_sequence;
-                        console.log(sequence)
-                        clave_acceso = date + tcomp + ruc + env + inv_number + sequence + '1';
-                        mod = self.compute_mod11(clave_acceso);
-                        clave_acceso += mod;
-                        self.$('.pos-receipt-container').html(QWeb.render('PosTicket', self.get_receipt_render_env()));    
-                        console.log(clave_acceso);
-                        // alert('ALERTA')
+                    }).then(function(res_inv_number){
+                        inv_number = res_inv_number;
+                        rpc.query({
+                            model: 'pos.order',
+                            method: 'get_pos_code',
+                            args:[
+                                [''],
+                                [seq],
+                            ],
+                        }).then(function (res_sequence){
+                            sequence = res_sequence;
+                            console.log(sequence)
+                            clave_acceso = date + tcomp + ruc + env + inv_number + sequence + '1';
+                            mod = self.compute_mod11(clave_acceso);
+                            clave_acceso += mod;
+                            self.$('.pos-receipt-container').html(QWeb.render('PosTicket', self.get_receipt_render_env()));    
+                            console.log(clave_acceso);
+                            // alert('ALERTA')
+                        });
                     });
-                });
-                sequence_array[sequence_array.length] = order.sequence_number;
+                    sequence_array[sequence_array.length] = order.sequence_number;
+                } else {
+                    self.$('.pos-receipt-container').html(QWeb.render('PosTicket', self.get_receipt_render_env()));    
+                }
             } else {
-                self.$('.pos-receipt-container').html(QWeb.render('PosTicket', self.get_receipt_render_env()));    
+                self.$('.pos-receipt-container').html(QWeb.render('PosTicketCompobante', self.get_receipt_render_env()));    
             }
         },
         render_change: function(){
@@ -124,7 +130,7 @@ odoo.define('l10n_ec_pos', function(require) {
                 button_print_invoice.hide();
             }
             
-            if (!first_receipt && !sequence_array.includes(order.sequence_number)) {
+            if (!first_receipt && !sequence_array.includes(order.sequence_number) && electronic_jornal) {
                 var date = moment().format('DDMMYYYY');
                 var tcomp = '01';
                 var ruc = this.pos.company.vat;
@@ -140,7 +146,7 @@ odoo.define('l10n_ec_pos', function(require) {
                 console.log(clave_acceso);
                 sequence_array[sequence_array.length] = order.sequence_number;
             }
-            console.log(sequence_array)
+            /*console.log(sequence_array)*/
         },
         compute_mod11: function(value){
             var total = 0;
@@ -201,7 +207,7 @@ odoo.define('l10n_ec_pos', function(require) {
                 alert('No se pueden crear facturas con base imponible igual a $0.00');
                 return false;
             }
-
+            
             // The exact amount must be paid if there is no cash payment method defined.
             if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
                 var cash = false;
