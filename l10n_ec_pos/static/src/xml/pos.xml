@@ -44,7 +44,7 @@
         		    <td class="pos-right-align"><strong>P.UNIT</strong></td>
         		    <td class="pos-right-align"><strong>TOTAL</strong></td>
                 </tr>
-                <tr t-foreach="orderlines" t-as="orderline">
+                <tr style="border-bottom: 1px solid black;" t-foreach="orderlines" t-as="orderline">
                     <td>
                         <t t-esc="orderline.get_product().display_name"/>
                          <t t-if="orderline.get_discount() > 0">
