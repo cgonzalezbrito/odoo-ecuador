@@ -115,7 +115,7 @@ odoo.define('l10n_ec_pos', function(require) {
                     self.$('.pos-receipt-container').html(QWeb.render('PosTicket', self.get_receipt_render_env()));    
                 }
             } else {
-                self.$('.pos-receipt-container').html(QWeb.render('PosTicketCompobante', self.get_receipt_render_env()));    
+                self.$('.pos-receipt-container').html(QWeb.render('PosTicketComprobante', self.get_receipt_render_env()));    
             }
         },
         render_change: function(){
