@@ -345,8 +345,8 @@ msgstr "IVA 0%"
 #. module: l10n_ec_withdrawing
 #: selection:account.invoice.tax,tax_group:0
 #: selection:account.tax,tax_group:0
-msgid "IVA Diferente de 0%"
-msgstr "IVA diferente de 0%"
+msgid "IVA 12%"
+msgstr "IVA 12%"
 
 #. module: l10n_ec_withdrawing
 #: view:account.invoice:l10n_ec_withdrawing.invoice_liq_purchase_form
