@@ -403,7 +403,7 @@ class AccountInvoice(models.Model):
                 'invoice_id': inv.id,
                 'auth_inv_id': auth_ret.id,
                 'type': inv.type,
-                'in_type': 'ret_%s' % inv.type,
+                'in_type': 'ret_in_invoice',#'ret_%s' % inv.type,
                 'date': today,
                 'manual': False
             }
