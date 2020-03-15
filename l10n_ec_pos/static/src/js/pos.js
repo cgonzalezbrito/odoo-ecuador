@@ -101,7 +101,6 @@ odoo.define('l10n_ec_pos', function(require) {
                             ],
                         }).then(function (res_sequence){
                             sequence = res_sequence;
-                            console.log(sequence)
                             clave_acceso = date + tcomp + ruc + env + inv_number + sequence + '1';
                             mod = self.compute_mod11(clave_acceso);
                             clave_acceso += mod;
@@ -146,7 +145,6 @@ odoo.define('l10n_ec_pos', function(require) {
                 console.log(clave_acceso);
                 sequence_array[sequence_array.length] = order.sequence_number;
             }
-            /*console.log(sequence_array)*/
         },
         compute_mod11: function(value){
             var total = 0;
@@ -207,7 +205,7 @@ odoo.define('l10n_ec_pos', function(require) {
                 alert('No se pueden crear facturas con base imponible igual a $0.00');
                 return false;
             }
-            
+
             // The exact amount must be paid if there is no cash payment method defined.
             if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
                 var cash = false;
