@@ -282,7 +282,7 @@ class WizardAts(models.TransientModel):
                     'puntoEmision': inv.invoice_number[3:6],
                     'secuencial': inv.invoice_number[6:15],
                     'fechaEmision': convertir_fecha(inv.date_invoice),
-                    'autorizacion': inv.auth_number,
+                    'autorizacion': inv.auth_number or inv.clave_acceso,
                     'baseNoGraIva': '%.2f' % inv.amount_untaxed_novat,
                     'baseImponible': '%.2f' % inv.amount_untaxed_vat0,
                     'baseImpGrav': '%.2f' % inv.amount_untaxed_vat,
