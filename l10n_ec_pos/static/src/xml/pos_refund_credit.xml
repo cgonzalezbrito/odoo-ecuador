@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-
     <t t-extend="ClientDetailsEdit">
         <t t-jquery=".client-details.edit" t-operation="replace">
             <section class='client-details edit'>
@@ -15,8 +14,12 @@
                 </div>
                 <input class='detail client-name' name='name' t-att-value='partner.name' placeholder='Name'></input>
                 <div class='edit-buttons'>
-                    <div class='button undo'><i class='fa fa-undo' /></div>
-                    <div class='button save'><i class='fa fa-floppy-o' /></div>
+                    <div class='button undo'>
+                        <i class='fa fa-undo' />
+                    </div>
+                    <div class='button save'>
+                        <i class='fa fa-floppy-o' />
+                    </div>
                 </div>
                 <div class='client-details-box clearfix'>
                     <div class='client-details-left'>
@@ -34,11 +37,11 @@
                         </div>
                         <div class='client-detail'>
                             <span class='label'>Street</span>
-                            <input class='detail client-address-street' name='street'       t-att-value='partner.street' placeholder='Street'></input>
+                            <input class='detail client-address-street' name='street' t-att-value='partner.street' placeholder='Street'></input>
                         </div>
                         <div class='client-detail'>
                             <span class='label'>City</span>
-                            <input class='detail client-address-city'   name='city'         t-att-value='partner.city' placeholder='City'></input>
+                            <input class='detail client-address-city' name='city' t-att-value='partner.city' placeholder='City'></input>
                         </div>
                         <div class='client-detail'>
                             <span class='label'>Country</span>
@@ -55,15 +58,15 @@
                     <div class='client-details-right'>
                         <div class='client-detail'>
                             <span class='label'>Email</span>
-                            <input class='detail client-email'  name='email'    type='email'    t-att-value='partner.email || ""'></input>
+                            <input class='detail client-email' name='email' type='email' t-att-value='partner.email || ""'></input>
                         </div>
                         <div class='client-detail'>
                             <span class='label'>Phone</span>
-                            <input class='detail client-phone'  name='phone'    type='tel'      t-att-value='partner.phone || ""'></input>
+                            <input class='detail client-phone' name='phone' type='tel' t-att-value='partner.phone || ""'></input>
                         </div>
                         <div class='client-detail'>
                             <span class='label'>Barcode</span>
-                            <input class='detail barcode'       name='ean13'    t-att-value='partner.ean13 || ""'></input>
+                            <input class='detail barcode' name='ean13' t-att-value='partner.ean13 || ""'></input>
                         </div>
                     </div>
                 </div>
@@ -74,10 +77,18 @@
     <t t-extend="ClientLine">
         <t t-jquery=".client-line" t-operation="replace">
             <tr class='client-line' t-att-data-id='partner.id'>
-	        <td><t t-esc='partner.identifier' /></td>
-                <td><t t-esc='partner.name' /></td>
-                <td><t t-esc='partner.address' /></td>
-                <td><t t-esc='partner.phone or partner.mobile or ""' /></td>
+                <td>
+                    <t t-esc='partner.identifier' />
+                </td>
+                <td>
+                    <t t-esc='partner.name' />
+                </td>
+                <td>
+                    <t t-esc='partner.address' />
+                </td>
+                <td>
+                    <t t-esc='partner.phone or partner.mobile or ""' />
+                </td>
             </tr>
         </t>
     </t>
@@ -87,7 +98,7 @@
             <table class='client-list'>
                 <thead>
                     <tr>
-	                    <th>Cedula / Ruc</th>
+                        <th>Cedula / Ruc</th>
                         <th>Name</th>
                         <th>Address</th>
                         <th>Phone</th>
@@ -105,28 +116,40 @@
                 <div class='client-picture'>
                     <img t-att-src='widget.partner_icon_url(partner.id)' />
                 </div>
-                <div class='client-name'><t t-esc='partner.name' /></div>
+                <div class='client-name'>
+                    <t t-esc='partner.name' />
+                </div>
                 <div class='edit-buttons'>
-                    <div class='button edit'><i class='fa fa-pencil-square' /></div>
+                    <div class='button edit'>
+                        <i class='fa fa-pencil-square' />
+                    </div>
                 </div>
                 <div class='client-details-box clearfix'>
                     <div class='client-details-left'>
                         <div class='client-detail'>
                             <span class='label'>Ced/RUC</span>
-                            <span class='detail client-address'><t t-esc='partner.identifier' /></span>
+                            <span class='detail client-address'>
+                                <t t-esc='partner.identifier' />
+                            </span>
                         </div>
                         <div class='client-detail'>
                             <span class='label'>Address</span>
-                            <span class='detail client-address'><t t-esc='partner.address' /></span>
+                            <span class='detail client-address'>
+                                <t t-esc='partner.address' />
+                            </span>
                         </div>
                         <div class='client-detail'>
                             <span class='label'>Email</span>
-                            <span class='detail client-email'><t t-esc='partner.email' /></span>
+                            <span class='detail client-email'>
+                                <t t-esc='partner.email' />
+                            </span>
                         </div>
                         <div class='client-detail'>
                             <span class='label'>Phone</span>
                             <t t-if='partner.phone'>
-                                <span class='detail client-phone'><t t-esc='partner.phone' /></span>
+                                <span class='detail client-phone'>
+                                    <t t-esc='partner.phone' />
+                                </span>
                             </t>
                             <t t-if='!partner.phone'>
                                 <span class='detail client-phone empty'>N/A</span>
@@ -137,7 +160,9 @@
                         <div class='client-detail'>
                             <span class='label'>Barcode</span>
                             <t t-if='partner.ean13'>
-                                <span class='detail client-id'><t t-esc='partner.ean13'/></span>
+                                <span class='detail client-id'>
+                                    <t t-esc='partner.ean13'/>
+                                </span>
                             </t>
                             <t t-if='!partner.ean13'>
                                 <span class='detail client-id empty'>N/A</span>
@@ -145,7 +170,9 @@
                         </div>
                         <div class='client-detail'>
                             <span class='label'>Crédito</span>
-                            <span class='detail client-address'><t t-esc='partner.refund_credit'/></span>
+                            <span class='detail client-address'>
+                                <t t-esc='partner.refund_credit'/>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -183,10 +210,11 @@
 
                     <div class='payment-buttons'>
                         <div class='button js_set_customer'>
-                            <i class='fa fa-user' /> 
-                            <span class='js_customer_name'> 
+                            <i class='fa fa-user' />
+                            <span class='js_customer_name'>
                                 <t t-if="widget.pos.get_client()">
-                                    <t t-esc="widget.pos.get_client().name" /><br/>
+                                    <t t-esc="widget.pos.get_client().name" />
+                                    <br/>
                                 </t>
                                 <t t-if="!widget.pos.get_client()">
                                     Customer
@@ -195,32 +223,34 @@
                         </div>
                         <t t-if="widget.pos.get_client().refund_credit != '0'">
                             <div class='button js_set_customer'>
-                                <span class='js_customer_credit'> 
-                                        <t t-esc="widget.pos.get_client().refund_credit"/>           
+                                <span class='js_customer_credit'>
+                                    <t t-esc="widget.pos.get_client().refund_credit"/>
                                 </span>
                             </div>
                         </t>
                         <t t-if='widget.pos.config.iface_invoicing'>
                             <t t-if='widget.pos.get_order()'>
                                 <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
-                                    <i class='fa fa-file-text-o' /> Invoice
+                                    <i class='fa fa-file-text-o' />
+ Invoice
                                 </div>
                             </t>
                         </t>
                         <t t-if='widget.pos.config.tip_product_id'>
                             <div class='button js_tip'>
-                                <i class='fa fa-heart' /> Tip 
+                                <i class='fa fa-heart' />
+ Tip 
                             </div>
                         </t>
                         <t t-if='widget.pos.config.iface_cashdrawer'>
                             <div class='button js_cashdrawer'>
-                                <i class='fa fa-archive' /> Open Cashbox
+                                <i class='fa fa-archive' />
+ Open Cashbox
                             </div>
                         </t>
-                     </div>
-                 </div>
-             </div>
-         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </t>
-    
 </templates>

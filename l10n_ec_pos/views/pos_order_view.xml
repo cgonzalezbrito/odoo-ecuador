@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_order_form" model="ir.ui.view">
+        <field name="name">POS order</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="before">
+                <field name="epayment_pos"/>
+            </xpath>
+            <xpath expr="//field[@name='sale_journal']" position="after">
+                <field name="access_key"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_session_form" model="ir.ui.view">
+        <field name="name">POS session</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_pos_session_validate']" position="after"/>
+            <xpath expr="//button[@name='action_pos_session_validate']" position="after">
+                <button name="closing_control_print" type="object" attrs="{'invisible':['|',('state','=',['opening_control','opened'])]}" string="Imprimir Resumen" class="btn"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

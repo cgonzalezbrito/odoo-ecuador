@@ -21,16 +21,21 @@
         'account_invoice_refund_link',
     ],
     'data': [
-        'data/pos.xml',
-        'data/credit.xml',
-        'views/pos_view.xml',
-        'views/pos_refund_view.xml',
+        'data/pos_data.xml',
+        'data/pos_refund_credit_data.xml',
+        'views/pos_refund_credit_view.xml',
+        'views/pos_templates.xml',
+        'views/pos_config_view.xml',
+        'views/pos_order_view.xml',
         'views/ticket_layout.xml',
-        'views/close_control_report.xml',
-        'views/report_closing_control.xml',
+        'report/close_control_report.xml',
+        'report/report_closing_control.xml',
     ],
     'qweb': [
-        'static/src/xml/l10n_ec_pos.xml',
-        'static/src/xml/pos.xml'
-    ]
+        'static/src/xml/pos.xml',
+        'static/src/xml/ticket.xml',
+    ],
+    'images': ['static/description/thumbnail.png'],
+    'installable': True,
+    'auto_install': False,
 }
