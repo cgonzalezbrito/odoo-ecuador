@@ -1,357 +1,257 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates id="point_of_sale.template" xml:space="preserve">
-    <t t-extend="PosTicket">
-        <t t-jquery=".pos-sale-ticket" t-operation="replace">
-            <div class="pos-sale-ticket">
-                <div class="emph">
-                    <h4 style="text-align: center;">
-                        <t t-esc="widget.pos.company.name" />
-                        <br />
-                        <t t-esc="widget.pos.company.namerl" />
-                        <br />
-                        RUC:
-                        <t t-esc="widget.pos.company.vat" />
-                    </h4>
-                </div>
-                <div class="pos-center-align">
-                    <t t-esc="moment().format('L LT')" />
-                </div>
-                <br />
-                <div class="pos-center-align">
-                    FACTURA ELECTRÓNICA
-                </div>
-                Documento Número:
-                <strong>
-                    <t t-esc="widget.get_invoice_number()" />
-                </strong>
-                <br />
-                Ambiente:
-                <strong>
-                    <t t-esc="widget.get_env_service()" />
-                </strong>
-                <br />
-                Clave de acceso:
-                <br />
-                <div class="pos-center-align">
-                    <strong>
-                        <t t-esc="widget.get_clave_start()" />
-                        <br />
-                        <t t-esc="widget.get_clave_end()" />
-                    </strong>
-                </div>
-                <br />
-                Producción:
-                <strong>
-                    NORMAL
-                </strong>
-                <br />
-                Dirección:
-                <t t-esc="widget.pos.company.street || ''" />
-                <br />
-                Telef:
-                <t t-esc="widget.pos.company.phone || ''" />
-                <br />
-                Atendido por:
-                <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name" />
-                <br />
-                <br />
-                <div class="pos-center-align">
-                    DATOS DE CLIENTE
-                </div>
-                CÉDULA/RUC:
-                <t t-esc="order.get_client().identifier || ''" />
-                <br />
-                Cliente:
-                <t t-esc="order.get_client().name || ''" />
-                <br />
-                Dirección:
-                <t t-esc="order.get_client().street || ''" />
-                <br />
-                Telef:
-                <t t-esc="order.get_client().phone || ''" />
-                <br />
-                Correo:
-                <t t-esc="order.get_client().email || ''" />
-                <br />
-                <br />
-                <t t-if="receipt.header">
-                    <div style="text-align:center">
-                        <t t-esc="receipt.header" />
-                    </div>
-                    <br />
-                </t>
-                <table class="receipt-orderlines">
-                    <colgroup>
-                        <col width="40%" />
-                        <col width="20%" />
-                        <col width="20%" />
-                        <col width="20%" />
-                    </colgroup>
-                    <tr>
-                        <td>
-                            <strong>
-                                ITEM
-                            </strong>
-                        </td>
-                        <td class="pos-right-align">
-                            <strong>
-                                CANT
-                            </strong>
-                        </td>
-                        <td class="pos-right-align">
-                            <strong>
-                                P.UNIT
-                            </strong>
-                        </td>
-                        <td class="pos-right-align">
-                            <strong>
-                                TOTAL
-                            </strong>
-                        </td>
-                    </tr>
-                    <tr t-foreach="orderlines" t-as="orderline">
-                        <td>
-                            <t t-esc="orderline.get_product().display_name" />
-                            <t t-if="orderline.get_discount() > 0">
-                                <div class="pos-disc-font">
-                                    Con
-                                    <t t-esc="orderline.get_discount()" />
-                                    % desc.
-                                </div>
-                            </t>
-                        </td>
-                        <td class="pos-right-align">
-                            <t t-esc="orderline.get_quantity_str_with_unit()" />
-                        </td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(orderline.get_unit_display_price())" />
-                        </td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(orderline.get_display_price())" />
-                        </td>
-                    </tr>
-                </table>
-                <br />
-                <table class="receipt-total">
-                    <tr>
-                        <td>
-                            Subtotal:
-                        </td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(order.get_total_without_tax())" />
-                        </td>
-                    </tr>
-                    <t t-foreach="order.get_tax_details()" t-as="taxdetail">
-                        <tr>
-                            <td>
-                                <t t-esc="taxdetail.name" />
-                            </td>
-                            <td class="pos-right-align">
-                                <t t-esc="widget.format_currency(taxdetail.amount)" />
-                            </td>
-                        </tr>
+<templates xml:space="preserve">
+
+    <t t-extend="ClientDetailsEdit">
+        <t t-jquery=".client-details.edit" t-operation="replace">
+            <section class='client-details edit'>
+                <div class='client-picture'>
+                    <t t-if='!partner.id'>
+                        <i class='fa fa-camera'></i>
                     </t>
-                    <tr>
-                        <td>
-                            Descuento:
-                        </td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(order.get_total_discount())" />
-                        </td>
-                    </tr>
-                    <tr class="emph">
-                        <td>
-                            Total:
-                        </td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(order.get_total_with_tax())" />
-                        </td>
-                    </tr>
-                </table>
-                <br />
-                <br />
-                <br />
-                <table class="receipt-paymentlines">
-                    <t t-foreach="paymentlines" t-as="line">
-                        <tr>
-                            <td>
-                                <t t-esc="line.name" />
-                            </td>
-                            <td class="pos-right-align">
-                                <t t-esc="widget.format_currency(line.get_amount())" />
-                            </td>
-                        </tr>
+                    <t t-if='partner.id'>
+                        <img t-att-src='widget.partner_icon_url(partner.id)' />
                     </t>
-                </table>
-                <br />
-                <table class="receipt-change">
-                    <tr>
-                        <td>
-                            Change:
-                        </td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(order.get_change())" />
-                        </td>
-                    </tr>
-                </table>
-                <br />
-                <div class="pos-center-align" style="border-top: 1px solid black;">
-                    Este comprobante no posee validez tributaria
+                    <input type='file' class='image-uploader'></input>
                 </div>
-                <div class="pos-center-align">
-                    Su factura se enviara a:
-                    <br />
-                    <t t-esc="order.get_client().email || ''" />
-                    <br />
-                    <br />
-                </div>
-                Puede consultar sus facturas electrónicas en https://srienlinea.sri.gob.ec/comprobantes-electronicos-internet/publico/validezComprobantes.jsf con la siguiente clave de acceso
-                <br />
-                <br />
-                <div class="pos-center-align" style="border-bottom: 1px solid black;">
-                    <t t-esc="widget.get_clave_start()" />
-                    <br />
-                    <t t-esc="widget.get_clave_end()" />
-                </div>
-                <br />
-                <div class="pos-center-align">
-                    GRACIAS POR SU COMPRA!
-                </div>
-                <t t-if="receipt.footer">
-                    <br />
-                    <div style="text-align:center">
-                        <t t-esc="receipt.footer" />
+                <input class='detail client-name' name='name' t-att-value='partner.name' placeholder='Name'></input>
+                <div class='edit-buttons'>
+                    <div class='button undo'>
+                        <i class='fa fa-undo' />
                     </div>
-                </t>
-            </div>
+                    <div class='button save'>
+                        <i class='fa fa-floppy-o' />
+                    </div>
+                </div>
+                <div class='client-details-box clearfix'>
+                    <div class='client-details-left'>
+                        <div class='client-detail'>
+                            <span class='label'>Tipo</span>
+                            <select class="detail client-address-street" name="type_id">
+                                <option value='cedula' t-att-selected="partner.type_id ? (('cedula' === partner.type_id) ? true : undefined) : undefined">CÉDULA</option>
+                                <option value='ruc' t-att-selected="partner.type_id ? (('ruc' === partner.type_id) ? true : undefined) : undefined">RUC</option>
+                                <option value='pasaporte' t-att-selected="partner.type_id ? (('pasaporte' === partner.type_id) ? true : undefined) : undefined">PASAPORTE</option>
+                            </select>
+                        </div>
+                        <div class='client-detail'>
+                            <span class='label'>Ced/RUC</span>
+                            <input class='detail client-address-street' name='identifier' t-att-value='partner.identifier' placeholder='Cedula / RUC'></input>
+                        </div>
+                        <div class='client-detail'>
+                            <span class='label'>Street</span>
+                            <input class='detail client-address-street' name='street' t-att-value='partner.street' placeholder='Street'></input>
+                        </div>
+                        <div class='client-detail'>
+                            <span class='label'>City</span>
+                            <input class='detail client-address-city' name='city' t-att-value='partner.city' placeholder='City'></input>
+                        </div>
+                        <div class='client-detail'>
+                            <span class='label'>Country</span>
+                            <select class='detail client-address-country' name='country_id'>
+                                <option value=''>Ecuador</option>
+                                <t t-foreach='widget.pos.countries' t-as='country'>
+                                    <option t-att-value='country.id' t-att-selected="partner_country_id ? ((country.id === partner.country_id[57]) ? true : undefined) : undefined">
+                                        <t t-esc='country.name'/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='client-details-right'>
+                        <div class='client-detail'>
+                            <span class='label'>Email</span>
+                            <input class='detail client-email' name='email' type='email' t-att-value='partner.email || ""'></input>
+                        </div>
+                        <div class='client-detail'>
+                            <span class='label'>Phone</span>
+                            <input class='detail client-phone' name='phone' type='tel' t-att-value='partner.phone || ""'></input>
+                        </div>
+                        <div class='client-detail'>
+                            <span class='label'>Barcode</span>
+                            <input class='detail barcode' name='ean13' t-att-value='partner.ean13 || ""'></input>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </t>
     </t>
-    
-    <t t-name="PosTicketComprobante">
-        <t t-jquery=".pos-sale-ticket" t-operation="replace">
-            <div class="pos-sale-ticket">
-                <br/>
-                <!--div class="emph">
-                <h4 style="text-align: center;"><t t-esc="widget.pos.company.name"/><br/><t t-esc="widget.pos.company.namerl"/><br/>RUC: <t t-esc="widget.pos.company.vat"/></h4>
-                </div-->
-                <table>
-                    <colgroup>
-                        <col width='22%' />
-                        <col width='78%' />
-                    </colgroup>
-                    <tr>
-                        <td>FECHA: </td>
-                        <td><t t-esc="moment().format('L LT')"/></td>
-                    </tr> 
-                    <tr>
-                        <td>SEÑORES: </td>
-                        <td>
-                            <t t-esc="order.get_client().name || ''"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>RUC/CI: </td>
-                        <td>
-                            <t t-esc="order.get_client().identifier || ''"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>DIR:</td>
-                        <td>
-                            <t t-esc="order.get_client().street || ''"/>
-                        </td>
-                    </tr>
-                </table>
 
-                <br/>
-
-                <table class='receipt-orderlines'>
-                    <colgroup>
-                        <col width='20%' />
-                        <col width='40%' />
-                        <col width='20%' />
-                        <col width='20%' />
-                    </colgroup>
-                    <tr style="border-bottom: 1px solid black; border-top: 1px solid black;">
-                        <td class="pos-left-align"><strong>CANT</strong></td>
-                        <td class="pos-left-align"><strong>ITEM</strong></td>
-                        <td class="pos-right-align"><strong>P.UNIT</strong></td>
-                        <td class="pos-right-align"><strong>TOTAL</strong></td>
-                    </tr>
-                    <tr t-foreach="orderlines" t-as="orderline">
-                        <td class="pos-left-align">
-                            <t t-esc="orderline.get_quantity_str_with_unit()"/>
-                        </td>
-                        <td>
-                            <t t-esc="orderline.get_product().display_name"/>
-                        </td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(orderline.get_unit_display_price())"/>
-                        </td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(orderline.get_display_price())"/>
-                        </td>
-                    </tr>
-                </table>
-                <br />
-                <table class='receipt-total' style="border-top: 1px solid black;">
-                    <colgroup>
-                        <col width='20%' />
-                        <col width='20%' />
-                        <col width='35%' />
-                        <col width='25%' />
-                    </colgroup>
-                    <tr>
-                        <td class="pos-left-align">Pagado:</td>
-                        <td class="pos-left-align">
-                            <t t-esc="widget.format_currency(order.get_total_paid())"/>
-                        </td>
-                        <td class="pos-right-align">Subtotal:</td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="pos-left-align">Cambio:</td>
-                        <td class="pos-left-align">
-                            <t t-esc="widget.format_currency(order.get_change())"/>
-                        </td>
-                        <td class="pos-right-align">Descuento:</td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(order.get_total_discount())"/>
-                        </td>
-                    </tr>
-                    <t t-foreach="order.get_tax_details()" t-as="taxdetail">
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td class="pos-right-align">IVA 12%</td>
-                            <td class="pos-right-align">
-                                <t t-esc="widget.format_currency(taxdetail.amount)" />
-                            </td>
-                        </tr>
-                    </t>
-                    <tr class="emph">
-                        <td></td>
-                        <td></td>
-                        <td class="pos-right-align">Total:</td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
-                        </td>
-                    </tr>
-                </table>
-
-                <br />
-                <br />
-                <br />
-            
-                <t t-if="receipt.footer">
-                    <br />
-                    <div style='text-align:center'>
-                        <t t-esc="receipt.footer" />
-                    </div>
-                </t>
-            </div>
+    <t t-extend="ClientLine">
+        <t t-jquery=".client-line" t-operation="replace">
+            <tr class='client-line' t-att-data-id='partner.id'>
+                <td>
+                    <t t-esc='partner.identifier' />
+                </td>
+                <td>
+                    <t t-esc='partner.name' />
+                </td>
+                <td>
+                    <t t-esc='partner.address' />
+                </td>
+                <td>
+                    <t t-esc='partner.phone or partner.mobile or ""' />
+                </td>
+            </tr>
         </t>
+    </t>
+
+    <t t-extend="ClientListScreenWidget">
+        <t t-jquery=".client-list" t-operation="replace">
+            <table class='client-list'>
+                <thead>
+                    <tr>
+                        <th>Cedula / Ruc</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody class='client-list-contents'>
+                </tbody>
+            </table>
+        </t>
+    </t>
+
+    <t t-extend="ClientDetails">
+        <t t-jquery=".client-details" t-operation="replace">
+            <section class='client-details'>
+                <div class='client-picture'>
+                    <img t-att-src='widget.partner_icon_url(partner.id)' />
+                </div>
+                <div class='client-name'>
+                    <t t-esc='partner.name' />
+                </div>
+                <div class='edit-buttons'>
+                    <div class='button edit'>
+                        <i class='fa fa-pencil-square' />
+                    </div>
+                </div>
+                <div class='client-details-box clearfix'>
+                    <div class='client-details-left'>
+                        <div class='client-detail'>
+                            <span class='label'>Ced/RUC</span>
+                            <span class='detail client-address'>
+                                <t t-esc='partner.identifier' />
+                            </span>
+                        </div>
+                        <div class='client-detail'>
+                            <span class='label'>Address</span>
+                            <span class='detail client-address'>
+                                <t t-esc='partner.address' />
+                            </span>
+                        </div>
+                        <div class='client-detail'>
+                            <span class='label'>Email</span>
+                            <span class='detail client-email'>
+                                <t t-esc='partner.email' />
+                            </span>
+                        </div>
+                        <div class='client-detail'>
+                            <span class='label'>Phone</span>
+                            <t t-if='partner.phone'>
+                                <span class='detail client-phone'>
+                                    <t t-esc='partner.phone' />
+                                </span>
+                            </t>
+                            <t t-if='!partner.phone'>
+                                <span class='detail client-phone empty'>N/A</span>
+                            </t>
+                        </div>
+                    </div>
+                    <div class='client-details-right'>
+                        <div class='client-detail'>
+                            <span class='label'>Barcode</span>
+                            <t t-if='partner.ean13'>
+                                <span class='detail client-id'>
+                                    <t t-esc='partner.ean13'/>
+                                </span>
+                            </t>
+                            <t t-if='!partner.ean13'>
+                                <span class='detail client-id empty'>N/A</span>
+                            </t>
+                        </div>
+                        <div class='client-detail'>
+                            <span class='label'>Crédito</span>
+                            <span class='detail client-address'>
+                                <t t-esc='partner.refund_credit'/>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </t>
+
+    <t t-name="PaymentScreenWidget">
+        <div class='payment-screen screen'>
+            <div class='screen-content'>
+                <div class='top-content'>
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                    <h1>Payment</h1>
+                    <span class='button next'>
+                        Validate
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </div>
+                <div class='left-content pc40 touch-scrollable scrollable-y'>
+
+                    <div class='paymentmethods-container'>
+                    </div>
+
+                </div>
+                <div class='right-content pc60 touch-scrollable scrollable-y'>
+
+                    <section class='paymentlines-container'>
+                    </section>
+
+                    <section class='payment-numpad'>
+                    </section>
+
+                    <div class='payment-buttons'>
+                        <div class='button js_set_customer'>
+                            <i class='fa fa-user' />
+                            <span class='js_customer_name'>
+                                <t t-if="widget.pos.get_client()">
+                                    <t t-esc="widget.pos.get_client().name" />
+                                    <br/>
+                                </t>
+                                <t t-if="!widget.pos.get_client()">
+                                    Customer
+                                </t>
+                            </span>
+                        </div>
+                        <t t-if="widget.pos.get_client().refund_credit != '0'">
+                            <div class='button js_set_customer'>
+                                <span class='js_customer_credit'>
+                                    <t t-esc="widget.pos.get_client().refund_credit"/>
+                                </span>
+                            </div>
+                        </t>
+                        <t t-if='widget.pos.config.iface_invoicing'>
+                            <t t-if='widget.pos.get_order()'>
+                                <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
+                                    <i class='fa fa-file-text-o' />
+ Invoice
+                                </div>
+                            </t>
+                        </t>
+                        <t t-if='widget.pos.config.tip_product_id'>
+                            <div class='button js_tip'>
+                                <i class='fa fa-heart' />
+ Tip 
+                            </div>
+                        </t>
+                        <t t-if='widget.pos.config.iface_cashdrawer'>
+                            <div class='button js_cashdrawer'>
+                                <i class='fa fa-archive' />
+ Open Cashbox
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
     </t>
 </templates>

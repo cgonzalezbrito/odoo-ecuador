@@ -11,37 +11,20 @@ import psycopg2
 
 _logger = logging.getLogger(__name__)
 
+
 class AccountEpayment(models.Model):
     _name = 'account.epayment'
 
     code = fields.Char('Código')
     name = fields.Char('Forma de Pago')
-        
 
-class PosConfig(models.Model):
-    _inherit = 'pos.config'
-
-    default_partner_id = fields.Many2one('res.partner', 'Default Partner', default=lambda self:self.env['res.partner'].search([('identifier','=','9999999999999'),('name','=','CONSUMIDOR FINAL'),]))
-    sucursal = fields.Char(string="Dirección Sucursal")
-    seq_access_key = fields.Many2one('ir.sequence', default=lambda self:self.env['ir.sequence'].search([('code','=','pos.edocuments.code')]))
-    electronic_journal = fields.Boolean('Diario documentos electrónicos', default=lambda self:self.invoice_journal_id.auth_out_invoice_id.is_electronic)
-
-    @api.onchange('invoice_journal_id')
-    def _onchange_invoice_journal_id(self):
-        self.electronic_journal = self.invoice_journal_id.auth_out_invoice_id.is_electronic
-
-class Bankstatementepayment(models.Model):
-    """docstring for Bankstatementepayment"""
-    _inherit = 'account.bank.statement.line'
-
-    epayment_pos = fields.Many2one('account.epayment', 'Forma de Pago')
 
 class pos_accesskey(models.Model):
     """docstring for pos_access_key"""
 
     _name = 'pos.accesskey'
 
-    inv_number = fields.Char( 
+    inv_number = fields.Char(
         'Número de Factura',
         size=15,
         store=True
@@ -50,7 +33,7 @@ class pos_accesskey(models.Model):
         'Clave de Acceso',
         size=49,
         store=True
-    )   
+    )
 
     @api.multi
     def set_access_key(self, acc_key, i_number):
@@ -58,39 +41,43 @@ class pos_accesskey(models.Model):
         for reference in do_search:
             print(reference.name)
         sql = ' '.join([
-            "INSERT INTO pos_accesskey (access_key,inv_number) VALUES ('%s','%s')" % (acc_key[0],i_number[0])
+            "INSERT INTO pos_accesskey (access_key,inv_number) VALUES ('%s','%s')" % (
+                acc_key[0], i_number[0])
         ])
         self.env.cr.execute(sql)
         return
-        
-       
+
+
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     access_key = fields.Char('Clave de Acceso', size=49,)
 
     def get_pos_code(self, seq):
-        code = self.env['ir.sequence'].search([('id','=',seq)])
+        code = self.env['ir.sequence'].search([('id', '=', seq)])
         return str(code.number_next_actual).zfill(8)
-
 
     def get_refund_code(self):
         code = self.env['ir.sequence'].next_by_code('pos.refund.code')
         return code
 
     def get_code_increse(self):
-        code = self.env['ir.sequence'].next_by_code(self.config_id.seq_access_key.code)
+        code = self.env['ir.sequence'].next_by_code(
+            self.config_id.seq_access_key.code)
         return code
 
-    def get_inv_number(self,journal):
-        inv_number = self.env['account.journal'].search([('id','in',journal)])
+    def get_inv_number(self, journal):
+        inv_number = self.env['account.journal'].search(
+            [('id', 'in', journal)])
         entidad = inv_number.auth_out_invoice_id.serie_entidad
         emision = inv_number.auth_out_invoice_id.serie_emision
-        if self.order_type  == 'refund':
-            inv_number = str(inv_number.auth_out_refund_id.sequence_id.number_next_actual).zfill(9)
+        if self.order_type == 'refund':
+            inv_number = str(
+                inv_number.auth_out_refund_id.sequence_id.number_next_actual).zfill(9)
         else:
-            inv_number = str(inv_number.auth_out_invoice_id.sequence_id.number_next_actual).zfill(9)
-        inv_number = entidad + emision + inv_number
+            inv_number = str(
+                inv_number.auth_out_invoice_id.sequence_id.number_next_actual).zfill(9)
+        inv_number = str(entidad) + str(emision) + inv_number
         return inv_number
 
     def _eval_mod11(self, modulo):
@@ -127,7 +114,7 @@ class PosOrder(models.Model):
         date = ''.join(ld)
         tcomp = self.invoice_id.auth_inv_id.type_id.code
         ruc = self.company_id.partner_id.identifier
-        if self.order_type  == 'refund':
+        if self.order_type == 'refund':
             codigo_numero = self.get_refund_code()
         else:
             codigo_numero = self.get_code_increse()
@@ -142,10 +129,13 @@ class PosOrder(models.Model):
     def create_from_ui(self, orders):
         # Keep only new orders
         submitted_references = [o['data']['name'] for o in orders]
-        pos_order = self.search([('pos_reference', 'in', submitted_references)])
+        pos_order = self.search(
+            [('pos_reference', 'in', submitted_references)])
         existing_orders = pos_order.read(['pos_reference'])
-        existing_references = set([o['pos_reference'] for o in existing_orders])
-        orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
+        existing_references = set([o['pos_reference']
+                                   for o in existing_orders])
+        orders_to_save = [o for o in orders if o['data']
+                          ['name'] not in existing_references]
         order_ids = []
 
         for tmp_order in orders_to_save:
@@ -160,8 +150,9 @@ class PosOrder(models.Model):
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
             except Exception as e:
-                _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
-            
+                _logger.error(
+                    'Could not fully process the POS Order: %s', tools.ustr(e))
+
             pos_order.sale_journal = pos_order.session_id.config_id.invoice_journal_id
             pos_order.action_pos_order_invoice()
 
@@ -171,7 +162,7 @@ class PosOrder(models.Model):
     def action_pos_order_invoice(self):
         super(PosOrder, self).action_pos_order_invoice()
         for order in self:
-            if order.order_type  == 'refund':
+            if order.order_type == 'refund':
                 order.invoice_id.auth_inv_id = order.sale_journal.auth_out_refund_id
                 order.invoice_id.reference = order.sale_journal.auth_out_refund_id.sequence_id.number_next_actual
                 for product in order.invoice_id.invoice_line_ids:
@@ -183,7 +174,7 @@ class PosOrder(models.Model):
                 order.invoice_id.auth_inv_id = order.sale_journal.auth_out_invoice_id
                 order.invoice_id.reference = order.sale_journal.auth_out_invoice_id.sequence_id.number_next_actual
                 order.sale_journal.sequence_number_next = order.sale_journal.auth_out_invoice_id.sequence_id.number_next_actual
-                
+
             order.invoice_id.reference = order.invoice_id.reference.zfill(9)
             order.invoice_id.date_invoice = datetime.now() + timedelta(hours=-5)
 
@@ -193,13 +184,16 @@ class PosOrder(models.Model):
                     'code': statement_id.epayment_pos.code,
                     'epayment_id': statement_id.epayment_pos.id,
                     'payment_amount': statement_id.amount,
-                    }
+                }
 
-                order.invoice_id.pos_payment_line_ids = [(0,0,pos_payment_line)]
+                if statement_id.epayment_pos:
+                    order.invoice_id.pos_payment_line_ids = [
+                        (0, 0, pos_payment_line)]
 
             # Create access key only if is_electronic journal
             if order.sale_journal.auth_out_invoice_id.is_electronic:
-                order.access_key = order.get_access_key(order.sale_journal.id,order.invoice_id.date_invoice)
+                order.access_key = order.get_access_key(
+                    order.sale_journal.id, order.invoice_id.date_invoice)
                 order.invoice_id.clave_acceso = order.access_key
             order.invoice_id.sudo().action_invoice_open()
             for statement_id in order.statement_ids:
@@ -208,17 +202,20 @@ class PosOrder(models.Model):
             order.account_move = order.invoice_id.move_id
 
     @api.multi
-    def add_payment(self,data):
+    def add_payment(self, data):
         super(PosOrder, self).add_payment(data)
         for order in self:
             for statement_id in order.statement_ids:
                 if statement_id.journal_id.type == 'cash':
-                    statement_id.epayment_pos = self.env['account.epayment'].search([('code','=','01')], limit=1)
+                    statement_id.epayment_pos = self.env['account.epayment'].search(
+                        [('code', '=', '01')], limit=1)
                 elif statement_id.journal_id.type == 'bank':
-                    statement_id.epayment_pos = self.env['account.epayment'].search([('code','=','19')], limit=1)
+                    statement_id.epayment_pos = self.env['account.epayment'].search(
+                        [('code', '=', '19')], limit=1)
                 else:
-                    statement_id.epayment_pos = self.env['account.epayment'].search([('code','=','20')], limit=1)
+                    statement_id.epayment_pos = self.env['account.epayment'].search(
+                        [('code', '=', '20')], limit=1)
                 if statement_id.journal_id.code == 'NCRD':
-                    statement_id.epayment_pos = self.env['account.epayment'].search([('code','=','01')], limit=1)
-
+                    statement_id.epayment_pos = self.env['account.epayment'].search(
+                        [('code', '=', '01')], limit=1)
 

@@ -2,9 +2,10 @@
 
 import logging
 
-from odoo import models, fields, api#, _
+from odoo import models, fields, api  # , _
 from odoo.exceptions import Warning as UserError
-        
+
+
 class PosRefundCredit(models.Model):
     _inherit = 'res.partner'
 
@@ -14,15 +15,18 @@ class PosRefundCredit(models.Model):
         Metodo ...
         """
         self.refund_credit = 0
-        refund_invoices = self.env['account.invoice'].search([('partner_id.id','=',self.id),('type','=','out_refund')])
+        refund_invoices = self.env['account.invoice'].search(
+            [('partner_id.id', '=', self.id), ('type', '=', 'out_refund')])
         for refund_invoice in refund_invoices:
             self.refund_credit += refund_invoice.amount_total
-        credit_invoices = self.env['account.invoice'].search([('partner_id.id','=',self.id),('type','=','out_invoice'),('state','=','open')])
+        credit_invoices = self.env['account.invoice'].search(
+            [('partner_id.id', '=', self.id), ('type', '=', 'out_invoice'), ('state', '=', 'open')])
         for credit_invoice in credit_invoices:
             for payment_line_id in credit_invoice.pos_payment_line_ids:
                 if payment_line_id.journal_id.code == 'NCRD':
                     self.refund_credit -= float(payment_line_id.payment_amount)
-        credit_payments = self.env['account.payment'].search([('partner_id.id','=',self.id),('payment_type','=','outbound'),('journal_id','=','Nota de Credito')])
+        credit_payments = self.env['account.payment'].search(
+            [('partner_id.id', '=', self.id), ('payment_type', '=', 'outbound'), ('journal_id', '=', 'Nota de Credito')])
         for credit_payment in credit_payments:
             self.refund_credit -= float(credit_payment.amount)
 
@@ -33,30 +37,33 @@ class PosRefundCredit(models.Model):
         help='Crédito en Devoluciones o Notas de Crédito',
     )
 
+
 class ProductCat(models.Model):
     """docstring for ProductCat"""
     _inherit = 'product.category'
-    
+
     property_account_refund_categ_id = fields.Many2one(
         comodel_name='account.account',
         string='Cuenta de devoluciones',
     )
 
+
 class ProductTemp(models.Model):
     """docstring for ProductCat"""
     _inherit = 'product.template'
-    
+
     property_account_product_refund_id = fields.Many2one(
         comodel_name='account.account',
         string='Cuenta de devoluciones',
     )
+
 
 class PosOrder(models.Model):
     """docstring for PosOrder"""
     _inherit = 'pos.order'
 
     _logger = logging.getLogger('pos.order')
-    
+
     returned_order_id = fields.Many2one(
         comodel_name='pos.order',
         string='Returned Order',
@@ -64,13 +71,13 @@ class PosOrder(models.Model):
     )
     order_type = fields.Selection(
         [
-            ('sale','Orden de Venta'),
-            ('refund','Orden de Devolución')
+            ('sale', 'Orden de Venta'),
+            ('refund', 'Orden de Devolución')
         ],
         string='Orden',
         readonly=True,
         default='sale'
-        )
+    )
     returned = fields.Boolean(
         string='Retornado',
         readonly=True,)
@@ -85,20 +92,21 @@ class PosOrder(models.Model):
         new_order.sale_journal = new_order.session_id.config_id.invoice_journal_id
 
         return res
-        
+
     def action_credit_invoice(self):
-        #Nota de Crédito
+        # Nota de Crédito
         if self.partner_id.type_id == 'venta_consumidor_final':
-            raise UserError('No puede realizar Notas de Crédito a Consumidor Final')
-        journal = self.env['account.journal'].search([('code','=','NCRD')])
+            raise UserError(
+                'No puede realizar Notas de Crédito a Consumidor Final')
+        journal = self.env['account.journal'].search([('code', '=', 'NCRD')])
         payment_context = {
-            "active_ids": self.id, 
+            "active_ids": self.id,
             "active_id": self.id
         }
         payment = self.env['pos.make.payment'].with_context(**payment_context).create({
             'amount': self.amount_total,
-            'journal_id':journal.id,
-            'epayment_pos':journal.epayment_id.id,
+            'journal_id': journal.id,
+            'epayment_pos': journal.epayment_id.id,
         })
 
         payment.with_context(**payment_context).check()
@@ -109,4 +117,3 @@ class PosOrder(models.Model):
         self.invoice_id.type = 'out_refund'
         self.returned_order_id.returned = True
         self.partner_id.compute_refund_credit()
-
