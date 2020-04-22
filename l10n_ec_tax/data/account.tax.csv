@@ -1,17 +1,18 @@
 id,description,account_id/id,refund_account_id/id,name,type_tax_use,tax_group_id/id,amount_type,amount,percent_report
 account_tax302,302,,,RET. RENTA 0% EN RELACIÓN DE DEPENDENCIA QUE SUPERA O NO LA BASE DESGR,purchase,l10n_ec_tax.ret_ir,percent,0,0
-account_tax303,303,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 1% HONORARIOS PROFESIONALES ,purchase,l10n_ec_tax.ret_ir,percent,-1,1
+account_tax303,303,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 10% HONORARIOS PROFESIONALES ,purchase,l10n_ec_tax.ret_ir,percent,-10,10
 account_tax304,304,l10n_ec_chart.2010406,l10n_ec_chart.2010406,RET. RENTA 8% PREDOMINA EL INTELECTO,purchase,l10n_ec_tax.ret_ir,percent,-8,8
 account_tax307,307,l10n_ec_chart.2010405,l10n_ec_chart.2010405,RET. RENTA 2% PREDOMINA MANO DE OBRA,purchase,l10n_ec_tax.ret_ir,percent,-2,2
-account_tax308,308,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 1% SERVICIOS UTILIZACIÓN O APROVECHAMIENTO DE LA IMAGEN O RENOMBRE,purchase,l10n_ec_tax.ret_ir,percent,-1,1
-account_tax309,309,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 1% PUBLICIDAD Y COMUNICACIÓN,purchase,l10n_ec_tax.ret_ir,percent,-1,1
+account_tax308,308,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 10% SERVICIOS UTILIZACIÓN O APROVECHAMIENTO DE LA IMAGEN O RENOMBRE,purchase,l10n_ec_tax.ret_ir,percent,-10,10
+account_tax309,309,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 1.75% PUBLICIDAD Y COMUNICACIÓN,purchase,l10n_ec_tax.ret_ir,percent,-1.75,1.75
 account_tax310,310,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 1% TRANS. PRIVADO DE PASAJEROS O SERV. PÚBLICO O PRIVADO DE CA,purchase,l10n_ec_tax.ret_ir,percent,-1,1
-account_tax312,312,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 1% TRANSFERENCIA DE BIENES MUEBLES DE NATURALEZA CORPORAL,purchase,l10n_ec_tax.ret_ir,percent,-1,1
+account_tax311,311,l10n_ec_chart.2010404,l10n_ec_chart.2010404,PAGOS A TRAVÉS DE LIQUIDACIÓN DE COMPRA (NIVEL CULTURAL ORUSTICIDAD),purchase,l10n_ec_tax.ret_ir,percent,2,2
+account_tax312,312,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 1.75% TRANSFERENCIA DE BIENES MUEBLES DE NATURALEZA CORPORAL,purchase,l10n_ec_tax.ret_ir,percent,-1.75,1.75
 account_tax320,320,l10n_ec_chart.2010406,l10n_ec_chart.2010406,RET. RENTA 8% ARRENDAMIENTO BIENES INMUEBLES,purchase,l10n_ec_tax.ret_ir,percent,-8,8
-account_tax322,322,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 1% SEGUROS Y REASEGUROS (PRIMAS Y CESIONES),purchase,l10n_ec_tax.ret_ir,percent,-1,1
+account_tax322,322,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA 1.75% SEGUROS Y REASEGUROS (PRIMAS Y CESIONES),purchase,l10n_ec_tax.ret_ir,percent,-1.75,1.75
 account_tax332,332,,,RET. PAGOS DE BIENES O SERVICIOS NO SUJETOS A RETENCIÓN,purchase,l10n_ec_tax.no_ret_ir,percent,0,0
 account_tax343,343,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RET. RENTA APLICABLES EL 1%,purchase,l10n_ec_tax.ret_ir,percent,-1,1
-account_tax344,344,l10n_ec_chart.2010405,l10n_ec_chart.2010405,RET. RENTA APLICABLES EL 2%,purchase,l10n_ec_tax.ret_ir,percent,-2,2
+account_tax344,3440,l10n_ec_chart.2010405,l10n_ec_chart.2010405,RET. RENTA APLICABLES EL 2.75%,purchase,l10n_ec_tax.ret_ir,percent,-2.75,2.75
 account_tax345,345,l10n_ec_chart.2010406,l10n_ec_chart.2010406,RET. RENTA APLICABLES EL 8%,purchase,l10n_ec_tax.ret_ir,percent,-8,8
 account_tax346,346,,,RET. RENTA APLICABLES OTROS PORCENTAJES,purchase,l10n_ec_tax.ret_ir,percent,0,0
 account_taxr1,1% IR,l10n_ec_chart.2010404,l10n_ec_chart.2010404,RETENCIONES A FAVOR DEL IMPUESTO A LA RENTA,purchase,l10n_ec_tax.ret_ir,percent,-1,1
