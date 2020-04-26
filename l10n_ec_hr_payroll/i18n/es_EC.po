@@ -1253,7 +1253,7 @@ msgstr "Nº Pasaporte"
 #. module: l10n_ec_hr_payroll
 #: model:ir.model,name:l10n_ec_hr_payroll.model_hr_payslip
 msgid "Pay Slip"
-msgstr "Nómina"
+msgstr "Roles de pago"
 
 #. module: l10n_ec_hr_payroll
 #: model:ir.model,name:l10n_ec_hr_payroll.model_hr_payslip_run

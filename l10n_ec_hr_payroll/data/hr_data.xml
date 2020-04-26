@@ -47,12 +47,12 @@ if contract.basic_wage and contract.wage != employee.company_id.basic_wage:
 dias = 30
 unpaid = 0
 
-for line in payslip.worked_days_line_ids:
-    if line.code == 'UNPAID':
-        unpaid += line.number_of_days
+#for line in payslip.worked_days_line_ids:
+#    if line.code == 'UNPAID':
+#        unpaid += line.number_of_days
 
-if worked_days.WORK100:
-    dias = worked_days.WORK100.number_of_days
+#if worked_days.WORK100:
+#    dias = worked_days.WORK100.number_of_days
 sueldo = (contract.wage/30)*(dias - unpaid)
 result = round(sueldo, 2)
         </field>

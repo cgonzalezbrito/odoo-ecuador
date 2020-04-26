@@ -9,7 +9,7 @@
 		<field name="active" eval="True" />
 	</record>
 
-	<record id="hr_sri_retention_line_0" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_0_2017" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">0.0</field>
 		<field name="excess_up">11290.00</field>
@@ -17,7 +17,7 @@
 		<field name="percent">0</field>
 	</record>
 
-	<record id="hr_sri_retention_line_1" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_1_2017" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">11290.00</field>
 		<field name="excess_up">14390.00</field>
@@ -25,7 +25,7 @@
 		<field name="percent">5</field>
 	</record>
 
-	<record id="hr_sri_retention_line_2" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_2_2017" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">14390.00</field>
 		<field name="excess_up">17990.00</field>
@@ -33,7 +33,7 @@
 		<field name="percent">10</field>
 	</record>
 
-	<record id="hr_sri_retention_line_3" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_3_2017" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">17990.00</field>
 		<field name="excess_up">21600.00</field>
@@ -41,7 +41,7 @@
 		<field name="percent">12</field>
 	</record>
 
-	<record id="hr_sri_retention_line_4" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_4_2017" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">21600.00</field>
 		<field name="excess_up">43190.00</field>
@@ -49,7 +49,7 @@
 		<field name="percent">15</field>
 	</record>
 
-	<record id="hr_sri_retention_line_5" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_5_2017" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">43190.00</field>
 		<field name="excess_up">64770.00</field>
@@ -57,7 +57,7 @@
 		<field name="percent">20</field>
 	</record>
 
-	<record id="hr_sri_retention_line_6" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_6_2017" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">64770.00</field>
 		<field name="excess_up">86370.00</field>
@@ -65,7 +65,7 @@
 		<field name="percent">25</field>
 	</record>
 
-	<record id="hr_sri_retention_line_7" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_7_2017" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">86370.00</field>
 		<field name="excess_up">115140.00</field>
@@ -73,7 +73,7 @@
 		<field name="percent">30</field>
 	</record>
 
-	<record id="hr_sri_retention_line_8" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_8_2017" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">115140.00</field>
 		<field name="excess_up">9999999.00</field>
@@ -83,7 +83,7 @@
 
 
 	<!-- PROYECIONES DE GASTOS 2017 -->
-	<record id="hr_sri_projection_max_1" model="hr.sri.projection">
+	<!--record id="hr_sri_projection_max_1" model="hr.sri.projection">
 		<field name="amount">3669.25</field>
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="deduction_id" ref="hr_sri_deduction_ali"/>
@@ -111,7 +111,7 @@
 		<field name="amount">3669.35</field>
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="deduction_id" ref="hr_sri_deduction_viv"/>
-	</record>
+	</record-->
 
 	<!-- EXONERACIONES 2017 -->
 	<record id="hr_sri_exoneration_line_0" model="hr.sri.exoneration.line">
@@ -151,7 +151,7 @@
 		<field name="active" eval="True" />
 	</record>
 
-	<record id="hr_sri_retention_line_0" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_0_2018" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2018"/>
 		<field name="basic_fraction">0.0</field>
 		<field name="excess_up">11270.00</field>
@@ -159,7 +159,7 @@
 		<field name="percent">0</field>
 	</record>
 
-	<record id="hr_sri_retention_line_1" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_1_2018" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2018"/>
 		<field name="basic_fraction">11270.00</field>
 		<field name="excess_up">14360.00</field>
@@ -167,7 +167,7 @@
 		<field name="percent">5</field>
 	</record>
 
-	<record id="hr_sri_retention_line_2" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_2_2018" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2018"/>
 		<field name="basic_fraction">14360.00</field>
 		<field name="excess_up">17950.00</field>
@@ -175,7 +175,7 @@
 		<field name="percent">10</field>
 	</record>
 
-	<record id="hr_sri_retention_line_3" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_3_2018" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2018"/>
 		<field name="basic_fraction">17950.00</field>
 		<field name="excess_up">21550.00</field>
@@ -183,7 +183,7 @@
 		<field name="percent">12</field>
 	</record>
 
-	<record id="hr_sri_retention_line_4" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_4_2018" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2018"/>
 		<field name="basic_fraction">21550.00</field>
 		<field name="excess_up">43100.00</field>
@@ -191,7 +191,7 @@
 		<field name="percent">15</field>
 	</record>
 
-	<record id="hr_sri_retention_line_5" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_5_2018" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2018"/>
 		<field name="basic_fraction">43100.00</field>
 		<field name="excess_up">64630.00</field>
@@ -199,7 +199,7 @@
 		<field name="percent">20</field>
 	</record>
 
-	<record id="hr_sri_retention_line_6" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_6_2018" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2018"/>
 		<field name="basic_fraction">64630.00</field>
 		<field name="excess_up">86180.00</field>
@@ -207,7 +207,7 @@
 		<field name="percent">25</field>
 	</record>
 
-	<record id="hr_sri_retention_line_7" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_7_2018" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2018"/>
 		<field name="basic_fraction">86180.00</field>
 		<field name="excess_up">114890.00</field>
@@ -215,7 +215,7 @@
 		<field name="percent">30</field>
 	</record>
 
-	<record id="hr_sri_retention_line_8" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_8_2018" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2018"/>
 		<field name="basic_fraction">114890.00</field>
 		<field name="excess_up">9999999.00</field>
@@ -227,12 +227,12 @@
 	<record id="hr_sri_retention_2019" model="hr.sri.retention">
 		<field name="year">2019</field>
 		<field name="name">Tabla Retenciones 2019</field>
-		<field name="max_deductible">14677.00</field>
-		<field name="old_age">14677.00</field>
+		<field name="max_deductible">14703.00</field>
+		<field name="old_age">14703.00</field>
 		<field name="active" eval="True" />
 	</record>
 
-	<record id="hr_sri_retention_line_0" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_0_2019" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">0.0</field>
 		<field name="excess_up">11310.00</field>
@@ -240,7 +240,7 @@
 		<field name="percent">0</field>
 	</record>
 
-	<record id="hr_sri_retention_line_1" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_1_2019" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">11290.00</field>
 		<field name="excess_up">14390.00</field>
@@ -248,7 +248,7 @@
 		<field name="percent">5</field>
 	</record>
 
-	<record id="hr_sri_retention_line_2" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_2_2019" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">14390.00</field>
 		<field name="excess_up">17990.00</field>
@@ -256,7 +256,7 @@
 		<field name="percent">10</field>
 	</record>
 
-	<record id="hr_sri_retention_line_3" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_3_2019" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">17990.00</field>
 		<field name="excess_up">21600.00</field>
@@ -264,7 +264,7 @@
 		<field name="percent">12</field>
 	</record>
 
-	<record id="hr_sri_retention_line_4" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_4_2019" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">21600.00</field>
 		<field name="excess_up">43190.00</field>
@@ -272,7 +272,7 @@
 		<field name="percent">15</field>
 	</record>
 
-	<record id="hr_sri_retention_line_5" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_5_2019" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">43190.00</field>
 		<field name="excess_up">64770.00</field>
@@ -280,7 +280,7 @@
 		<field name="percent">20</field>
 	</record>
 
-	<record id="hr_sri_retention_line_6" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_6_2019" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">64770.00</field>
 		<field name="excess_up">86370.00</field>
@@ -288,7 +288,7 @@
 		<field name="percent">25</field>
 	</record>
 
-	<record id="hr_sri_retention_line_7" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_7_2019" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">86370.00</field>
 		<field name="excess_up">115140.00</field>
@@ -296,11 +296,153 @@
 		<field name="percent">30</field>
 	</record>
 
-	<record id="hr_sri_retention_line_8" model="hr.sri.retention.line">
+	<record id="hr_sri_retention_line_8_2019" model="hr.sri.retention.line">
 		<field name="ret_id" ref="hr_sri_retention_2017"/>
 		<field name="basic_fraction">115140.00</field>
 		<field name="excess_up">9999999.00</field>
 		<field name="basic_fraction_tax">22534</field>
 		<field name="percent">35</field>
+	</record>
+
+	<!-- TABLA BASE DE RETENCION 2020-->
+	<record id="hr_sri_retention_2020" model="hr.sri.retention">
+		<field name="year">2020</field>
+		<field name="name">Tabla Retenciones 2020</field>
+		<field name="max_deductible">14709.50</field>
+		<field name="old_age">14709.50</field>
+		<field name="active" eval="True" />
+	</record>
+
+	<record id="hr_sri_retention_line_0_2020" model="hr.sri.retention.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="basic_fraction">0.0</field>
+		<field name="excess_up">11315.00</field>
+		<field name="basic_fraction_tax">0</field>
+		<field name="percent">0</field>
+	</record>
+
+	<record id="hr_sri_retention_line_1_2020" model="hr.sri.retention.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="basic_fraction">11315.00</field>
+		<field name="excess_up">14416.00</field>
+		<field name="basic_fraction_tax">0</field>
+		<field name="percent">5</field>
+	</record>
+
+	<record id="hr_sri_retention_line_2_2020" model="hr.sri.retention.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="basic_fraction">14416.00</field>
+		<field name="excess_up">18018.00</field>
+		<field name="basic_fraction_tax">115</field>
+		<field name="percent">10</field>
+	</record>
+
+	<record id="hr_sri_retention_line_3_2020" model="hr.sri.retention.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="basic_fraction">18018.00</field>
+		<field name="excess_up">21639.00</field>
+		<field name="basic_fraction_tax">515</field>
+		<field name="percent">12</field>
+	</record>
+
+	<record id="hr_sri_retention_line_4_2020" model="hr.sri.retention.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="basic_fraction">21639.00</field>
+		<field name="excess_up">43268.00</field>
+		<field name="basic_fraction_tax">950</field>
+		<field name="percent">15</field>
+	</record>
+
+	<record id="hr_sri_retention_line_5_2020" model="hr.sri.retention.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="basic_fraction">43268.00</field>
+		<field name="excess_up">64887.00</field>
+		<field name="basic_fraction_tax">4194</field>
+		<field name="percent">20</field>
+	</record>
+
+	<record id="hr_sri_retention_line_6_2020" model="hr.sri.retention.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="basic_fraction">64887.00</field>
+		<field name="excess_up">86516.00</field>
+		<field name="basic_fraction_tax">8518</field>
+		<field name="percent">25</field>
+	</record>
+
+	<record id="hr_sri_retention_line_7_2020" model="hr.sri.retention.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="basic_fraction">86516.00</field>
+		<field name="excess_up">115338.00</field>
+		<field name="basic_fraction_tax">13925</field>
+		<field name="percent">30</field>
+	</record>
+
+	<record id="hr_sri_retention_line_8_2020" model="hr.sri.retention.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="basic_fraction">115338.00</field>
+		<field name="excess_up">9999999.00</field>
+		<field name="basic_fraction_tax">22572</field>
+		<field name="percent">35</field>
+	</record>
+
+
+	<!-- PROYECIONES DE GASTOS 2020 -->
+	<record id="hr_sri_projection_max_1" model="hr.sri.projection">
+		<field name="amount">3677.38</field>
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="deduction_id" ref="hr_sri_deduction_ali"/>
+	</record>
+
+	<record id="hr_sri_projection_max_2" model="hr.sri.projection">
+		<field name="amount">3677.38</field>
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="deduction_id" ref="hr_sri_deduction_edu"/>
+	</record>
+
+	<record id="hr_sri_projection_max_3" model="hr.sri.projection">
+		<field name="amount">14709.50</field>
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="deduction_id" ref="hr_sri_deduction_sal"/>
+	</record>
+
+	<record id="hr_sri_projection_max_4" model="hr.sri.projection">
+		<field name="amount">3677.38</field>
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="deduction_id" ref="hr_sri_deduction_ves"/>
+	</record>
+
+	<record id="hr_sri_projection_max_5" model="hr.sri.projection">
+		<field name="amount">3677.38</field>
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="deduction_id" ref="hr_sri_deduction_viv"/>
+	</record>
+
+	<!-- EXONERACIONES 2020 -->
+	<record id="hr_sri_exoneration_line_0" model="hr.sri.exoneration.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="excess_from">40</field>
+		<field name="excess_up">49</field>
+		<field name="percent">60</field>
+	</record>
+
+	<record id="hr_sri_exoneration_line_1" model="hr.sri.exoneration.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="excess_from">50</field>
+		<field name="excess_up">74</field>
+		<field name="percent">70</field>
+	</record>
+
+	<record id="hr_sri_exoneration_line_2" model="hr.sri.exoneration.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="excess_from">75</field>
+		<field name="excess_up">84</field>
+		<field name="percent">80</field>
+	</record>
+
+	<record id="hr_sri_exoneration_line_3" model="hr.sri.exoneration.line">
+		<field name="ret_id" ref="hr_sri_retention_2020"/>
+		<field name="excess_from">85</field>
+		<field name="excess_up">100</field>
+		<field name="percent">100</field>
 	</record>
 </odoo>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record id="base.main_company" model="res.company">
-        <field name="basic_wage" eval="394"/>
+        <field name="basic_wage" eval="400"/>
         <field name="iess_personal" eval="9.45"/>
         <field name="iess_representante_legal" eval="17.60"/>
         <field name="iess_empleador" eval="11.15"/>
