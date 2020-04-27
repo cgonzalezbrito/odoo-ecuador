@@ -89,7 +89,7 @@ result = round(value, 2)
 
     <!-- Horas Suplementarias -->
     <record id="hr_payroll.hr_rule_suplementarias" model="hr.salary.rule">
-        <field name="name">Horas_Suplementarias</field>
+        <field name="name">Horas Suplementarias</field>
         <field name="sequence" eval="1"/>
         <field name="code">SUPLE</field>
         <field name="category_id" ref="hr_payroll.ALW"/>
@@ -100,6 +100,24 @@ result = round(value, 2)
 value = 0
 if inputs.SUPLE:
     value = inputs.SUPLE.amount*contract.hour_cost*2
+result = round(value, 2) 
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+    <!-- Horas Nocturnas -->
+    <record id="hr_payroll.hr_rule_nocturnas" model="hr.salary.rule">
+        <field name="name">Horas Nocturnas</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">NOCT</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.NOCT</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+value = 0
+if inputs.NOCT:
+    value = inputs.NOCT.amount*contract.hour_cost*1.25
 result = round(value, 2) 
         </field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
