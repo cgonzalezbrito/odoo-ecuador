@@ -30,7 +30,11 @@
         <field name="code">LOAN</field>
     </record>
 
-    <!-- Ingresos -->
+    <!-- 
+        INGRESO BASE
+    -->
+
+    <!-- Sueldo base -->
     <record id="hr_payroll.hr_rule_basic" model="hr.salary.rule">
         <field name="name">Sueldo</field>
         <field name="sequence" eval="1"/>
@@ -39,6 +43,7 @@
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
+
 if contract.basic_wage and contract.wage != employee.company_id.basic_wage:
     contracts = contract.search([('basic_wage', '=', True)])
     if contracts:
@@ -47,46 +52,120 @@ if contract.basic_wage and contract.wage != employee.company_id.basic_wage:
 dias = 30
 unpaid = 0
 
-#for line in payslip.worked_days_line_ids:
-#    if line.code == 'UNPAID':
-#        unpaid += line.number_of_days
+for line in payslip.worked_days_line_ids:
+    if line.code == 'UNPAID':
+        unpaid += line.number_of_days
 
-#if worked_days.WORK100:
-#    dias = worked_days.WORK100.number_of_days
-sueldo = (contract.wage/30)*(dias - unpaid)
-result = round(sueldo, 2)
+    if line.code == 'WORK100':
+        dias = line.number_of_days
+
+value = (contract.wage/30)*(dias - unpaid)
+result = round(value, 2)
+
         </field>
     </record>
 
-    <record id="hr_rule_gratificacion" model="hr.salary.rule">
+    <!-- 
+        OTROS INGRESOS
+    -->
+
+    <!-- Horas Extra -->
+    <record id="hr_payroll.hr_rule_extra" model="hr.salary.rule">
+        <field name="name">Horas Extra</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">EXTRA</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.EXTRA</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+value = 0
+if inputs.EXTRA:
+    value = inputs.EXTRA.amount*contract.hour_cost*1.5
+result = round(value, 2) 
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+    <!-- Horas Suplementarias -->
+    <record id="hr_payroll.hr_rule_suplementarias" model="hr.salary.rule">
+        <field name="name">Horas_Suplementarias</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">SUPLE</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.SUPLE</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+value = 0
+if inputs.SUPLE:
+    value = inputs.SUPLE.amount*contract.hour_cost*2
+result = round(value, 2) 
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+    <!-- Comisiones -->
+    <record id="hr_payroll.hr_rule_comision" model="hr.salary.rule">
+        <field name="name">Comisiones</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">COMIS</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.COMIS</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+value = 0
+if inputs.COMIS:
+    value = inputs.COMIS.amount
+result = round(value, 2) 
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+    <!-- Bonificaciones -->
+    <record id="hr_payroll.hr_rule_bonificaciones" model="hr.salary.rule">
+        <field name="name">Bonificaciones</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">BONIF</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.BONIF</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+value = 0
+if inputs.BONIF:
+    value = inputs.BONIF.amount
+result = round(value, 2) 
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+    <!-- Gratificaciones -->
+    <record id="hr_payroll.hr_rule_gratificacion" model="hr.salary.rule">
         <field name="name">Gratificaciones</field>
         <field name="sequence" eval="2"/>
         <field name="code">GRATI</field>
         <field name="category_id" ref="hr_payroll.ALW"/>
-        <field name="condition_select">none</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.GRATI or contract.gratificacion</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 value = 0
-if inputs.ALW:
-    value = inputs.ALW.amount
+if inputs.GRATI:
+    value = inputs.GRATI.amount
 elif contract.gratificacion:
     value = contract.gratificacion
 result = round(value, 2)
         </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
-    <record id="hr_rule_inggrav" model="hr.salary.rule">
-        <field name="name">Ingresos Imputables</field>
-        <field name="sequence" eval="2"/>
-        <field name="code">INGGRAV</field>
-        <field name="category_id" ref="hr_salary_rule__category_inggrav"/>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = inputs.INGGRAV</field>
-        <field name="amount_select">fix</field>
-    </record>
-
+    <!-- 
+        INGRESOS NO GRAVADOS 
+    -->
     <!-- Cobro de Fondos de Reserva en el Rol de Pagos -->
-    <record id="hr_rule_reserve_funds" model="hr.salary.rule">
+    <record id="hr_payroll.hr_rule_reserve_funds" model="hr.salary.rule">
         <field name="code">FRPAG</field>
         <field name="sequence" eval="3"/>
         <field name="appears_on_payslip" eval="True"/>
@@ -237,8 +316,11 @@ else:
     valor = (sub_total/30.0)*(dias-365.0)
 
 laborados = 30
-if worked_days.WORK100:
-    laborados = worked_days.WORK100.number_of_days
+
+for line in payslip.worked_days_line_ids:
+    if line.code == 'WORK100':
+        laborados = line.number_of_days
+
 valor = valor * (laborados / 30)
 result = round(valor, 2)
         </field>
@@ -247,7 +329,7 @@ result = round(valor, 2)
     </record>
 
     <!-- Cobro de Fondos de Reserva como provision-->
-    <record id="hr_rule_reserve_funds_as_contribution" model="hr.salary.rule">
+    <record id="hr_payroll.hr_rule_reserve_funds_as_contribution" model="hr.salary.rule">
         <field name="code">FRPROV</field>
         <field name="sequence" eval="10"/>
         <field name="appears_on_payslip" eval="True"/>
@@ -407,8 +489,24 @@ result = round(valor, 2)
         <field name="quantity">1.0</field>
     </record>
 
+    <!-- 
+        INGRESOS IMPUTABLES 
+    -->
+    <record id="hr_payroll.hr_rule_inggrav" model="hr.salary.rule">
+        <field name="name">Ingresos Imputables</field>
+        <field name="sequence" eval="2"/>
+        <field name="code">INGGRAV</field>
+        <field name="category_id" ref="hr_salary_rule__category_inggrav"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.INGGRAV</field>
+        <field name="amount_select">fix</field>
+    </record>
+
+    <!-- 
+        DECIMOS 
+    -->
     <!-- Cobro de décimos en rol-->
-    <record id="hr_rule_13ing_salary" model="hr.salary.rule">
+    <record id="hr_payroll.hr_rule_13ing_salary" model="hr.salary.rule">
         <field name="name">Décimo Tercero</field>
         <field name="sequence" eval="20"/>
         <field name="appears_on_payslip" eval="True"/>
@@ -430,7 +528,8 @@ result = round(valor, 2)
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
-    <record id="hr_rule_14ing_salary" model="hr.salary.rule">
+    <!-- Cobro de décimos en rol-->
+    <record id="hr_payroll.hr_rule_14ing_salary" model="hr.salary.rule">
         <field name="name">Décimo Cuarto</field>
         <field name="sequence" eval="21"/>
         <field name="appears_on_payslip" eval="True"/>
@@ -453,8 +552,9 @@ for line in payslip.worked_days_line_ids:
     if line.code == 'UNPAID':
         unpaid += line.number_of_days
 
-if worked_days.WORK100:
-    dias = worked_days.WORK100.number_of_days
+    if line.code == 'WORK100':
+        dias = line.number_of_days
+    
 valor = (employee.company_id.basic_wage/30)*(dias - unpaid) / 12
 result = round(valor, 2)
         </field>
@@ -462,7 +562,7 @@ result = round(valor, 2)
     </record>
 
     <!-- Cobro de Fondos de Reserva como provision-->
-    <record id="hr_rule_13_salary" model="hr.salary.rule">
+    <record id="hr_payroll.hr_rule_13_salary" model="hr.salary.rule">
         <field name="name">Provisión - Décimo Tercero</field>
         <field name="sequence" eval="20"/>
         <field name="appears_on_payslip" eval="True"/>
@@ -484,7 +584,7 @@ result = round(valor, 2)
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
-    <record id="hr_rule_14_salary" model="hr.salary.rule">
+    <record id="hr_payroll.hr_rule_14_salary" model="hr.salary.rule">
         <field name="name">Provisión - Décimo Cuarto</field>
         <field name="sequence" eval="21"/>
         <field name="appears_on_payslip" eval="True"/>
@@ -509,7 +609,7 @@ result = round(valor, 2)
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
-    <record id="hr_rule_vacaciones" model="hr.salary.rule">
+    <record id="hr_payroll.hr_rule_vacaciones" model="hr.salary.rule">
         <field name="name">Provisión - Vacaciones</field>
         <field name="sequence" eval="21"/>
         <field name="appears_on_payslip" eval="True"/>
@@ -530,35 +630,94 @@ result = round(valor, 2)
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
-
-    <!-- Iess patronal -->
-    <record id="hr_rule_company_iess" model="hr.salary.rule">
-        <field name="name">IESS Aporte patronal</field>
-        <field name="sequence" eval="100"/>
-        <field name="appears_on_payslip" eval="False"/>
-        <field name="code">IESSPATRO</field>
-        <field name="category_id" ref="hr_payroll.COMP"/>
+    <!-- 
+        DEDUCCIONES
+    -->
+    <!-- Consumos en el Almacén -->
+    <record id="hr_payroll.hr_rule_consumos" model="hr.salary.rule">
+        <field name="name">Consumos en el Almacén</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">CONS</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
         <field name="condition_select">python</field>
-        <field name="condition_python">
-# No se aplica con el porcentaje especial del representante legal.
-if contract.iess_representante_legal:
-    result = False
-else:
-    result = True
-        </field>
+        <field name="condition_python">result = inputs.CONS</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-dias = 30
-if worked_days.WORK100:
-    dias = worked_days.WORK100.number_of_days
-valor = (categories.BASIC + categories.ALW - categories.SUBIESS) * (employee.company_id.iess_empleador / 100) * (dias/30)
-result = round(valor, 2)
+value = 0
+if inputs.CONS:
+    value = inputs.CONS.amount
+result = round(value, 2) 
         </field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
+    <!-- 
+        PRESTAMOS Y AVANCES 
+    -->
+    <!-- Deducción Anticipos o Adelantos-->
+    <record id="hr_payroll.hr_rule_anticipo" model="hr.salary.rule">
+        <field name="name">Anticipos o Adelantos</field>
+        <field name="sequence" eval="20"/>
+        <field name="code">ANTIC</field>
+        <field name="category_id" ref="LOAN"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+value = False
+for item in contract.prestamos:
+    if item.type == 'adelanto' and item.state == 'run':
+        value = True
+result = value or inputs.ANTIC</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+value = 0
+for item in contract.prestamos:
+    if item.type == 'adelanto' and item.state == 'run':
+        if payslip.date_from &lt;= item.inicia_pago and payslip.date_to &gt;= item.termina_pago:
+            value = item.monto
+result = round(value, 2)
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+    <!-- Préstamos -->
+    <!--record id="hr_rule_prestamo" model="hr.salary.rule">
+        <field name="name">PRESTAMOS/AVANCES</field>
+        <field name="sequence">34</field>
+        <field name="code">LOAN</field>
+        <field name="category_id" ref="LOAN"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = payslip.credit_note != False and inputs.LOAN</field>
+        <field name="amount_select">fix</field>
+        <field name="amount_fix">1.00</field>
+        <field name="appears_on_payslip">True</field>
+        <field name="quantity">1.0</field>
+    </record-->
+    <!--record id="hr_payroll.hr_rule_prestamo" model="hr.salary.rule">
+        <field name="name">PRESTAMOS</field>
+        <field name="sequence" eval="20"/>
+        <field name="code">LOAN</field>
+        <field name="category_id" ref="LOAN"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+value = False
+for item in contract.prestamos:
+    if item.type == 'prestamo' and item.state == 'run':
+        value = True
+result = value or inputs.LOAN</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+value = 0
+for item in contract.prestamos:
+    if item.type == 'prestamo' and item.state == 'run':
+        if payslip.date_from &lt;= item.inicia_pago and payslip.date_to &gt;= item.termina_pago:
+            value = item.monto
+result = round(value, 2)
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record-->
+
     <!-- Deduccion IR-->
-    <record id="hr_rule_personal_ir" model="hr.salary.rule">
+    <record id="hr_payroll.hr_rule_personal_ir" model="hr.salary.rule">
         <field name="name">Deducción de IR</field>
         <field name="sequence" eval="10"/>
         <field name="code">DEDIR</field>
@@ -576,8 +735,96 @@ result = round(valor, 2)
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
-    <!-- Deducción IESS personal -->
-    <record id="hr_rule_personal_iess" model="hr.salary.rule">
+    <!--subiess -->
+    <record id="hr_payroll.hr_rule_ded_66_exp" model="hr.salary.rule">
+        <field name="name">Deducción de 66% del salario (gasto)</field>
+        <field name="sequence" eval="10"/>
+        <field name="code">DED66</field>
+        <field name="category_id" ref="SUBIESS"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = worked_days.DED66</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if worked_days.DED66:
+    ausencias = 0
+    for line in payslip.worked_days_line_ids:
+        if line.code == 'DED66':
+            ausencias += line.number_of_days
+
+    deduccion = (contract.wage/30) * ausencias * 0.66
+    result = round(deduccion, 2)
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+    <!-- Deducción por maternidad -->
+    <record id="hr_payroll.hr_rule_ded_75_exp" model="hr.salary.rule">
+        <field name="name">Deducción de 75% del salario (gasto)</field>
+        <field name="sequence" eval="10"/>
+        <field name="code">DED75</field>
+        <field name="category_id" ref="SUBIESS"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = worked_days.DED75</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if worked_days.DED75:
+    ausencias = 0
+    for line in payslip.worked_days_line_ids:
+        if line.code == 'DED75':
+            ausencias += line.number_of_days
+
+    deduccion = (contract.wage/30) * ausencias * 0.75
+    result = round(deduccion, 2)
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+    <!-- Descuentos -->
+    <record id="hr_payroll.hr_rule_descuentos" model="hr.salary.rule">
+        <field name="name">Descuentos del empleado</field>
+        <field name="sequence" eval="20"/>
+        <field name="code">DESC</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.DESC</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+value = 0
+if inputs.DESC:
+    for line in payslip.input_line_ids:
+        if line.code == 'DESC':
+            value += line.amount
+result = round(value, 2)
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+    <!-- Otras deducciones-->
+    <record id="hr_payroll.hr_rule_deducciones" model="hr.salary.rule">
+        <field name="name">Otras deducciones</field>
+        <field name="sequence" eval="20"/>
+        <field name="code">DED</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.DED</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+value = 0
+if inputs.DED:
+    for line in payslip.input_line_ids:
+        if line.code == 'DED':
+            value += line.amount
+result = round(value, 2)
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+    <!-- 
+        IESS 
+    -->
+
+<!-- Deducción IESS personal -->
+    <record id="hr_payroll.hr_rule_personal_iess" model="hr.salary.rule">
         <field name="name">IESS aporte personal</field>
         <field name="sequence" eval="100"/>
         <field name="code">IESSPER</field>
@@ -603,7 +850,7 @@ result = round(valor, 2)
     </record>
 
     <!-- Deducción IESS personal -->
-    <record id="hr_rule_representante_legal_iess" model="hr.salary.rule">
+    <record id="hr_payroll.hr_rule_representante_legal_iess" model="hr.salary.rule">
         <field name="name">IESS aporte personal Rep. Legal</field>
         <field name="sequence" eval="100"/>
         <field name="code">IESSREPLEGAL</field>
@@ -622,127 +869,18 @@ result = round(valor, 2)
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
-
-    <!-- Deducción adelantos-->
-    <record id="hr_rule_adelanto" model="hr.salary.rule">
-        <field name="name">Adelantos</field>
-        <field name="sequence" eval="20"/>
-        <field name="code">ADV</field>
-        <field name="category_id" ref="hr_payroll.DED"/>
-        <field name="condition_select">none</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-value = 0
-for item in contract.prestamos:
-    if item.type == 'adelanto' and item.state == 'run':
-        if payslip.date_from &lt;= item.inicia_pago and payslip.date_to &gt;= item.termina_pago:
-            value = item.monto
-result = round(value, 2)
-        </field>
-        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
-    </record>
-
-    <record id="hr_rule_descuentos" model="hr.salary.rule">
-        <field name="name">Descuentos del empleado</field>
-        <field name="sequence" eval="20"/>
-        <field name="code">DESC</field>
-        <field name="category_id" ref="hr_payroll.DED"/>
-        <field name="condition_select">none</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-value = 0
-if inputs.DESC:
-    for line in payslip.input_line_ids:
-        if line.code == 'DESC':
-            value += line.amount
-result = round(value, 2)
-        </field>
-        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
-    </record>
-
-    <!-- Deducción-->
-    <record id="hr_rule_deducciones" model="hr.salary.rule">
-        <field name="name">Otras deducciones</field>
-        <field name="sequence" eval="20"/>
-        <field name="code">DED</field>
-        <field name="category_id" ref="hr_payroll.DED"/>
-        <field name="condition_select">none</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-value = 0
-if inputs.DED:
-    for line in payslip.input_line_ids:
-        if line.code == 'DED':
-            value += line.amount
-result = round(value, 2)
-        </field>
-        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
-    </record>
-
-    <!-- Deducción por maternidad -->
-    <record id="l10n_ec_hr_payroll.hr_rule_ded_75_exp" model="hr.salary.rule">
-        <field name="name">Deducción de 75% del salario (gasto)</field>
-        <field name="sequence" eval="10"/>
-        <field name="code">DED75</field>
-        <field name="category_id" ref="SUBIESS"/>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = worked_days.DED75</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-if worked_days.DED75:
-    ausencias = 0
-    for line in payslip.worked_days_line_ids:
-        if line.code == 'DED75':
-            ausencias += line.number_of_days
-
-    deduccion = (contract.wage/30) * ausencias * 0.75
-    result = round(deduccion, 2)
-        </field>
-        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
-    </record>
-
-    <record id="l10n_ec_hr_payroll.hr_rule_ded_66_exp" model="hr.salary.rule">
-        <field name="name">Deducción de 66% del salario (gasto)</field>
-        <field name="sequence" eval="10"/>
-        <field name="code">DED66</field>
-        <field name="category_id" ref="SUBIESS"/>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = worked_days.DED66</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-if worked_days.DED66:
-    ausencias = 0
-    for line in payslip.worked_days_line_ids:
-        if line.code == 'DED66':
-            ausencias += line.number_of_days
-
-    deduccion = (contract.wage/30) * ausencias * 0.66
-    result = round(deduccion, 2)
-        </field>
-        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
-    </record>
-
-    <!-- Préstamos -->
-
-    <record id="salary_rule_" model="hr.salary.rule">
-        <field name="condition_select">python</field>
-        <field name="code">LOAN</field>
-        <field name="amount_select">fix</field>
-        <field name="amount_fix">1.00</field>
-        <field name="sequence">34</field>
-        <field name="appears_on_payslip">True</field>
-        <field name="name">PRESTAMOS/AVANCES</field>
-        <field name="condition_python">result = payslip.credit_note != False and inputs.LOAN</field>
-        <field name="category_id" ref="LOAN"/>
-        <field name="quantity">1.0</field>
-    </record>
-
-    <record id="hr_rule_iess_prestamo_quirografario" model="hr.salary.rule">
+    <record id="hr_payroll.hr_rule_iess_prestamo_quirografario" model="hr.salary.rule">
         <field name="name">IESS Quirografario</field>
         <field name="sequence" eval="30"/>
         <field name="code">QUIRO</field>
         <field name="category_id" ref="hr_payroll.DED"/>
-        <field name="condition_select">none</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+value = False
+for item in contract.prestamos:
+    if item.type == 'prestamo' and item.subtype == 'quirografario' and item.state == 'run':
+        value = True
+result = value or inputs.QUIRO</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 value = 0
@@ -755,12 +893,18 @@ result = round(value, 2)
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
-    <record id="hr_rule_iess_prestamo_hipotecario" model="hr.salary.rule">
+    <record id="hr_payroll.hr_rule_iess_prestamo_hipotecario" model="hr.salary.rule">
         <field name="name">IESS Hipotecario</field>
         <field name="sequence" eval="40"/>
         <field name="code">HIPO</field>
         <field name="category_id" ref="hr_payroll.DED"/>
-        <field name="condition_select">none</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+value = False
+for item in contract.prestamos:
+    if item.type == 'prestamo' and item.subtype == 'hipotecario' and item.state == 'run':
+        value = True
+result = value or inputs.HIPO</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 value = 0
@@ -773,7 +917,36 @@ result = round(value, 2)
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
-    <!-- Rules - Net -->
+    <!-- Iess patronal -->
+    <record id="hr_payroll.hr_rule_company_iess" model="hr.salary.rule">
+        <field name="name">IESS Aporte patronal</field>
+        <field name="sequence" eval="100"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="code">IESSPATRO</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+# No se aplica con el porcentaje especial del representante legal.
+if contract.iess_representante_legal:
+    result = False
+else:
+    result = True
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+dias = 30
+if worked_days.WORK100:
+    dias = worked_days.WORK100.number_of_days
+valor = (categories.BASIC + categories.ALW - categories.SUBIESS) * (employee.company_id.iess_empleador / 100) * (dias/30)
+result = round(valor, 2)
+        </field>
+        <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+    </record>
+
+
+    <!-- 
+        NETO 
+    -->
     <!-- Permite actualizar la regla hr_rule_net -->
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
@@ -789,11 +962,13 @@ result = round(value, 2)
       <field name="category_id" ref="hr_payroll.NET"/>
       <field name="condition_select">none</field>
       <field name="amount_select">code</field>
-      <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.INGGRAV + categories.INGRESONOGRAVADO - categories.DED - categories.SUBIESS</field>
+      <field name="amount_python_compute">result =  categories.BASIC + categories.ALW - categories.DED - categories.LOAN + categories.INGRESONOGRAVADO + categories.INGGRAV - categories.SUBIESS</field>
       <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
     </record>
 
-      <!-- REGLAS DE LA LIQUIDACIÓN DE HABERES-->
+    <!-- 
+        REGLAS DE LA LIQUIDACIÓN DE HABERES
+    -->
 
     <record id="hr_rule_liq_bon25" model="hr.salary.rule">
         <field name="name">Bonificación 25% (gasto)</field>
@@ -1013,26 +1188,32 @@ result = round(value, 2)
         <field name="name">ESTRUCTURA SALARIAL GENERAL</field>
         <field eval="[(6, 0, [
                    ref('hr_payroll.hr_rule_basic'),
-                   ref('hr_rule_inggrav'),
-                   ref('hr_rule_gratificacion'),
-                   ref('hr_rule_reserve_funds'),
-                   ref('hr_rule_reserve_funds_as_contribution'),
-                   ref('hr_rule_13ing_salary'),
-                   ref('hr_rule_14ing_salary'),
-                   ref('hr_rule_personal_ir'),
-                   ref('hr_rule_adelanto'),
-                   ref('hr_rule_personal_iess'),
-                   ref('hr_rule_representante_legal_iess'),
-                   ref('hr_rule_iess_prestamo_quirografario'),
-                   ref('hr_rule_iess_prestamo_hipotecario'),
-                   ref('hr_rule_13_salary'),
-                   ref('hr_rule_14_salary'),
-                   ref('hr_rule_company_iess'),
-                   ref('hr_rule_vacaciones'),
-                   ref('hr_rule_deducciones'),
-                   ref('hr_payroll.hr_rule_net'),
-                   ref('l10n_ec_hr_payroll.hr_rule_ded_75_exp'),
-                   ref('l10n_ec_hr_payroll.hr_rule_ded_66_exp')])]"
+                   ref('hr_payroll.hr_rule_extra'),
+                   ref('hr_payroll.hr_rule_suplementarias'),
+                   ref('hr_payroll.hr_rule_comision'),
+                   ref('hr_payroll.hr_rule_bonificaciones'),
+                   ref('hr_payroll.hr_rule_gratificacion'),
+                   ref('hr_payroll.hr_rule_reserve_funds'),
+                   ref('hr_payroll.hr_rule_reserve_funds_as_contribution'),
+                   ref('hr_payroll.hr_rule_inggrav'),
+                   ref('hr_payroll.hr_rule_13ing_salary'),
+                   ref('hr_payroll.hr_rule_14ing_salary'),
+                   ref('hr_payroll.hr_rule_13_salary'),
+                   ref('hr_payroll.hr_rule_14_salary'),
+                   ref('hr_payroll.hr_rule_vacaciones'),
+                   ref('hr_payroll.hr_rule_consumos'),
+                   ref('hr_payroll.hr_rule_anticipo'),
+                   ref('hr_payroll.hr_rule_personal_ir'),
+                   ref('hr_payroll.hr_rule_ded_66_exp'),
+                   ref('hr_payroll.hr_rule_ded_75_exp'),
+                   ref('hr_payroll.hr_rule_descuentos'),
+                   ref('hr_payroll.hr_rule_deducciones'),
+                   ref('hr_payroll.hr_rule_personal_iess'),
+                   ref('hr_payroll.hr_rule_representante_legal_iess'),
+                   ref('hr_payroll.hr_rule_iess_prestamo_quirografario'),
+                   ref('hr_payroll.hr_rule_iess_prestamo_hipotecario'),
+                   ref('hr_payroll.hr_rule_company_iess'),
+                   ref('hr_payroll.hr_rule_net')])]"
                name="rule_ids"/>
         <field name="company_id" ref="base.main_company"/>
     </record>

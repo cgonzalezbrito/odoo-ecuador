@@ -12,7 +12,7 @@
                     <attribute name="edit">false</attribute>
                 </xpath>
                 <xpath expr="//field[@name='worked_days_line_ids']" position="replace">
-                    <field name="worked_days_line_ids" readonly="1">
+                    <field name="worked_days_line_ids">
                         <tree string="Worked Days" editable="bottom">
                             <field name="name"/>
                             <field name="code"/>
@@ -34,11 +34,11 @@
                     </field>
                 </xpath>
                 <xpath expr="//field[@name='input_line_ids']" position="replace">
-                    <field name="input_line_ids" colspan="4" nolabel="1" readonly="1" >
+                    <field name="input_line_ids" colspan="4" nolabel="1">
                         <tree string="Input Data" editable="bottom">
                             <field name="name"/>
                             <field name="code"/>
-                            <field name="amount"/>
+                            <field name="amount" string="Cantidad"/>
                             <field name="contract_id"/>
                             <field name="sequence" invisible="True"/>
                         </tree>
