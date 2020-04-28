@@ -321,11 +321,12 @@ while (validar == 0):
 dias = ((val_anio_p*365)+(val_mes_p*30)+val_dia_p) - ((val_anio_c*365)+(val_mes_c*30)+val_dia_c)
 valor = 0
 
-sub_total = (contract.wage + contract.gratificacion) * (employee.company_id.porcentaje_fondos_reserva / 100)
+laborados = 30
+if worked_days.WORK100:
+    laborados = worked_days.WORK100.number_of_days
+sub_total = contract.wage * (laborados / 30)
 
 #si son menos de 30 dias, luego de pasado 1 año de trabajo, se calcula el proporcional a los dias correspondientes, caso contrario se coloca el valor completo
-
-
 if (dias-395)&gt;=0:
     valor = sub_total
 else:
@@ -333,13 +334,25 @@ else:
         dias = dias + 1
     valor = (sub_total/30.0)*(dias-365.0)
 
-laborados = 30
+if inputs.SUPLE:
+    valor += inputs.SUPLE.amount*contract.hour_cost*2
 
-for line in payslip.worked_days_line_ids:
-    if line.code == 'WORK100':
-        laborados = line.number_of_days
+if inputs.EXTRA:
+    valor += inputs.EXTRA.amount*contract.hour_cost*1.5
 
-valor = valor * (laborados / 30)
+if inputs.NOCT:
+    valor += inputs.NOCT.amount*contract.hour_cost*1.25
+
+if inputs.GRATIF:
+    valor += inputs.GRATIF.amount
+
+if inputs.COMIS:
+    valor += inputs.COMIS.amount
+
+valor += contract.gratificacion
+
+valor *= (employee.company_id.porcentaje_fondos_reserva / 100)
+
 result = round(valor, 2)
         </field>
         <field name="category_id" ref="INGRESONOGRAVADO"/>
@@ -487,7 +500,10 @@ while (validar == 0):
 dias = ((val_anio_p*365)+(val_mes_p*30)+val_dia_p) - ((val_anio_c*365)+(val_mes_c*30)+val_dia_c)
 valor = 0
 
-sub_total = (contract.wage + contract.gratificacion) * (employee.company_id.porcentaje_fondos_reserva / 100)
+laborados = 30
+if worked_days.WORK100:
+    laborados = worked_days.WORK100.number_of_days
+sub_total = contract.wage * (laborados / 30)
 
 #si son menos de 30 dias, luego de pasado 1 año de trabajo, se calcula el proporcional a los dias correspondientes, caso contrario se coloca el valor completo
 if (dias-395)&gt;=0:
@@ -497,10 +513,25 @@ else:
         dias = dias + 1
     valor = (sub_total/30.0)*(dias-365.0)
 
-laborados = 30
-if worked_days.WORK100:
-    laborados = worked_days.WORK100.number_of_days
-valor = valor * (laborados / 30)
+if inputs.SUPLE:
+    valor += inputs.SUPLE.amount*contract.hour_cost*2
+
+if inputs.EXTRA:
+    valor += inputs.EXTRA.amount*contract.hour_cost*1.5
+
+if inputs.NOCT:
+    valor += inputs.NOCT.amount*contract.hour_cost*1.25
+
+if inputs.GRATIF:
+    valor += inputs.GRATIF.amount
+
+if inputs.COMIS:
+    valor += inputs.COMIS.amount
+
+valor += contract.gratificacion
+
+valor *= (employee.company_id.porcentaje_fondos_reserva / 100)
+
 result = round(valor, 2)
         </field>
         <field name="category_id" ref="hr_payroll.COMP"/>
@@ -690,7 +721,7 @@ result = value or inputs.ANTIC</field>
 value = 0
 for item in contract.prestamos:
     if item.type == 'adelanto' and item.state == 'run':
-        if payslip.date_from &lt;= item.inicia_pago and payslip.date_to &gt;= item.termina_pago:
+        if item.inicia_pago &lt;= payslip.date_from and item.termina_pago &gt;= payslip.date_to:
             value = item.monto
 result = round(value, 2)
         </field>
@@ -857,11 +888,8 @@ else:
         </field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-dias = 30
-if worked_days.WORK100:
-    dias = worked_days.WORK100.number_of_days
 
-valor = (categories.BASIC + categories.ALW - categories.SUBIESS) * (employee.company_id.iess_personal / 100) * (dias/30)
+valor = (categories.BASIC + categories.ALW - categories.SUBIESS) * (employee.company_id.iess_personal / 100)
 result = round(valor, 2)
         </field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
@@ -952,10 +980,7 @@ else:
         </field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-dias = 30
-if worked_days.WORK100:
-    dias = worked_days.WORK100.number_of_days
-valor = (categories.BASIC + categories.ALW - categories.SUBIESS) * (employee.company_id.iess_empleador / 100) * (dias/30)
+valor = (categories.BASIC + categories.ALW - categories.SUBIESS) * (employee.company_id.iess_empleador / 100)
 result = round(valor, 2)
         </field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
